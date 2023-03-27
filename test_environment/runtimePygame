@@ -1,11 +1,8 @@
-# PyGame template.
- 
-# Import standard modules.
 import sys
- 
-# Import non-standard modules.
 import pygame
 from pygame.locals import *
+ 
+ #IMPORTANT! Apparently PyGame can't handle .aif files.
  
 def update(dt):
   """
@@ -29,6 +26,7 @@ def update(dt):
       # on other operating systems too, but I don't know for sure.
     # Handle other events as you wish.
  
+  
 def draw(screen):
   """
   Draw things to the window. Called once per frame.
@@ -39,12 +37,11 @@ def draw(screen):
   
   # Flip the display so that the things we drew actually show up.
   pygame.display.flip()
+  
  
 def runPyGame():
-  # Initialise PyGame.
-  pygame.init()
   
-  # Set up the clock. This will tick every frame and thus maintain a relatively constant framerate. Hopefully.
+  pygame.init() # Initialise PyGame.
   fps = 60.0
   fpsClock = pygame.time.Clock()
   
@@ -52,28 +49,47 @@ def runPyGame():
   width, height = 640, 480
   screen = pygame.display.set_mode((width, height))
   
-  # screen is the surface representing the window.
-  # PyGame surfaces can be thought of as screen sections that you can draw onto.
-  # You can also draw surfaces onto other surfaces, rotate surfaces, and transform surfaces.
-  
   x=0
+  
+  glitch_sound = pygame.mixer.Sound("sounds/Misc_FX/Glitch_downshifter.wav") # loads sound as "glitch_sound"
+  laser_sounds = pygame.mixer.Sound("sounds/Misc_FX/Glitch_downshifter.wav") # loads sound as "laser_sounds"
+  
+  pygame.mixer.music.load("sounds/Music/loading_screen.wav")
+  pygame.mixer.music.play(-1)                                 # loads and plays a music file
+  
+  def paused():
+    ############
+    pygame.mixer.music.pause()
+  def unpaused():
+    global pause
+    pygame.mixer.music.unpause()
+    pause = False
+  
+  
+  
+  
+  
+  
   
   # Main game loop.
   dt = 1/fps # dt is the time since last frame.
-  while True: # Loop forever!
-    update(dt) # You can update/draw here, I've just moved the code for neatness.
-
-
-
-
-
-
-
+  while True:
+    update(dt)
     x += 1/60
     print(f"seconds passed: {x}")
     draw(screen)
-    
     dt = fpsClock.tick(fps)
+    
+    
+    
+    #
+    
+    
+    
+    
+    
+    
+    
     
 runPyGame()
     
