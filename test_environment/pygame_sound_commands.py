@@ -3,9 +3,9 @@
 #Pygame audio
 from pygame import *
 
-jump_sound = pygame.mixer.Sound("jump.wav") # loads sounds
+boost_sound = pygame.mixer.Sound("boost.wav") # loads sounds
 
-grass_sound = [pygame.mixer.Sound("grass.wav"),pygame.mixer.Sound("grass_2.wav")] # loads two sounds to be played randomly
+shot_sound = [pygame.mixer.Sound("shot.wav"),pygame.mixer.Sound("shot_2.wav")] # loads two sounds to be played randomly
 
 pygame.mixer.music.load("music.wav") # loads music
 
