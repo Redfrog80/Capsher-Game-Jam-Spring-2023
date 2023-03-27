@@ -28,20 +28,14 @@ def update(dt):
  
   
 def draw(screen):
-  """
-  Draw things to the window. Called once per frame.
-  """
   screen.fill((0, 0, 0)) # Fill the screen with black.
-  
-  # Redraw screen here.
-  
-  # Flip the display so that the things we drew actually show up.
   pygame.display.flip()
-  
  
 def runPyGame():
   
-  pygame.init() # Initialise PyGame.
+  pygame.init()
+  pygame.mixer.init()
+  
   fps = 60.0
   fpsClock = pygame.time.Clock()
   
@@ -56,6 +50,10 @@ def runPyGame():
   
   pygame.mixer.music.load("sounds/Music/loading_screen.wav")
   pygame.mixer.music.play(-1)                                 # loads and plays a music file
+  
+  pygame.mixer.Sound.play(laser_sounds) # to play the sound
+  pygame.time.wait(100)
+  pygame.mixer.Sound.play(laser_sounds) # to play the sound
   
   def paused():
     ############
