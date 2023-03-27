@@ -2,13 +2,14 @@ import pygame
 import numpy as np
 import os
 
-class imageDict:
-    def __init__(self, location : str = None) -> None:
+
+class ImageDict:
+    def __init__(self, location: str = None) -> None:
         self.__image_dict__ = {}
         if location:
             self.load_images(location)
     
-    def load_image(self, location  : str = "images/notfound.png"):
+    def load_image(self, location: str = "images/notfound.png"):
         key = os.path.split[1]
         if key:
             self.__image_dict__[key] = pygame.image.load(location).convert()
@@ -20,7 +21,7 @@ class imageDict:
                 key = filename[:-4]
                 self.__image_dict__[key] = pygame.image.load(path).convert()
     
-    def get_image(self, name : str, notFound = None):
+    def get_image(self, name: str, notFound = None):
         return self.__image_dict__.get(name, notFound)
     
     def get_image_dimensions(self, name : str, notFound = None):
