@@ -23,9 +23,9 @@ class GameObject(Base):
 
     def render(self, screen: surface, cam: Camera):
         if self.checkCollision(cam):  # render when object collide with camera view
-            if self.rot == 0:
-                screen.blit(self.texture, subTuple(self.boundary.topleft, cam.boundary.topleft))
-            else:
+            #if self.rot == 0:
+                #screen.blit(self.texture, subTuple(self.boundary.topleft, cam.boundary.topleft))
+            #else:
                 img0 = transform.rotate(self.texture, self.rot)
                 dummy = divTuple(subTuple(img0.get_size(), self.boundary.size), 2)
                 screen.blit(img0, subTuple(subTuple(self.boundary.topleft, cam.boundary.topleft), dummy))
@@ -35,4 +35,5 @@ class GameObject(Base):
         self.pos = addTuple(self.pos, mulTuple(self.vel, dt))
         self.boundCenterToPos()
         self.vel = addTuple(self.vel, mulTuple(self.acc, dt))
+        self.rot += self.rotv;
         #self.boundary = Rect(self.pos, self.size);

@@ -16,6 +16,7 @@ class Base:
         self.vel = vel
         self.acc = acc
         self.rot = 0
+        self.rotv = 0;
         #self.size = size;
         self.boundary = Rect(pos, size)
 
