@@ -1,29 +1,33 @@
-import pygame
+from pygame import image, surface, transform
 from lib.ImageDict import imageDict
-from .lib.objects.GameObject import gameObject
+from lib.misc import floorDivTuple, floorElementDiv
+from lib.objects import Camera, GameObject
 
 class gameWorld:
-    def __init__(self, dimensions : tuple, tiledim : tuple, camera) -> None:
+    def __init__(self, dimensions : tuple, tiledim : tuple, camera : Camera) -> None:
         self.__dim__ = dimensions # top left corner is (0,0), bottom left is dimensions 
         self.__tiles__ = tiledim
         self.__camera__ = camera
         self.__game_objects__ = {}
         self.tileMap = {} # TODO FOR COLLISIONS
     
-    def add_static_object(self, key, object):
-        self.__static_objects__[key] = object
     
-    def add_phys_object(self, key, object):
+    def __update_tile_map__(self):
+        for key in self.__game_objects__:
+            for tup in [floorElementDiv(i,self.tileMap) for i in self.__game_objects__[key].get_boundary_corners()]:
+                self.tileMap[tup] = key
+    
+    def add_game_objects(self, key : str, object : GameObject):
         self.__game_objects__[key] = object
     
-    def update(self,dt):
+    def update(self, dt : float):
         for key in self.__game_objects__:
             obj = self.__game_objects__[key]
-            obj.update(dt, self.__dim__, np.floor_divide(obj.imageDict.get_image_dimensions(obj.texture),2), doWrap)
+            obj.update(dt)
         # need to ensure the camera is not looking outside playable area (so things don't seem to pop into existance)
         # check for collisions
         # perform collisions
-    def render(self,screen):
+    def render(self, screen : surface):
         for key in self.__game_objects__:
             obj = self.__game_objects__[key]
             obj.render(screen, self.__camera__)
