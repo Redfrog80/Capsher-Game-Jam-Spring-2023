@@ -2,7 +2,6 @@ print("yeet")
 
 import pygame
 import os
-import math
 
 # Initialize Pygame
 pygame.init()
@@ -22,11 +21,8 @@ target_image = pygame.image.load(os.path.join('images', 'gameImage.png'))
 # Set up the bot
 bot_image = pygame.image.load(os.path.join('images', 'amogus.png'))
 
-initial_player_x = 0
-initial_player_y = 0
-
-player_x = screen_width / 2 + initial_player_x # initializes player location
-player_y = screen_height / 2 + initial_player_y
+player_x = 0 # initializes player location
+player_y = 0
 
 initial_x = 100
 initial_y = 100 # change these as needed, when bots spawn this should be random
@@ -34,11 +30,11 @@ initial_y = 100 # change these as needed, when bots spawn this should be random
 bot_speed_x = 0
 bot_speed_y = 0
 
-bot_accel_x = 0.5
-bot_accel_y = 0.5 # this is a coefficient
+bot_accel_x = 1
+bot_accel_y = 1 # this is a coefficient
 
 max_speed_x = 10
-max_speed_y = 10
+max_speed_y = 7
 
 bot_x = screen_width / 2 + initial_x
 bot_y = screen_height / 2 + initial_y
@@ -65,11 +61,11 @@ while running:
     dir_y /= dir_length # normalizes vector
 
     keys = pygame.key.get_pressed() # movement
-    if dir_x < 0:
+    if keys[pygame.K_LEFT]: #if dir_x < 0:
         bot_speed_x -= bot_accel_x
         if bot_speed_x < -max_speed_x:
             bot_speed_x = -max_speed_x
-    elif dir_x > 0:
+    elif keys[pygame.K_RIGHT]: #if dir_x > 0:
         bot_speed_x += bot_accel_x
         if bot_speed_x > max_speed_x:
             bot_speed_x = max_speed_x
@@ -79,11 +75,11 @@ while running:
         elif bot_speed_x < 0:
             bot_speed_x += bot_accel_x * damp_factor
 
-    if dir_y < 0:
+    if keys[pygame.K_UP]: #if dir_y < 0:
         bot_speed_y -= bot_accel_y
         if bot_speed_y < -max_speed_y:
             bot_speed_y = -max_speed_y
-    elif dir_y > 0:
+    elif keys[pygame.K_DOWN]: #if dir_y < 0:
         bot_speed_y += bot_accel_y
         if bot_speed_y > max_speed_y:
             bot_speed_y = max_speed_y
@@ -93,11 +89,11 @@ while running:
         elif bot_speed_y < 0:
             bot_speed_y += bot_accel_y * damp_factor
 
-    
+    # Move the bot
     bot_x += bot_speed_x * speed_multiplier
-    bot_y += bot_speed_y * speed_multiplier # moves bot
+    bot_y += bot_speed_y * speed_multiplier
 
-    
+    # Draw the screen
     screen.fill((255, 255, 255))
     screen.blit(target_image, (screen_width / 2 - target_image.get_width() / 2, screen_height / 2 - target_image.get_height() / 2))
     screen.blit(bot_image, (bot_x - bot_image.get_width() / 2, bot_y - bot_image.get_height() / 2))
@@ -105,5 +101,5 @@ while running:
     
     clock.tick(fps) # limit FPS
 
-
+# Clean up Pygame
 pygame.quit()
