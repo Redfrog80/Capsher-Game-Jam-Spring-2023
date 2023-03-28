@@ -2,6 +2,7 @@ from ..misc import *
 from .Base import Base
 from .Camera import Camera
 from pygame import image, surface, transform
+from pygame.rect import Rect;
 
 
 class GameObject(Base):
@@ -34,3 +35,4 @@ class GameObject(Base):
         self.pos = addTuple(self.pos, mulTuple(self.vel, dt))
         self.boundCenterToPos()
         self.vel = addTuple(self.vel, mulTuple(self.acc, dt))
+        #self.boundary = Rect(self.pos, self.size);

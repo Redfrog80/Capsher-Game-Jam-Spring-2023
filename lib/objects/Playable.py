@@ -13,3 +13,5 @@ class Playable(GameObject):
         speed = 0
 
         weapon = {}
+
+    

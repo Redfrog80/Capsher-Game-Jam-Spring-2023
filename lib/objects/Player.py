@@ -9,4 +9,9 @@ class Player(Playable):
                  img: str = "resources/images/notfound.png"):
         super().__init__(name, pos, size, img)
 
+    def setSpeed(self, spd):
+        self.vel = spd;
+    def setAccel(self, acc):
+        self.acc = acc;
+
 
