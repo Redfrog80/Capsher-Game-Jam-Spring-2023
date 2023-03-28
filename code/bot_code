@@ -16,10 +16,7 @@ screen_height = 480
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Target Practice")
 
-# Load the target image
 target_image = pygame.image.load(os.path.join('images', 'gameImage.png'))
-
-# Set up the bot
 bot_image = pygame.image.load(os.path.join('images', 'amogus.png'))
 
 initial_player_x = 0
@@ -46,6 +43,7 @@ bot_y = screen_height / 2 + initial_y
 speed_multiplier = 1 # changes overall speed of the bot after acceleration
 damp_factor = 0.1 # changes how quickly a bot slows down when not actively moving in any given axis
 
+max_follow_distance = 500 # makes sure the player isnt swarmed by bots off-sceen
 
 # Main game loop
 running = True
@@ -64,42 +62,44 @@ while running:
     dir_x /= dir_length
     dir_y /= dir_length # normalizes vector
 
-    keys = pygame.key.get_pressed() # movement
-    if dir_x < 0:
-        bot_speed_x -= bot_accel_x
-        if bot_speed_x < -max_speed_x:
-            bot_speed_x = -max_speed_x
-    elif dir_x > 0:
-        bot_speed_x += bot_accel_x
-        if bot_speed_x > max_speed_x:
-            bot_speed_x = max_speed_x
-    else:
-        if bot_speed_x > 0:
-            bot_speed_x -= bot_accel_x * damp_factor
-        elif bot_speed_x < 0:
-            bot_speed_x += bot_accel_x * damp_factor
+    ####################################################
+    # movement
+    if dir_length < max_follow_distance:
+        if dir_x < 0:
+            bot_speed_x -= bot_accel_x
+            if bot_speed_x < -max_speed_x:
+                bot_speed_x = -max_speed_x
+        elif dir_x > 0:
+            bot_speed_x += bot_accel_x
+            if bot_speed_x > max_speed_x:
+                bot_speed_x = max_speed_x
+        else:
+            if bot_speed_x > 0:
+                bot_speed_x -= bot_accel_x * damp_factor
+            elif bot_speed_x < 0:
+                bot_speed_x += bot_accel_x * damp_factor
 
-    if dir_y < 0:
-        bot_speed_y -= bot_accel_y
-        if bot_speed_y < -max_speed_y:
-            bot_speed_y = -max_speed_y
-    elif dir_y > 0:
-        bot_speed_y += bot_accel_y
-        if bot_speed_y > max_speed_y:
-            bot_speed_y = max_speed_y
-    else:
-        if bot_speed_y > 0:
-            bot_speed_y -= bot_accel_y * damp_factor
-        elif bot_speed_y < 0:
-            bot_speed_y += bot_accel_y * damp_factor
-
-    
+    if dir_length < max_follow_distance:
+        if dir_y < 0:
+            bot_speed_y -= bot_accel_y
+            if bot_speed_y < -max_speed_y:
+                bot_speed_y = -max_speed_y
+        elif dir_y > 0:
+            bot_speed_y += bot_accel_y
+            if bot_speed_y > max_speed_y:
+                bot_speed_y = max_speed_y
+        else:
+            if bot_speed_y > 0:
+                bot_speed_y -= bot_accel_y * damp_factor
+            elif bot_speed_y < 0:
+                bot_speed_y += bot_accel_y * damp_factor
+        
     bot_x += bot_speed_x * speed_multiplier
     bot_y += bot_speed_y * speed_multiplier # moves bot
 
+    ####################################################
     
     screen.fill((255, 255, 255))
-    screen.blit(target_image, (screen_width / 2 - target_image.get_width() / 2, screen_height / 2 - target_image.get_height() / 2))
     screen.blit(bot_image, (bot_x - bot_image.get_width() / 2, bot_y - bot_image.get_height() / 2))
     pygame.display.flip()
     
