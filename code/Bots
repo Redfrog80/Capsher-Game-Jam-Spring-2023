@@ -1,0 +1,61 @@
+import pygame
+import random
+
+class EnemyShip(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        super().__init__()
+        self.image = pygame.Surface((50, 50))
+        self.image.fill((255, 0, 0))
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+        self.speed = random.randint(1, 3)
+        self.bullet_timer = 0
+        
+    def update(self):
+        self.rect.move_ip(0, self.speed)
+        self.bullet_timer += 1
+        if self.bullet_timer >= 60:
+            self.bullet_timer = 0
+            bullet = Bullet(self.rect.centerx, self.rect.bottom)
+            all_sprites.add(bullet)
+            enemy_bullets.add(bullet)
+
+class Bullet(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        super().__init__()
+        self.image = pygame.Surface((10, 10))
+        self.image.fill((0, 255, 0))
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+        self.speed = 5
+        
+    def update(self):
+        self.rect.move_ip(0, self.speed)
+        if self.rect.bottom < 0 or self.rect.top > SCREEN_HEIGHT:
+            self.kill()
+
+# In the main game loop:
+all_sprites = pygame.sprite.Group()
+enemy_ships = pygame.sprite.Group()
+enemy_bullets = pygame.sprite.Group()
+
+for i in range(5):
+    enemy = EnemyShip(random.randint(0, SCREEN_WIDTH), 0)
+    all_sprites.add(enemy)
+    enemy_ships.add(enemy)
+
+while True:
+    # Handle events, update game objects, etc.
+    
+    # Update all sprites
+    all_sprites.update()
+    
+    # Check for collisions between player and enemy bullets
+    hits = pygame.sprite.spritecollide(player, enemy_bullets, True)
+    if hits:
+        # Handle player getting hit by enemy bullets
+    
+    # Draw all sprites
+    all_sprites.draw(screen)
+    
+    pygame.display.flip()
