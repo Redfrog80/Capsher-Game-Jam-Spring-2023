@@ -9,7 +9,7 @@ class gameWorld:
         self.__tiles__ = tiledim
         self.__camera__ = camera
         self.__game_objects__ = {}
-        self.tileMap = {} # TODO FOR COLLISIONS
+        self.tileMap = {} 
     
     
     def __update_tile_map__(self):
