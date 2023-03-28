@@ -30,10 +30,7 @@ class GameObject(Base):
                 screen.blit(img0, subTuple(subTuple(self.boundary.topleft, cam.boundary.topleft), dummy))
 
     def update(self, dt: float):
-        """update pos, then vel"""
-        self.pos = addTuple(self.pos, mulTuple(self.vel, dt))
-        self.boundCenterToPos()
-        self.vel = addTuple(self.vel, mulTuple(self.acc, dt))
+        pass
 
     def get_boundary_corners(self):
         return (self.boundary.topleft,self.boundary.topright, self.boundary.bottomleft, self.boundary.bottomright)
