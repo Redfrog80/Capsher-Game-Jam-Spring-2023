@@ -1,4 +1,5 @@
 from .Playable import Playable
+from .ProjectTile import Projectile
 import math
 from misc import *
 
@@ -34,6 +35,11 @@ class Player(Playable):
 
     def goBackStop(self):
         self.speed = 0
+
+    def shoot(self):
+        bullet = Projectile("bullet", "Enemy")
+        bullet.traj(self.pos, self.speedMax, self.rot, 1)
+        return bullet
 
     def update(self, dt: float):
         self.pos = addTuple(self.pos, mulTuple(self.vel, dt))

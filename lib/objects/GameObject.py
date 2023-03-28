@@ -20,6 +20,10 @@ class GameObject(Base):
         """match size of boundary to texture"""
         self.boundary.update(subTuple(self.pos, divTuple(self.texture.get_size(), 2)), self.texture.get_size())
 
+    def matchTextureToBoundary(self):
+        """match size of texture to boundary"""
+        self.texture = transform.scale(self.texture, self.boundary.size)
+
     def render(self, screen: surface, cam: Camera):
         if self.checkCollision(cam):  # render when object collide with camera view
             if self.rot == 0:

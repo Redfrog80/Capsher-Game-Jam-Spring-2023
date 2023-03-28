@@ -19,11 +19,14 @@ firstObject.matchBoundaryToTexture()
 # secondObject.matchBoundaryToTexture()
 # secondObject.vel = (200, 200)
 
-player = objects.Player("player", (0, 0), (100, 100), "resources/images/ship.png")
+player = objects.Player("player", (0, 0), (64, 64), "resources/images/ship.png")
+player.matchTextureToBoundary()
 player.speedMax = 500
 player.rotspeedMax = 360
 # camera track second object
 camera.trackCenter(player)
+
+updateList = [player, firstObject]
 
 run = True
 while run:
@@ -41,6 +44,8 @@ while run:
                 player.goForward()
             elif event.key == pygame.K_DOWN:
                 player.goBack()
+            elif event.key == pygame.K_SPACE:
+                updateList.append(player.shoot())
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
                 player.rotateLeftStop()
@@ -53,12 +58,11 @@ while run:
 
     # update calculation
     # player.rot += 2
-    player.update(dt)
+    [i.update(dt) for i in updateList]
     camera.update()
     # render
     win.fill((255, 255, 255))
-    firstObject.render(win, camera)
-    player.render(win, camera)
+    [i.render(win, camera) for i in updateList]
 
     pygame.display.update()
 pygame.quit()
