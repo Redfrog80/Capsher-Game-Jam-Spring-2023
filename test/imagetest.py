@@ -1,7 +1,17 @@
 from lib import objects
 import pygame
 pygame.init()
-
+if __name__ == '__main__':
+    if __package__ is None:
+        import sys
+        from os import path
+        sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
+        from lib.objects import *;
+        #from lib.imageDict import *
+    else:
+        from ..lib.objects import *
+        #from ..lib.imageDict import *
+        
 # initializer
 win = pygame.display.set_mode((800, 800))
 pygame.display.set_caption("Bug shooter")

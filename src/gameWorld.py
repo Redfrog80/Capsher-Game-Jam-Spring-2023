@@ -1,8 +1,19 @@
 import pygame
 import numpy as np
-from lib.imageDict import imageDict
-from lib.objects.gameObject import gameObject
-from lib.objects.physicsObject import physicsObject
+#from lib.imageDict import imageDict
+#from lib.objects.gameObject import gameObject
+#from lib.objects.physicsObject import physicsObject
+
+if __name__ == '__main__':
+    if __package__ is None:
+        import sys
+        from os import path
+        sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
+        from lib.objects import *;
+        #from lib.imageDict import *
+    else:
+        from ..lib.objects import *
+        #from ..lib.imageDict import *
 
 class gameWorld:
     def __init__(self, dimensions : np.array, tiledim : np.array, camera) -> None:
