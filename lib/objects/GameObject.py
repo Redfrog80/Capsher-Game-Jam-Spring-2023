@@ -8,10 +8,11 @@ class GameObject(Base):
     """
     game object: can be rendered and have update movement
     """
-    def __init__(self, name: str = "", pos: tuple = (0, 0), size: tuple = (0, 0),
+    def __init__(self, name: str = "", pos: tuple = (0, 0), vel: tuple = (0, 0), acc: tuple = (0, 0), size: tuple = (0, 0),
                  img: str = "resources/images/notfound.png"):
-        super().__init__(name, pos, (0, 0), (0, 0), size)
+        super().__init__(name, pos, vel, acc, size)
         self.texture = image.load(img)
+        self.matchBoundaryToTexture()
 
     def checkCollision(self, other: Base):
         return self.boundary.colliderect(other.boundary)

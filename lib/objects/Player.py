@@ -1,6 +1,6 @@
 from .Playable import Playable
 import math
-from misc import *
+from lib.misc import *
 
 
 class Player(Playable):
