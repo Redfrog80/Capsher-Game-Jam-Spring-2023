@@ -5,7 +5,7 @@ from lib.objects import Camera, GameObject
 
 class gameWorld:
     def __init__(self, dimensions : tuple, tiledim : tuple, camera : Camera) -> None:
-        self.__dim__ = dimensions # top left corner is (0,0), bottom left is dimensions 
+        self.__dim__ = dimensions # two tuples, top left cord, bottom right cord
         self.__tiles__ = tiledim
         self.__camera__ = camera
         self.__game_objects__ = {}
@@ -20,14 +20,19 @@ class gameWorld:
     def add_game_objects(self, key : str, object : GameObject):
         self.__game_objects__[key] = object
     
-    def update(self, dt : float):
+    # args will be functions which we want to apply to every object, but we don't want in our object classes
+    def update(self, dt : float, *args):
         for key in self.__game_objects__:
             obj = self.__game_objects__[key]
             obj.update(dt)
+            for fun in args:
+                fun(key = key, object = obj)
         # need to ensure the camera is not looking outside playable area (so things don't seem to pop into existance)
         # check for collisions
         # perform collisions
-    def render(self, screen : surface):
+    def render(self, screen : surface, *args):
         for key in self.__game_objects__:
             obj = self.__game_objects__[key]
             obj.render(screen, self.__camera__)
+            for fun in args:
+                fun(key = key, object = obj)
