@@ -32,3 +32,5 @@ class GameObject(Base):
     def update(self, dt: float):
         pass
 
+    def get_boundary_corners(self):
+        return (self.boundary.topleft,self.boundary.topright, self.boundary.bottomleft, self.boundary.bottomright)
