@@ -1,6 +1,6 @@
 from lib import objects
 import pygame
-
+import random
 
 pygame.init()
 
@@ -13,28 +13,54 @@ FPS = 60
 clock = pygame.time.Clock()
 
 camera = objects.Camera("cam", (0, 0), win.get_size())
-firstObject = objects.GameObject("dummy", (400, 400), (0, 0))
-firstObject.matchBoundaryToTexture()
-# secondObject = objects.GameObject("player", (100, 100), (0, 0),)
-# secondObject.matchBoundaryToTexture()
-# secondObject.vel = (200, 200)
 
 player = objects.Player("player", (0, 0), (64, 64), "resources/images/ship.png")
 player.matchTextureToBoundary()
-player.speedMax = 500
-player.rotspeedMax = 360
+player.setStat(0, 100, 0, 100, 500, 360)
 # camera track second object
 camera.trackCenter(player)
 
-updateList = [player, firstObject]
+
+def createEnemy(name, pos):
+    enemy = objects.Enemy(name, pos, (100, 100))
+    enemy.matchTextureToBoundary()
+    enemy.setStat(0, 50, 0, 50, 200, 200)
+    return enemy
+
+
+def chance(c):
+    return random.randint(0, 100) < c
+
+
+def randDist(obj: objects.GameObject):
+    return random.randrange(-300, 300) + obj.pos[0], random.randrange(-300, 300) + obj.pos[1]
+
+
+# enemy generator
+# maxEnemy = 100
+# countEnemy = 0
+RAND_SPAWN = pygame.USEREVENT+1
+pygame.time.set_timer(RAND_SPAWN, 1000)
+
+everything = {player.name: player}  # everything
+destroylist = []
+
 
 run = True
 while run:
-    dt = clock.tick(FPS)/1000
+    dt = clock.tick(FPS) / 1000
     # get and analyze pygame event
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+        if event.type == RAND_SPAWN and chance(50):
+            for i in range(random.randint(0, 3)):
+                while True:
+                    # prevent overwriting key
+                    nametest = "enemy" + str(random.randint(0, 1000))
+                    if nametest not in everything:
+                        everything.update({nametest: createEnemy(nametest, randDist(player))})
+                        break
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 player.rotateLeft()
@@ -45,7 +71,12 @@ while run:
             elif event.key == pygame.K_DOWN:
                 player.goBack()
             elif event.key == pygame.K_SPACE:
-                updateList.append(player.shoot())
+                while True:
+                    # prevent overwriting key
+                    nametest = "bullet" + str(random.randint(0, 1000))
+                    if nametest not in everything:
+                        everything.update({nametest: player.shoot(nametest)})
+                        break
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
                 player.rotateLeftStop()
@@ -58,12 +89,23 @@ while run:
 
     # update calculation
     # player.rot += 2
-    [i.update(dt) for i in updateList]
+    for key in everything:
+        everything[key].update(dt, gameobjs=everything)
     camera.update()
+    # destroy object with dead flag
+    for key in everything:
+        if not everything[key].objAlive():
+            print("murder {}".format(key))
+            destroylist.append(key)
+    for k in destroylist:
+        del everything[k]
+    destroylist.clear()
+
     # render
     win.fill((255, 255, 255))
-    [i.render(win, camera) for i in updateList]
+    for key in everything:
+        everything[key].render(win, camera)
+    camera.update()
 
     pygame.display.update()
 pygame.quit()
-

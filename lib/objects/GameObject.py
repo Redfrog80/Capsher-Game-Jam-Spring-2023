@@ -33,7 +33,7 @@ class GameObject(Base):
                 dummy = divTuple(subTuple(img0.get_size(), self.boundary.size), 2)
                 screen.blit(img0, subTuple(subTuple(self.boundary.topleft, cam.boundary.topleft), dummy))
 
-    def update(self, dt: float):
+    def update(self, dt: float, **kwargs):
         pass
 
     def get_boundary_corners(self):

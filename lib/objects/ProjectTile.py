@@ -13,6 +13,7 @@ class Projectile(GameObject):
         super().__init__(name, (0, 0), size, img)
         self.matchTextureToBoundary()  # small bullet
         self.dmg = dmg
+        self.tag = tag
 
     def traj(self, pos: tuple, speed: float, rot: float, speed_amp: float):
         """
@@ -25,7 +26,7 @@ class Projectile(GameObject):
         self.pos = pos
         self.vel = (-speed*math.sin(math.radians(self.rot))*speed_amp, -speed*math.cos(math.radians(self.rot))*speed_amp)
 
-    def update(self, dt: float):
+    def update(self, dt: float, **kwargs):
         self.pos = addTuple(self.pos, mulTuple(self.vel, dt))
         self.boundCenterToPos()
         self.vel = addTuple(self.vel, mulTuple(self.acc, dt))

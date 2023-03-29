@@ -36,12 +36,15 @@ class Player(Playable):
     def goBackStop(self):
         self.speed = 0
 
-    def shoot(self):
-        bullet = Projectile("bullet", "Enemy")
+    def shoot(self, name: str):
+        """
+        :param name: bullet name, for looking up in dictionary
+        """
+        bullet = Projectile(name, "bulletEnemy", 20)
         bullet.traj(self.pos, self.speedMax, self.rot, 1)
         return bullet
 
-    def update(self, dt: float):
+    def update(self, dt: float, **kwargs):
         self.pos = addTuple(self.pos, mulTuple(self.vel, dt))
         self.boundCenterToPos()
         self.vel = addTuple(self.vel, mulTuple(self.acc, dt))
