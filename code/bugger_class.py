@@ -4,15 +4,13 @@ import pygame
 import os
 import math
 import random
-
-# Define the Bugger class
 class Bugger:
     def __init__(self, x, y):
         self.image = pygame.image.load(os.path.join('images', 'amogus.png'))
         self.x = x
         self.y = y
         self.speed_x = 0
-        self.speed_y = 0 # init, do not change
+        self.speed_y = 0 # init values, do not change
         self.accel_x = 0.1
         self.accel_y = 0.1
         self.max_speed_x = 8
@@ -26,7 +24,7 @@ class Bugger:
         self.y = random.randint(0, screen_height)
 
     def update(self, player_x, player_y):
-        # Calculate the direction and distance to the player
+
         player_x, player_y = pygame.mouse.get_pos() # makes bot follow mouse
         self.dir_x = player_x - self.x
         self.dir_y = player_y - self.y
@@ -62,17 +60,14 @@ class Bugger:
                 elif self.speed_y < 0:
                     self.speed_y += self.accel_y * self.damp_factor
 
-        # Move the bugger
         self.x += self.speed_x * self.speed_multiplier
         self.y += self.speed_y * self.speed_multiplier
 
-# Initialize Pygame
 pygame.init()
 
 clock = pygame.time.Clock()
 fps = 60
 
-# Set up the display
 screen_width = 1000
 screen_height = 800
 screen = pygame.display.set_mode((screen_width, screen_height))
@@ -89,7 +84,6 @@ for i in range(4):
     
 running = True # Makes sure game closes after manually quitting. It Mac it won't otherwise.
 while running:
-    # Handle events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False

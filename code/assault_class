@@ -4,8 +4,6 @@ import pygame
 import os
 import math
 import random
-
-# Define the assault class
 class Assault:
     def __init__(self, x, y):
         self.image = pygame.image.load(os.path.join('images', 'amogus.png'))
@@ -83,13 +81,11 @@ class Assault:
         self.x += self.speed_x * self.speed_multiplier
         self.y += self.speed_y * self.speed_multiplier
 
-# Initialize Pygame
 pygame.init()
 
 clock = pygame.time.Clock()
 fps = 60
 
-# Set up the display
 screen_width = 1000
 screen_height = 800
 screen = pygame.display.set_mode((screen_width, screen_height))
@@ -98,7 +94,7 @@ pygame.display.set_caption("Target Practice")
 target_image = pygame.image.load(os.path.join('images', 'gameImage.png'))
 assault_image = pygame.image.load(os.path.join('images', 'amogus.png'))
 
-assaults=[] # Initialize and spawn 4 assaults inside the dimensions of the screen
+assaults=[] # Initialize and spawn 10 assaults inside the dimensions of the screen
 for i in range(10):
     assault = Assault(0, 0)
     assault.randomize_position(screen_width, screen_height)
