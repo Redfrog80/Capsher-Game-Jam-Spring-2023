@@ -41,9 +41,15 @@ class Gun(GameObject):
             self.rotv = 0;
         
         elif mangle-gsimpRot > 0:
-            self.rotv = 2;
+            if abs(mangle-gsimpRot) > 180:
+                self.rotv = -2;
+            else:
+                self.rotv = 2;
         else:
-            self.rotv = -2;
+            if abs(mangle-gsimpRot) > 180:
+                self.rotv = 2;
+            else:
+                self.rotv = -2;
         
         self.pos = addTuple(self.pos, mulTuple(self.vel, dt))
         self.boundCenterToPos()
