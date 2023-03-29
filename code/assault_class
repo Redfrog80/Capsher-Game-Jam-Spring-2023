@@ -27,15 +27,13 @@ class Assault:
         self.y = random.randint(0, screen_height)
 
     def update(self, player_x, player_y):
-        # Calculate the direction and distance to the player
-        player_x, player_y = pygame.mouse.get_pos() # makes bot follow mouse
+        player_x, player_y = pygame.mouse.get_pos() # replace with player coordinates
         self.dir_x = player_x - self.x
         self.dir_y = player_y - self.y
         self.dir_length = max(1, math.sqrt(self.dir_x ** 2 + self.dir_y ** 2))
         self.dir_x /= self.dir_length
         self.dir_y /= self.dir_length # Normalizes vector
-        
-        # Move towards the player if within range
+
         if self.dir_length < self.max_follow_distance:
             if self.dir_length < self.hover_distance:
                 if self.dir_x > 0:
