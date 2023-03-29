@@ -31,7 +31,7 @@ class GameObject(Base):
                 screen.blit(img0, subTuple(subTuple(self.boundary.topleft, cam.boundary.topleft), dummy))
 
     def update(self, dt: float):
-        """update pos, then vel"""
+        """update pos, then vel, then rotation"""
         self.pos = addTuple(self.pos, mulTuple(self.vel, dt))
         self.boundCenterToPos()
         self.vel = addTuple(self.vel, mulTuple(self.acc, dt))

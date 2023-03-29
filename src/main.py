@@ -30,41 +30,50 @@ testThing2 = GameObject("reeeeeeee", (1300, 800), (64, 64));
 testThing3 = GameObject("reeeeeeeee", (1300, 100), (64, 64));
 
 player = Player("player", (1200, 200), (64, 64), "resources/images/directionalTest.png");
+gun = Gun("gun", (0, 0), (10, 10), "resources/images/directionalTest.png");
 
 camera = Camera("camera", (0, 0), win.get_size());
 
 
 
-handler.append(player);
+#handler.append(player);
 handler.append(testThing);
 handler.append(testThing1);
 handler.append(testThing2);
 handler.append(testThing3);
+handler.append(gun);
+handler.append(player);
 
 camera.trackCenter(player);
 run = True
 while run:
-    print(player.vel);
+    #print(player.acc);
+    #print(player.trackRot);
     dt = clock.tick(FPS)
     #print(str(clock.get_fps()) + " dt:" + str(dt))
+
+    #set position of gun to always be on the player
+    gun.pos = player.pos;
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False 
         if event.type == KEYDOWN:
             if event.key == K_w:
-                print("ship go forward");
-                player.setAccel((-0.0003 * sin(player.rot * pi / 180), -0.0003 * cos(player.rot * pi / 180)));
+                #print("ship go forward");
+                player.setAccel((-player.accMag * sin(player.rot * pi / 180), -player.accMag * cos(player.rot * pi / 180)));
                 
             if event.key == K_s:
-                player.setAccel((0.0003 * sin(player.rot * pi / 180), 0.0003 * cos(player.rot * pi / 180)));
+                player.setAccel((player.accMag * sin(player.rot * pi / 180), player.accMag * cos(player.rot * pi / 180)));
                 #ship go backward
             if event.key == K_a:
                 #ship go ccw
                 player.rotv = 2;
+                player.trackRot = True;
                 pass;
             if event.key == K_d:
                 #ship go cw
                 player.rotv = -2;
+                player.trackRot = True;
                 pass;
         if event.type == KEYUP:
             if event.key == K_w:
@@ -78,9 +87,11 @@ while run:
             if event.key == K_a:
                 #player stop rotating
                 player.rotv = 0;
+                player.trackRot = False;
                 pass;
             if event.key == K_d:
                 player.rotv = 0;
+                player.trackRot = False;
                 #player stop rotating
                 pass;
         if event.type == MOUSEBUTTONDOWN:

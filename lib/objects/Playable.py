@@ -8,9 +8,9 @@ class Playable(GameObject):
         super().__init__(name, pos, size, img)
 
         # stat
-        health = 0
-        shield = 0
-        speed = 0
+        self.health = 0
+        self.shield = 0
+        self.accMag = 0;
 
         weapon = {}
 
