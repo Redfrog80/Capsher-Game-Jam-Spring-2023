@@ -6,13 +6,10 @@ import math
 import random
 from bugger_class.py import Bugger
 
-# Initialize Pygame
 pygame.init()
 
 clock = pygame.time.Clock()
 fps = 60
-
-# Set up the display
 screen_width = 1000
 screen_height = 800
 screen = pygame.display.set_mode((screen_width, screen_height))
@@ -21,7 +18,7 @@ pygame.display.set_caption("Target Practice")
 target_image = pygame.image.load(os.path.join('images', 'gameImage.png'))
 bugger_image = pygame.image.load(os.path.join('images', 'amogus.png'))
 
-buggers=[] # Initialize and spawn 4 buggers inside the dimensions of the screen
+buggers=[]
 for i in range(4):
     bugger = Bugger(0, 0)
     bugger.randomize_position(screen_width, screen_height)
