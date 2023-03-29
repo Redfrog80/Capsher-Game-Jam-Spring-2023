@@ -19,7 +19,7 @@ class Assault:
         self.max_speed_y = 2
         self.speed_multiplier = 1 # warning, this changes overall speed
         self.damp_factor = 0.3
-        self.max_follow_distance = 1000 # may not be necessary
+        self.max_follow_distance = 800 # may not be necessary
         self.hover_distance = 200
     
     def randomize_position(self, screen_width, screen_height):
@@ -118,6 +118,5 @@ while running:
     pygame.display.flip()
     clock.tick(fps) # limits FPS and keeps frames consistent
     print("tick finished")
-
 
 pygame.quit()
