@@ -2,6 +2,8 @@ import pygame
 from pygame.locals import *;
 from math import *;
 
+#print(468.51563%360);
+
 if __name__ == '__main__':
     if __package__ is None:
         import sys
@@ -16,7 +18,7 @@ if __name__ == '__main__':
 pygame.init()
 
 # initializer
-win = pygame.display.set_mode((800, 500))
+win = pygame.display.set_mode((1000, 600))
 pygame.display.set_caption("Bug shooter")
 
 # render setting
@@ -29,8 +31,8 @@ testThing1 = GameObject("reeeeeee", (1900, 1000), (64, 64));
 testThing2 = GameObject("reeeeeeee", (1300, 800), (64, 64));
 testThing3 = GameObject("reeeeeeeee", (1300, 100), (64, 64));
 
-player = Player("player", (1200, 200), (64, 64), "resources/images/directionalTest.png");
-gun = Gun("gun", (0, 0), (10, 10), "resources/images/directionalTest.png");
+player = Player("player", (0, 0), (64, 64), "resources/images/directionalTest.png");
+gun = Gun("gun", (0, 0), (10, 10), win.get_size(), "resources/images/directionalTest.png");
 
 camera = Camera("camera", (0, 0), win.get_size());
 
@@ -47,7 +49,7 @@ handler.append(player);
 camera.trackCenter(player);
 run = True
 while run:
-    #print(player.acc);
+    #print(camera.pos);
     #print(player.trackRot);
     dt = clock.tick(FPS)
     #print(str(clock.get_fps()) + " dt:" + str(dt))
