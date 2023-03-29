@@ -1,5 +1,5 @@
 
-####################### Press space to advance plot, press V to say "shield is down"
+####################### Press space to advance plot, press V to say "shield is down", B to say "sample text here"
 
 import pygame
 import os
