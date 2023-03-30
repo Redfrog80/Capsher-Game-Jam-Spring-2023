@@ -31,7 +31,7 @@ testThing1 = GameObject("reeeeeee", (1900, 1000), (64, 64));
 testThing2 = GameObject("reeeeeeee", (1300, 800), (64, 64));
 testThing3 = GameObject("reeeeeeeee", (1300, 100), (64, 64));
 
-player = Player("player", (0, 0), (64, 64), "resources/images/directionalTest.png");
+player = Player("player", (0, 0), (64, 64), "resources/images/ship.png");
 gun = Gun("gun", (0, 0), (10, 10), win.get_size(), "resources/images/directionalTest.png");
 
 camera = Camera("camera", (0, 0), win.get_size());
@@ -43,8 +43,9 @@ handler.append(testThing);
 handler.append(testThing1);
 handler.append(testThing2);
 handler.append(testThing3);
-handler.append(gun);
+
 handler.append(player);
+handler.append(gun);
 
 camera.trackCenter(player);
 run = True
