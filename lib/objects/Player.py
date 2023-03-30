@@ -54,7 +54,13 @@ class Player(Playable):
             self.acc = (-self.accMag * math.sin(self.rot * math.pi / 180), -self.accMag * math.cos(self.rot * math.pi / 180))
         self.pos = addTuple(self.pos, mulTuple(self.vel, dt))
         self.boundCenterToPos()
+        origV = self.vel;
         self.vel = addTuple(self.vel, mulTuple(self.acc, dt))
+
+        #if too fast set to preset velocity
+        if magnitude(self.vel) > 0.5:
+            self.vel = origV;
+        print(self.vel);
         # self.vel = addTuple(self.vel, (1, 1))
         # rotation
         self.rot += self.rotvel * dt

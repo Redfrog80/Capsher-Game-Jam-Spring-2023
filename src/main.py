@@ -10,9 +10,11 @@ if __name__ == '__main__':
         from os import path
         sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
         from lib.objects import *;
+        from lib.misc import *;
         #from lib.imageDict import *
     else:
         from ..lib.objects import *
+        from ..lib.misc import *;
         #from ..lib.imageDict import *
 
 pygame.init()
@@ -39,6 +41,7 @@ camera = Camera("camera", (0, 0), win.get_size());
 
 
 #handler.append(player);
+#append objects to handler in order of appearence, ex: append gun after player if it is to be displayed above the player
 handler.append(testThing);
 handler.append(testThing1);
 handler.append(testThing2);
@@ -98,6 +101,12 @@ while run:
                 #player stop rotating
                 pass;
         if event.type == MOUSEBUTTONDOWN:
+            bullet = Projectile("bullet", "b", 1);
+            bvrot = (-sin(gun.rot * (pi/180)), -cos(gun.rot * (pi/180)))
+            bullet.vel = addTuple(bvrot, player.vel);
+            bullet.pos = gun.pos;
+            #bullet.traj(gun.pos, 1, gun.rot, 1);
+            handler.append(bullet);
             print("SHOOT");
             pass;
 

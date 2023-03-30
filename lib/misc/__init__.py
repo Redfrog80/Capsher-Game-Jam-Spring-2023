@@ -1,4 +1,5 @@
 # utility function
+from math import *;
 def addTuple(a, b):
     return a[0] + b[0], a[1] + b[1]
 
@@ -16,3 +17,6 @@ def divTuple(a: tuple, b: float):
 
 def floorElementDiv(a: tuple, b: tuple):
     return a[0] // b[0], a[1] // b[1]
+
+def magnitude(a: tuple):
+    return sqrt(a[0]**2 + a[1]**2);

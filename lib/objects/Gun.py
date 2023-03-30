@@ -18,6 +18,7 @@ class Gun(GameObject):
         try:
             
             mangle = atan(subTuple(self.campos, mouse.get_pos())[0]/ subTuple(self.campos, mouse.get_pos())[1]) * (180 / pi);
+            #print(mangle);
         except:
             
             if subTuple(self.campos, mouse.get_pos())[0] > 0:
@@ -33,14 +34,17 @@ class Gun(GameObject):
         #mouse angle
         if mangle < 0:
             mangle += 180;
-        
+        #print(mangle, "pt 2");
         #gun angle
         gsimpRot = self.rot%360;
 
-        if mouse.get_pos()[0] >= self.campos[0]:
+        if mouse.get_pos()[0] > self.campos[0]:
             mangle += 180;
-        # print(mangle);
+        
+        if mouse.get_pos()[1] > self.campos[1] and mangle == 0:
+            mangle += 180;
         #print(mangle);
+        #print(mangle, gsimpRot);
         if abs(gsimpRot - mangle) < 4.1 :
             #if the angle of the mouse is close enough to the angle of the gun
             self.rot = mangle;
