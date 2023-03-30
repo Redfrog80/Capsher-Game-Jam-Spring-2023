@@ -6,7 +6,7 @@ import math
 import random
 class Bugger:
     def __init__(self, x, y):
-        self.image = pygame.image.load(os.path.join('images', 'amogus.png'))
+        self.image = pygame.image.load(os.path.join('images', 'player1.png'))
         self.x = x
         self.y = y
         self.speed_x = 0
@@ -74,7 +74,7 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Target Practice")
 
 target_image = pygame.image.load(os.path.join('images', 'gameImage.png'))
-bugger_image = pygame.image.load(os.path.join('images', 'amogus.png'))
+bugger_image = pygame.image.load(os.path.join('images', 'enemy1.png'))
 
 buggers=[] # Initialize and spawn 4 buggers inside the dimensions of the screen
 for i in range(4):
@@ -87,7 +87,7 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    screen.fill((255, 255, 255))
+    screen.fill((0,0,0))
     for bugger in buggers:
         bugger.update(0, 0)
         screen.blit(bugger_image, (bugger.x - bugger_image.get_width() / 2, bugger.y - bugger_image.get_height() / 2))
