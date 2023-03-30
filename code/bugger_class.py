@@ -1,12 +1,11 @@
-print("yeet")
-
 import pygame
 import os
 import math
 import random
+
 class Bugger:
     def __init__(self, x, y):
-        self.image = pygame.image.load(os.path.join('images', 'amogus.png'))
+        self.image = pygame.image.load("resources/images/amogus.png")
         self.x = x
         self.y = y
         self.speed_x = 0
@@ -24,7 +23,6 @@ class Bugger:
         self.y = random.randint(0, screen_height)
 
     def update(self, player_x, player_y):
-
         player_x, player_y = pygame.mouse.get_pos() # makes bot follow mouse
         self.dir_x = player_x - self.x
         self.dir_y = player_y - self.y
@@ -73,8 +71,8 @@ screen_height = 800
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Target Practice")
 
-target_image = pygame.image.load(os.path.join('images', 'gameImage.png'))
-bugger_image = pygame.image.load(os.path.join('images', 'amogus.png'))
+target_image = pygame.image.load("resources/images/amogus.png")
+bugger_image = pygame.image.load("resources/images/amogus.png")
 
 buggers=[] # Initialize and spawn 4 buggers inside the dimensions of the screen
 for i in range(4):

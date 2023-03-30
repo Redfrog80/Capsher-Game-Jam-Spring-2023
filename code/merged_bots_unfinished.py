@@ -4,7 +4,7 @@ import pygame
 import os
 import math
 import random
-from bugger_class.py import Bugger
+from bugger_class import Bugger
 
 pygame.init()
 
@@ -15,8 +15,8 @@ screen_height = 800
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Target Practice")
 
-target_image = pygame.image.load(os.path.join('images', 'gameImage.png'))
-bugger_image = pygame.image.load(os.path.join('images', 'amogus.png'))
+target_image = pygame.image.load("resources/images/amogus.png")
+bugger_image = pygame.image.load("resources/images/amogus.png")
 
 buggers=[]
 for i in range(4):

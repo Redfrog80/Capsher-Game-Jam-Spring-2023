@@ -6,7 +6,7 @@ import math
 import random
 class Assault:
     def __init__(self, x, y):
-        self.image = pygame.image.load(os.path.join('images', 'amogus.png'))
+        self.image = pygame.image.load("resources/images/amogus.png")
         self.x = x
         self.y = y
         self.speed_x = 0
@@ -91,8 +91,8 @@ screen_height = 800
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Target Practice")
 
-target_image = pygame.image.load(os.path.join('images', 'gameImage.png'))
-assault_image = pygame.image.load(os.path.join('images', 'amogus.png'))
+# target_image = pygame.image.load(os.path.join('images', 'gameImage.png'))
+assault_image = pygame.image.load("resources/images/amogus.png")
 
 assaults=[] # Initialize and spawn 10 assaults inside the dimensions of the screen
 for i in range(10):

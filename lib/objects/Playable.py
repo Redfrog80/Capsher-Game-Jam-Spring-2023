@@ -12,17 +12,18 @@ class Playable(GameObject):
         self.shield = 0
         self.healthMax = 0
         self.shieldMax = 0
-        self.speed = 0
         self.speedMax = 0
-        self.rotspeedMax = 0
+        self.acc_lin = 0
+        self.rotSpeedMax = 0
 
-    def setStat(self, s: float, h: float, shm: float, hm: float, sm: float, rm: float):
+    def setStat(self, s: float, a: float, h: float, shm: float, hm: float, sm: float, rm: float):
         self.shield = s
         self.health = h
         self.shieldMax = shm
         self.healthMax = hm
+        self.acc_lin = a
         self.speedMax = sm
-        self.rotspeedMax = rm
+        self.rotSpeedMax = rm
 
     def isDead(self):
         return self.health <= 0

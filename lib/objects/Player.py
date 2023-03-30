@@ -11,12 +11,13 @@ class Player(Playable):
     def __init__(self, name: str = "", pos: tuple = (0, 0), size: tuple = (0, 0),
                  img: str = "resources/images/notfound.png"):
         super().__init__(name, pos, size, img)
+        self.speed = 0  # will be remove once merge with Hao's player code
 
     def rotateLeft(self):
-        self.rotvel = self.rotspeedMax
+        self.rotvel = self.rotSpeedMax
 
     def rotateRight(self):
-        self.rotvel = -self.rotspeedMax
+        self.rotvel = -self.rotSpeedMax
 
     def goForward(self):
         self.speed = self.speedMax

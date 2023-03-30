@@ -1,4 +1,5 @@
-from lib import objects
+from lib import objects, enemy
+
 import pygame
 import random
 
@@ -16,16 +17,17 @@ camera = objects.Camera("cam", (0, 0), win.get_size())
 
 player = objects.Player("player", (0, 0), (64, 64), "resources/images/ship.png")
 player.matchTextureToBoundary()
-player.setStat(0, 100, 0, 100, 500, 360)
+player.setStat(0, 200, 100, 0, 100, 500, 360)
 # camera track second object
 camera.trackCenter(player)
 
 
-def createEnemy(name, pos):
-    enemy = objects.Enemy(name, pos, (100, 100))
-    enemy.matchTextureToBoundary()
-    enemy.setStat(0, 50, 0, 50, 200, 200)
-    return enemy
+def createEnemy(name, pos, target):
+    new_enemy = enemy.Assault(name, pos, (60, 60))
+    new_enemy.matchTextureToBoundary()
+    new_enemy.setStat(0, 100, 50, 0, 50, 100, 200)
+    new_enemy.follow_config(target, 300, .9, 100)
+    return new_enemy
 
 
 def chance(c):
@@ -41,8 +43,9 @@ def randDist(obj: objects.GameObject):
 # countEnemy = 0
 RAND_SPAWN = pygame.USEREVENT+1
 pygame.time.set_timer(RAND_SPAWN, 1000)
+an_enemy = createEnemy("ee", randDist(player), player)
+everything = {player.name: player, an_enemy.name: an_enemy}  # everything
 
-everything = {player.name: player}  # everything
 destroylist = []
 
 
@@ -53,13 +56,13 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-        if event.type == RAND_SPAWN and chance(50):
+        if event.type == RAND_SPAWN and chance(50):  # off
             for i in range(random.randint(0, 3)):
                 while True:
                     # prevent overwriting key
                     nametest = "enemy" + str(random.randint(0, 1000))
                     if nametest not in everything:
-                        everything.update({nametest: createEnemy(nametest, randDist(player))})
+                        everything.update({nametest: createEnemy(nametest, randDist(player), player)})
                         break
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:

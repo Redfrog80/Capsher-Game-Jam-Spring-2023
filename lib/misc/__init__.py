@@ -14,5 +14,15 @@ def mulTuple(a: tuple, b: float):
 def divTuple(a: tuple, b: float):
     return a[0] / b, a[1] / b
 
+
 def floorElementDiv(a: tuple, b: tuple):
     return a[0] // b[0], a[1] // b[1]
+
+
+def capRange(a, lo, hi):
+    if a < lo:
+        return lo
+    elif a > hi:
+        return hi
+    else:
+        return a
