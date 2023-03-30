@@ -97,11 +97,11 @@ while run:
                 #player stop rotating
                 pass;
         if event.type == MOUSEBUTTONDOWN:
-            #SHOOT
+            print("SHOOT");
             pass;
 
     camera.update();
-    win.fill((255, 255, 255));
+    win.fill((70, 70, 70));
     for i in handler:
         i.render(win, camera);
         i.update(dt);
