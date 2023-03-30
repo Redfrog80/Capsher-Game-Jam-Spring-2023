@@ -16,14 +16,18 @@ class Gun(GameObject):
         mangle = 0;
         #print(mouse.get_pos(), self.pos);
         try:
+            
             mangle = atan(subTuple(self.campos, mouse.get_pos())[0]/ subTuple(self.campos, mouse.get_pos())[1]) * (180 / pi);
         except:
+            
             if subTuple(self.campos, mouse.get_pos())[0] > 0:
-                mangle = 180;
+                print("poo");
+                mangle = 90;
             if subTuple(self.campos, mouse.get_pos())[0] < 0:
-                mangle = -180;
-            else:
-                mangle = 0;
+                mangle = -90;
+            #else:
+                #mangle = 0;
+            #print(subTuple(self.campos, mouse.get_pos())[0], mangle);
         #make angle positive, make rotaton <360 for gun
 
         #mouse angle
@@ -33,10 +37,10 @@ class Gun(GameObject):
         #gun angle
         gsimpRot = self.rot%360;
 
-        if mouse.get_pos()[0] > self.campos[0]:
+        if mouse.get_pos()[0] >= self.campos[0]:
             mangle += 180;
         # print(mangle);
-
+        print(mangle);
         if abs(gsimpRot - mangle) < 4.1 :
             #if the angle of the mouse is close enough to the angle of the gun
             self.rot = mangle;

@@ -12,7 +12,7 @@ class Player(Playable):
                  img: str = "resources/images/notfound.png"):
         super().__init__(name, pos, size, img)
         self.trackRot = False
-        self.accMag = 0.001;
+        self.accMag = 0.0003;
 
     def rotateLeft(self):
         self.rotvel = self.rotspeedMax
