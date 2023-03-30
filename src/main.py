@@ -69,12 +69,12 @@ while run:
                 #ship go backward
             if event.key == K_a:
                 #ship go ccw
-                player.rotv = 2;
+                player.rotvel = 0.1;
                 player.trackRot = True;
                 pass;
             if event.key == K_d:
                 #ship go cw
-                player.rotv = -2;
+                player.rotvel = -0.1;
                 player.trackRot = True;
                 pass;
         if event.type == KEYUP:
@@ -88,11 +88,11 @@ while run:
                 player.setAccel((0, 0));
             if event.key == K_a:
                 #player stop rotating
-                player.rotv = 0;
+                player.rotvel = 0;
                 player.trackRot = False;
                 pass;
             if event.key == K_d:
-                player.rotv = 0;
+                player.rotvel = 0;
                 player.trackRot = False;
                 #player stop rotating
                 pass;
