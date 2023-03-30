@@ -2,7 +2,6 @@ from ..misc import *
 from .Base import Base
 from .Camera import Camera
 from pygame import image, surface, transform
-from pygame.rect import Rect;
 
 
 class GameObject(Base):
@@ -21,6 +20,10 @@ class GameObject(Base):
         """match size of boundary to texture"""
         self.boundary.update(subTuple(self.pos, divTuple(self.texture.get_size(), 2)), self.texture.get_size())
 
+    def matchTextureToBoundary(self):
+        """match size of texture to boundary"""
+        self.texture = transform.scale(self.texture, self.boundary.size)
+
     def render(self, screen: surface, cam: Camera):
         if self.checkCollision(cam):  # render when object collide with camera view
             #if self.rot == 0:
@@ -30,10 +33,8 @@ class GameObject(Base):
                 dummy = divTuple(subTuple(img0.get_size(), self.boundary.size), 2)
                 screen.blit(img0, subTuple(subTuple(self.boundary.topleft, cam.boundary.topleft), dummy))
 
-    def update(self, dt: float):
-        """update pos, then vel, then rotation"""
-        self.pos = addTuple(self.pos, mulTuple(self.vel, dt))
-        self.boundCenterToPos()
-        self.vel = addTuple(self.vel, mulTuple(self.acc, dt))
-        self.rot += self.rotv;
-        #self.boundary = Rect(self.pos, self.size);
+    def update(self, dt: float, **kwargs):
+        pass
+
+    def get_boundary_corners(self):
+        return (self.boundary.topleft,self.boundary.topright, self.boundary.bottomleft, self.boundary.bottomright)
