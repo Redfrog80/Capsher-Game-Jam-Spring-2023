@@ -16,28 +16,37 @@ from gameWorld import gameWorld
 pygame.init()
 
 # initializer
-screen = pygame.display.set_mode((800, 800), pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.SCALED, vsync=0)
-pygame.display.set_caption("Bug shooter")
+
+window_dim, tile_dim = (800,800), (50,50)
+screen = pygame.display.set_mode(window_dim, pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.SCALED, vsync=0)
+pygame.display.set_caption("test")
 
 # render setting
 FPS = 120
 clock = pygame.time.Clock()
 
-camera = Camera("cam", (0, 0), size = screen.get_size())
+camera = Camera("camera", (0, 0), size = screen.get_size())
 
-world = gameWorld(((0,0),(800,800)),(100,100),camera)
-world.add_game_object("Player",GameObject("dummyTag", (400, 400), (100, 100)))
-world.add_game_object("object",GameObject("dummyTag", (400, 400), (0, 0)))
-world.set_tracked_object("object")
+world = gameWorld(((0,0),(800,800)),tile_dim,camera)
+world.add_game_object("Player",GameObject("IWANTTOMOVETHIS", (401, 400), (0, 0), img = "resources/images/player.png"))
+world.add_game_object("object",GameObject("object", (400, 400), (0, 0)))
+world.set_tracked_object("Player")
 
-def defaultUpdate(dt,object, key):
+def defaultUpdate(self, dt, object, key):
     object.boundCenterToPos()
     object.pos = addTuple(object.pos, mulTuple(object.vel, dt))
     object.vel = addTuple(object.vel, mulTuple(object.acc, dt))
 
-def drag(dt,object, key):
-    object.vel = subTuple(object.vel, mulTuple(object.vel, dt * 0.5))
-    print(object.vel)
+# This is temporary - just for prototyping
+def drag(self, dt, object, key):
+    if object.name!="IWANTTOMOVETHIS":
+        object.vel = subTuple(object.vel, mulTuple(object.vel, dt * 200))
+    else:
+        object.vel = subTuple(object.vel, mulTuple(object.vel, dt * 2))
+
+def dragToMouse(self, dt, object, key):
+    if object.name=="IWANTTOMOVETHIS":
+        object.vel = addTuple(object.vel,mulTuple(unitTuple(addTuple(pygame.mouse.get_pos(),self.__camera__.boundary.topleft),object.pos), 1000*dt))
 
 run = True
 while run:
@@ -48,11 +57,12 @@ while run:
             run = False 
             
     
-    screen.fill((255, 255, 255))
+    screen.fill((5, 5, 15))
     
+    world.render_tile_map(screen)
     world.render(screen)
     
-    world.update(dt,defaultUpdate, drag)
+    world.update(dt,defaultUpdate, drag, dragToMouse)
     
     pygame.display.flip()
     
