@@ -33,7 +33,7 @@ class Gun(GameObject):
 
         if mouse.get_pos()[0] > self.campos[0]:
             mangle += 180;
-        print(mangle);
+        # print(mangle);
 
         if abs(gsimpRot - mangle) < 2.1 :
             #if the angle of the mouse is close enough to the angle of the gun
