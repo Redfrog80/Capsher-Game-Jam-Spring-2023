@@ -5,8 +5,8 @@ from lib.misc import *
 from lib.objects import Camera, GameObject
 
 class gameWorld:
-    def __init__(self, dimensions : tuple, tiledim : tuple, camera : Camera) -> None:
-        self.__dim__ = dimensions # two tuples, top left cord, bottom right cord
+    def __init__(self, dimensions : Rect, tiledim : tuple, camera : Camera) -> None:
+        self.__dim__ = dimensions
         self.__tiledim__ = tiledim
         self.__camera__ = camera
         self.__game_objects__ = {}
@@ -36,16 +36,25 @@ class gameWorld:
             for fun in args:
                 fun(self = self, dt = dt, key = key, object = obj)
 
-        # Primative collision
         self.__update_tile_map__()
-        for key in self.tileMap:
-            if len(self.tileMap[key]) > 1:
-                for key_a in self.tileMap[key]:
-                    for key_b in self.tileMap[key]:
-                        if key_a!=key_b and Rect.colliderect(self.__game_objects__[key_a].boundary, self.__game_objects__[key_b].boundary):
-                            obj_a = self.__game_objects__[key_a]
-                            obj_b = self.__game_objects__[key_b]
-                            obj_a.vel = addTuple(obj_a.vel, mulElements(mulTuple(unitTuple(obj_a.boundary.center,obj_b.boundary.center), 10*dt), self.__tiledim__))
+        # for key in self.tileMap:
+        #     if len(self.tileMap[key]) > 1:
+        #         for key_a in self.tileMap[key]:
+        #             for key_b in self.tileMap[key]:
+        #                 if key_a!=key_b and Rect.colliderect(self.__game_objects__[key_a].boundary, self.__game_objects__[key_b].boundary):
+        #                     obj_a = self.__game_objects__[key_a]
+        #                     obj_b = self.__game_objects__[key_b]
+        #                     obj_a.boundCenterToPos()
+        #                     obj_b.boundCenterToPos()
+        #                     b_a = obj_a.boundary
+        #                     b_b = obj_b.boundary
+        #                     # obj_a.vel = addTuple(obj_a.vel, elementDiv(mulTuple(unitTuple(obj_a.boundary.center,obj_b.boundary.center), 1000*dt), self.__tiledim__))
+        #                     if (b_a.top < b_b.bottom and not b_b.top < b_a.bottom):
+        #                         v_a, v_b = obj_a.vel[1], obj_b.vel[1]
+        #                         obj_a.vel = (obj_b.vel[0],v_b-v_a)
+        #                         obj_b.vel = (obj_a.vel[0],v_a-v_b)
+
+        pass
                 
     def render(self, screen : surface, *args):
         for key in self.__game_objects__:
