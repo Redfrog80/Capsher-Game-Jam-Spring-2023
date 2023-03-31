@@ -113,8 +113,9 @@ while run:
     camera.update();
     win.fill((70, 70, 70));
     for i in handler:
-        i.render(win, camera);
         i.update(dt);
+        i.render(win, camera);
+        
     pygame.display.update();
     
 pygame.quit()
