@@ -10,7 +10,7 @@ class Gun(GameObject):
         super().__init__(name, pos, size, img);
         self.campos = divTuple(campos, 2);
 
-    def update(self, dt: float):
+    def update(self, dt: float, **kwargs):
 
         #mouse angle calculations
         mangle = 0;
