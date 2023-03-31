@@ -46,22 +46,22 @@ plot_text = [                       # defines a list of text
     "i’m not a hero",
     "(This is when QUEEN spawns)",
     "and they're not monsters",
-    "<<DIE>>",
+    "die",
     "(player kills QUEEN)",
-    "<<MURDERER>>",
-    "but i killed them all",
+    "murderer",
+    "and yet, i killed them all",
     "i didn't know it was genocide",
     "i didn't know they would all die",
-    "BUT THE EMPEROR KNEW",
-    "my son. i’m not the hero you think i am",
+    "but the emperor did...",
+    "i’m not the hero you think i am",
     "there’s something I need to do",
     "(This is when EMPEROR spawns in front of the player)",
+    "<<WHAT ARE YOU DOING?>>",
     "(player kills EMPEROR)",
     "(if player runs into EMPEROR, kill both immediately)",
     "turns out we're the monsters",
     "see ya round, kid (explodes)",
 ]
-
 
 
 text_index = 0
