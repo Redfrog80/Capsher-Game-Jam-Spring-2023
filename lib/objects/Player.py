@@ -1,6 +1,6 @@
 from .Playable import Playable
 import math
-from misc import *
+from ..misc import *
 from .Gun import Gun
 from .Camera import Camera
 from pygame import image, surface, transform
@@ -58,15 +58,14 @@ class Player(Playable):
             self.gun.render(screen, cam)
 
     def update(self, dt: float, **kwargs):
-        # if self.trackRot and self.acc != (0, 0):
-        self.acc = (-self.acc_lin * math.sin(self.rot * math.pi / 180), -self.acc_lin * math.cos(self.rot * math.pi / 180))
+        if self.trackRot and self.acc != (0, 0):
+            self.acc = (-self.acc_lin * math.sin(self.rot * math.pi / 180), -self.acc_lin * math.cos(self.rot * math.pi / 180))
         self.pos = addTuple(self.pos, mulTuple(self.vel, dt))
         self.boundCenterToPos()
         origV = self.vel
         self.vel = addTuple(self.vel, mulTuple(self.acc, dt))
         #if too fast set to preset velocity
-        if magnitude(self.vel) > self.speedMax:
-            self.vel = origV
+        # print(self.vel)
         self.rot += self.rotvel * dt
         # udpate gun
         self.gun.update(dt, **kwargs)

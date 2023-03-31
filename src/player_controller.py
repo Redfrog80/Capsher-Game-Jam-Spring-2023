@@ -8,17 +8,12 @@ from math import *
 
 
 class player_controller:
-    def __init__(self, player_object :Player, game_world : gameWorld, gun : Gun = None) -> None:
+    def __init__(self, player_object :Player, game_world : gameWorld) -> None:
         self.player = player_object
         self.world = game_world
         self.run = True
-        if gun:
-            self.attach_gun_to_player(gun)
-        
-    def attach_gun_to_player(self, gun : Gun):
-        self.gun = gun
-        self.gun.trackCenter(self.player)
-    
+        self.bullet_num = 0
+
     def update_player(self, dt):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -57,11 +52,8 @@ class player_controller:
                     self.player.rotvel = 0;
                     self.player.trackRot = False
                     pass;
-            if event.type == MOUSEBUTTONDOWN and self.gun:
-                bullet = Projectile("bullet", 1);
-                bvrot = (-sin(self.gun.rot * (pi/180)) * 1000, -cos(self.gun.rot * (pi/180)) * 1000)
-                bullet.vel = addTuple(bvrot, self.player.vel);
-                bullet.pos = self.gun.pos;
-                #bullet.traj(gun.pos, 1, gun.rot, 1);
-                self.world.add_game_object("player_bullet",bullet)
+            if event.type == MOUSEBUTTONDOWN:
+
+                self.world.add_game_object("player_bullet",self.player.shoot(str(self.bullet_num)))
+                self.bullet_num += 1
         return True

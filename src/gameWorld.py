@@ -1,5 +1,6 @@
 from gc import garbage
 from pygame import surface, Rect, font
+import pygame
 from lib.ImageDict import ImageDict
 from lib.misc import *
 from lib.objects import Camera, GameObject
@@ -34,7 +35,7 @@ class gameWorld:
                 r.bottom > b.bottom or
                 r.right > b.right):
                 world.__garbage__.append((key,object.name))
-                print(world.__garbage__)
+
 
         else:
             if (r.top < b.top):
@@ -70,7 +71,7 @@ class gameWorld:
         for key in self.__game_objects__:
             for object_key in self.__game_objects__[key]:
                 object = self.__game_objects__[key][object_key]
-                object.update(dt)
+                object.update(dt, mousepos = pygame.mouse.get_pos())
                 
                 self.border_behavior(dt = dt, key = key, object = object)
                 

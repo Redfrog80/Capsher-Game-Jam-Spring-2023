@@ -12,9 +12,10 @@ class Projectile(GameObject):
         """
         super().__init__(name=name, pos=(0, 0), size=size, img=img)
         self.matchTextureToBoundary()  # small bullet
+        print(self.boundary.size)
         self.dmg = dmg
 
-    def traj(self, pos: tuple, speed: float, rot: float, speed_amp: float):
+    def traj(self, pos: tuple, gun_velocity: tuple, speed: float, rot: float, speed_amp: float):
         """
         :param speed: projectTile Speed
         :param rot: rotation
@@ -23,7 +24,7 @@ class Projectile(GameObject):
         """
         self.rot = rot
         self.pos = pos
-        self.vel = (-speed*math.sin(math.radians(self.rot))*speed_amp, -speed*math.cos(math.radians(self.rot))*speed_amp)
+        self.vel = addTuple(gun_velocity,(-speed*math.sin(math.radians(self.rot))*speed_amp, -speed*math.cos(math.radians(self.rot))*speed_amp))
 
     def update(self, dt: float, **kwargs):
         self.pos = addTuple(self.pos, mulTuple(self.vel, dt))

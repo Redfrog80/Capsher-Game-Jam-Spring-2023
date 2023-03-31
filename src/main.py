@@ -33,18 +33,19 @@ camera = Camera("camera", (0, 0), size = screen.get_size())
 
 world = gameWorld(pygame.Rect(-100000, -100000,100000,100000),tile_dim,camera)
 
-player = Player("player", (0, 0), (64, 64), img="resources/images/ship.png");
+player = Player("player", (0, 0), (64, 64), screen.get_size(), img="resources/images/player1.png");
+player.setTextureSize((50,50))
 player.setStat(100,100,100,100,1000,100,200)
-gun = Gun("gun", (0, 0), (10, 10), screen.get_size(), "resources/images/directionalTest.png");
 
-controller = player_controller(player, world, gun)
+controller = player_controller(player, world)
 
 world.add_game_object("Player",player)
-world.add_game_object("Player_gun",gun)
+
 world.set_tracked_object("Player", "player")
 
 for i in range(1000):
-    enemy = Enemy(str(i), (i*1%2000, 200), (0, 0), img = "resources/images/notfoundTiny.png")
+    enemy = Enemy(str(i), (i*1%2000, 200), (0, 0), img = "resources/images/enemy1.png")
+    enemy.setTextureSize((10,10))
     enemy.setStat(0, 100, 50, 0, 1000, 100, 200)
     enemy.follow_config(player,500, 0.9, 100)
     world.add_game_object("enemy",enemy)
