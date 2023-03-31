@@ -10,7 +10,7 @@ class Player(Playable):
     """
     def __init__(self, name: str = "", pos: tuple = (0, 0), size: tuple = (0, 0),
                  img: str = "resources/images/notfound.png"):
-        super().__init__(name, pos, size, img)
+        super().__init__(name=name, pos=pos, size=size, img=img)
         self.speed = 0  # will be remove once merge with Hao's player code
         self.trackRot = False
         self.accMag = 0.0003
@@ -61,7 +61,6 @@ class Player(Playable):
         #if too fast set to preset velocity
         if magnitude(self.vel) > 0.5:
             self.vel = origV
-        print(self.vel)
         # self.vel = addTuple(self.vel, (1, 1))
         # rotation
         self.rot += self.rotvel * dt

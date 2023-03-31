@@ -10,57 +10,69 @@ class gameWorld:
         self.__camera__ = camera
         self.__game_objects__ = {}
         self.tileMap = {} 
+        self.border_behavior = self.border_default
     
     def __update_tile_map__(self):
         self.tileMap = {}
         for key in self.__game_objects__:
-            boundary = self.__game_objects__[key].boundary
-            topLeft, bottomRight = [floorElementDiv(i,self.__tiledim__) for i in [boundary.topleft, boundary.bottomright]]
-            for tup in [(i,j) for i in range(topLeft[0],bottomRight[0]+1) for j in range(topLeft[1],bottomRight[1]+1)]:
-                old = self.tileMap.get(tup,[])
-                self.tileMap[tup] = [key] + old
+            for object in self.__game_objects__[key]:
+                boundary = object.boundary
+                topLeft, bottomRight = [floorElementDiv(i,self.__tiledim__) for i in [boundary.topleft, boundary.bottomright]]
+                for tup in [(i,j) for i in range(topLeft[0],bottomRight[0]+1) for j in range(topLeft[1],bottomRight[1]+1)]:
+                    self.tileMap[tup] = [key] + self.tileMap.get(tup,[])
+    
+    def border_default(world, dt, key, object):
+        object.boundCenterToPos()
+        r = object.boundary
+        b = world.__dim__
+        
+        if (r.top < b.top):
+            object.pos = (object.pos[0], object.pos[1] + b.top - r.top)
+            object.vel = (object.vel[0],-object.vel[1])
+        if (r.left < b.left):
+            object.pos = (object.pos[0] + b.left - r.left, object.pos[1])
+            object.vel = (-object.vel[0],object.vel[1])
+
+        if (r.bottom > b.bottom):
+            object.pos = (object.pos[0], object.pos[1] + b.bottom - r.bottom)
+            object.vel = (object.vel[0],-object.vel[1])
+        if (r.right > b.right):
+            object.pos = (object.pos[0] + b.right - r.right, object.pos[1])
+            object.vel = (-object.vel[0],object.vel[1])
+
     
     def add_game_object(self, key : str, object : GameObject):
-        self.__game_objects__[key] = object
+        self.__game_objects__[key] = [object] + self.__game_objects__.get(key,[])
     
-    def set_tracked_object(self, key):
-        self.__camera__.trackCenter(self.__game_objects__[key])
+    def set_tracked_object(self, key, name):
+        for object in self.__game_objects__[key]:
+            if object.name == name:
+                self.__camera__.trackCenter(object)
     
     # args will be functions which we want to apply to every object, but we don't want in our object classes
     def update(self, dt : float, *args):
         self.__camera__.update()
         for key in self.__game_objects__:
-            obj = self.__game_objects__[key]
-            obj.update(dt)
-            for fun in args:
-                fun(self = self, dt = dt, key = key, object = obj)
+            for object in self.__game_objects__[key]:
+                object.update(dt)
+                
+                self.border_behavior(dt = dt, key = key, object = object)
+                
+                for fun in args:
+                    fun(world = self, dt = dt, key = key, object = object)
 
         self.__update_tile_map__()
-        # for key in self.tileMap:
-        #     if len(self.tileMap[key]) > 1:
-        #         for key_a in self.tileMap[key]:
-        #             for key_b in self.tileMap[key]:
-        #                 if key_a!=key_b and Rect.colliderect(self.__game_objects__[key_a].boundary, self.__game_objects__[key_b].boundary):
-        #                     obj_a = self.__game_objects__[key_a]
-        #                     obj_b = self.__game_objects__[key_b]
-        #                     obj_a.boundCenterToPos()
-        #                     obj_b.boundCenterToPos()
-        #                     b_a = obj_a.boundary
-        #                     b_b = obj_b.boundary
-        #                     # obj_a.vel = addTuple(obj_a.vel, elementDiv(mulTuple(unitTuple(obj_a.boundary.center,obj_b.boundary.center), 1000*dt), self.__tiledim__))
-        #                     if (b_a.top < b_b.bottom and not b_b.top < b_a.bottom):
-        #                         v_a, v_b = obj_a.vel[1], obj_b.vel[1]
-        #                         obj_a.vel = (obj_b.vel[0],v_b-v_a)
-        #                         obj_b.vel = (obj_a.vel[0],v_a-v_b)
+        # NEED Way TO GROUP COLLIDED OBJECTS WITHOUT DUPLICATES...
 
         pass
                 
     def render(self, screen : surface, *args):
         for key in self.__game_objects__:
-            obj = self.__game_objects__[key]
-            obj.render(screen, self.__camera__)
-            for fun in args:
-                fun(self = self, screen = screen, key = key, object = obj)
+            for object in self.__game_objects__[key]:
+                object.render(screen, self.__camera__)
+            
+                for fun in args:
+                    fun(self = self, screen = screen, key = key, object = object)
     
     def render_tile_map(self,screen):
         for tile in self.tileMap:

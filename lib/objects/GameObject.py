@@ -10,7 +10,7 @@ class GameObject(Base):
     """
     def __init__(self, name: str = "", pos: tuple = (0, 0), vel: tuple = (0, 0), acc: tuple = (0, 0), size: tuple = (0, 0),
                  img: str = "resources/images/notfound.png"):
-        super().__init__(name, pos, vel, acc, size)
+        super().__init__(name=name, pos=pos, vel=vel, acc=acc, size=size)
         self.texture = image.load(img)
         self.matchBoundaryToTexture()
 

@@ -10,7 +10,7 @@ class Projectile(GameObject):
         since we're using rectangle collider, all bullet will be small square to prevent bug when bullet travel at an
         angle
         """
-        super().__init__(name, (0, 0), size, img)
+        super().__init__(name=name, pos=(0, 0), size=size, img=img)
         self.matchTextureToBoundary()  # small bullet
         self.dmg = dmg
         self.tag = tag

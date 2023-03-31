@@ -7,11 +7,20 @@ from .Camera import Camera;
 
 class Gun(GameObject):
     def __init__(self, name: str = "", pos: tuple = ..., size: tuple = ..., campos: tuple = ..., img: str = "resources/images/notfound.png"):
-        super().__init__(name, pos, size, img);
-        self.campos = divTuple(campos, 2);
+        super().__init__(name=name, pos=pos, size=size, img=img);
+        self.campos = divTuple(campos, 2);        
+        self.follow = None
+
+    # Use this to attach the gun to something
+    def trackCenter(self, other_object):
+        self.follow = other_object
 
     def update(self, dt: float):
-
+        # Sets the center position to the object it is attached to
+        if self.follow is not None:
+            self.pos = addTuple(self.pos, subTuple(self.follow.boundary.center, self.boundary.center))
+            self.boundCenterToPos()
+        
         #mouse angle calculations
         mangle = 0;
         #print(mouse.get_pos(), self.pos);
@@ -22,7 +31,6 @@ class Gun(GameObject):
         except:
             
             if subTuple(self.campos, mouse.get_pos())[0] > 0:
-                print("poo");
                 mangle = 90;
             if subTuple(self.campos, mouse.get_pos())[0] < 0:
                 mangle = -90;
