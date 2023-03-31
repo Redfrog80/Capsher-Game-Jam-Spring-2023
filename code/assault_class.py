@@ -99,7 +99,8 @@ for i in range(10):
     assault = Assault(0, 0)
     assault.randomize_position(screen_width, screen_height)
     assaults.append(assault)
-    
+
+
 running = True # Makes sure game closes after manually quitting. On Mac it won't otherwise.
 while running:
     # Handle events

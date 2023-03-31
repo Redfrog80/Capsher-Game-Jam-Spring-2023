@@ -11,7 +11,7 @@ class GameObject(Base):
     def __init__(self, name: str = "", pos: tuple = (0, 0), vel: tuple = (0, 0), acc: tuple = (0, 0), size: tuple = (0, 0),
                  img: str = "resources/images/notfound.png"):
         super().__init__(name=name, pos=pos, vel=vel, acc=acc, size=size)
-        self.texture = image.load(img)
+        self.texture = image.load(img).convert_alpha()
         self.matchBoundaryToTexture()
 
     def checkCollision(self, other: Base):
@@ -25,14 +25,15 @@ class GameObject(Base):
         """match size of texture to boundary"""
         self.texture = transform.scale(self.texture, self.boundary.size)
 
+    def setTextureSize(self, size: tuple):
+        self.texture = transform.scale(self.texture, size)
+        self.matchBoundaryToTexture()
+
     def render(self, screen: surface, cam: Camera):
         if self.checkCollision(cam):  # render when object collide with camera view
-            #if self.rot == 0:
-                #screen.blit(self.texture, subTuple(self.boundary.topleft, cam.boundary.topleft))
-            #else:
-                img0 = transform.rotate(self.texture, self.rot)
-                dummy = divTuple(subTuple(img0.get_size(), self.boundary.size), 2)
-                screen.blit(img0, subTuple(subTuple(self.boundary.topleft, cam.boundary.topleft), dummy))
+            img0 = transform.rotate(self.texture, self.rot)
+            dummy = divTuple(subTuple(img0.get_size(), self.boundary.size), 2)
+            screen.blit(img0, subTuple(subTuple(self.boundary.topleft, cam.boundary.topleft), dummy))
 
     def update(self, dt: float, **kwargs):
         pass
