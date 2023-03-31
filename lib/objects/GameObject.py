@@ -30,6 +30,7 @@ class GameObject(Base):
         self.matchBoundaryToTexture()
 
     def render(self, screen: surface, cam: Camera):
+        
         if self.checkCollision(cam):  # render when object collide with camera view
             img0 = transform.rotate(self.texture, self.rot)
             dummy = divTuple(subTuple(img0.get_size(), self.boundary.size), 2)
