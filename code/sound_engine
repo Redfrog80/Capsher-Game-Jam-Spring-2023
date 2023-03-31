@@ -73,13 +73,10 @@ def runPyGame():
   #pygame.mixer.Sound.play(death_sound)
 
 ################################################################################
-  x = 0
-  # Main game loop.
   dt = 1/fps # dt is the time since last frame.
   while True:
     update(dt)
     x += 1/60
-    print(f"seconds passed: {x}")
     draw(screen)
     dt = fpsClock.tick(fps)
 runPyGame()
