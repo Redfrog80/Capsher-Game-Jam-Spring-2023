@@ -1,6 +1,6 @@
 import pygame
-from pygame.locals import *;
-from math import *;
+from pygame.locals import *
+from math import *
 
 #print(468.51563%360);
 
@@ -9,12 +9,12 @@ if __name__ == '__main__':
         import sys
         from os import path
         sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
-        from lib.objects import *;
-        from lib.misc import *;
+        from lib.objects import *
+        from lib.misc import *
         #from lib.imageDict import *
     else:
         from ..lib.objects import *
-        from ..lib.misc import *;
+        from ..lib.misc import *
         #from ..lib.imageDict import *
 
 pygame.init()
@@ -27,7 +27,7 @@ pygame.display.set_caption("Bug shooter")
 FPS = 120
 clock = pygame.time.Clock()
 
-handler = [];
+handler = []
 testThing = GameObject("reeeeee", (100, 100), (64, 64));
 testThing1 = GameObject("reeeeeee", (1900, 1000), (64, 64));
 testThing2 = GameObject("reeeeeeee", (1300, 800), (64, 64));
@@ -66,40 +66,24 @@ while run:
         if event.type == KEYDOWN:
             if event.key == K_w:
                 #print("ship go forward");
-                player.setAccel((-player.accMag * sin(player.rot * pi / 180), -player.accMag * cos(player.rot * pi / 180)));
-                
+                player.goForward()
+
             if event.key == K_s:
-                player.setAccel((player.accMag * sin(player.rot * pi / 180), player.accMag * cos(player.rot * pi / 180)));
+                player.goForward()
                 #ship go backward
             if event.key == K_a:
-                #ship go ccw
-                player.rotvel = 0.1;
-                player.trackRot = True;
-                pass;
+                player.rotateLeft()
             if event.key == K_d:
-                #ship go cw
-                player.rotvel = -0.1;
-                player.trackRot = True;
-                pass;
+                player.rotateRight()
         if event.type == KEYUP:
             if event.key == K_w:
-                #print("ship go forward");
-                #stop acceleration
-                player.setAccel((0, 0));
-                
+                player.goForwardStop()
             if event.key == K_s:
-                #stop acceleration
-                player.setAccel((0, 0));
+                player.goBackStop()
             if event.key == K_a:
-                #player stop rotating
-                player.rotvel = 0;
-                player.trackRot = False;
-                pass;
+                player.rotateLeftStop()
             if event.key == K_d:
-                player.rotvel = 0;
-                player.trackRot = False;
-                #player stop rotating
-                pass;
+                player.rotateRightStop()
         if event.type == MOUSEBUTTONDOWN:
             bullet = Projectile("bullet", "b", 1);
             bvrot = (-sin(gun.rot * (pi/180)), -cos(gun.rot * (pi/180)))

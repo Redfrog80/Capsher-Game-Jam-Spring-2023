@@ -11,7 +11,6 @@ class Projectile(GameObject):
         angle
         """
         super().__init__(name, (0, 0), size, img)
-        self.matchTextureToBoundary()  # small bullet
         self.dmg = dmg
         self.tag = tag
 

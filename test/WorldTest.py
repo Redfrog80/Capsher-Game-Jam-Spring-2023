@@ -1,12 +1,11 @@
 from lib import objects, enemy
-
 import pygame
 import random
 
 pygame.init()
 
 # initializer
-win = pygame.display.set_mode((800, 800))
+win = pygame.display.set_mode((1000, 1000))
 pygame.display.set_caption("Bug shooter")
 
 # render setting
@@ -15,9 +14,9 @@ clock = pygame.time.Clock()
 
 camera = objects.Camera("cam", (0, 0), win.get_size())
 
-player = objects.Player("player", (0, 0), (64, 64), "resources/images/ship.png")
+player = objects.Player("player", (0, 0), (64, 64), win.get_size(), camera, "resources/images/player1.png")
 player.matchTextureToBoundary()
-player.setStat(0, 200, 100, 0, 100, 500, 360)
+player.setStat(0, 200, 100, 0, 100, 200, 360)
 # camera track second object
 camera.trackCenter(player)
 
@@ -37,6 +36,7 @@ def chance(c):
 def randDist(obj: objects.GameObject):
     return random.randrange(-300, 300) + obj.pos[0], random.randrange(-300, 300) + obj.pos[1]
 
+myMouse = pygame.mouse
 
 # enemy generator
 # maxEnemy = 100
@@ -47,7 +47,6 @@ an_enemy = createEnemy("ee", randDist(player), player)
 everything = {player.name: player, an_enemy.name: an_enemy}  # everything
 
 destroylist = []
-
 
 run = True
 while run:
@@ -73,13 +72,13 @@ while run:
                 player.goForward()
             elif event.key == pygame.K_DOWN:
                 player.goBack()
-            elif event.key == pygame.K_SPACE:
-                while True:
-                    # prevent overwriting key
-                    nametest = "bullet" + str(random.randint(0, 1000))
-                    if nametest not in everything:
-                        everything.update({nametest: player.shoot(nametest)})
-                        break
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            while True:
+                # prevent overwriting key
+                nametest = "bullet" + str(random.randint(0, 1000))
+                if nametest not in everything:
+                    everything.update({nametest: player.shoot(nametest)})
+                    break
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
                 player.rotateLeftStop()
@@ -93,7 +92,7 @@ while run:
     # update calculation
     # player.rot += 2
     for key in everything:
-        everything[key].update(dt, gameobjs=everything)
+        everything[key].update(dt, gameobjs=everything, mousepos=myMouse.get_pos())
     camera.update()
     # destroy object with dead flag
     for key in everything:
