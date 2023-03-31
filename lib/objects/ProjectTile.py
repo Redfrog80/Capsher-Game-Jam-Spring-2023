@@ -10,9 +10,8 @@ class Projectile(GameObject):
         since we're using rectangle collider, all bullet will be small square to prevent bug when bullet travel at an
         angle
         """
-        super().__init__(name=name, pos=(0, 0), size=size, img=img)
-        self.matchTextureToBoundary()  # small bullet
-        print(self.boundary.size)
+        super().__init__(name=name, pos=(-100000,100000), size=size, img=img)
+
         self.dmg = dmg
 
     def traj(self, pos: tuple, gun_velocity: tuple, speed: float, rot: float, speed_amp: float):
@@ -24,6 +23,7 @@ class Projectile(GameObject):
         """
         self.rot = rot
         self.pos = pos
+        self.matchTextureToBoundary()  # small bullet
         self.vel = addTuple(gun_velocity,(-speed*math.sin(math.radians(self.rot))*speed_amp, -speed*math.cos(math.radians(self.rot))*speed_amp))
 
     def update(self, dt: float, **kwargs):
