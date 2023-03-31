@@ -1,7 +1,6 @@
 from gc import garbage
 from pygame import surface, Rect, font
 import pygame
-from lib.ImageDict import ImageDict
 from lib.misc import *
 from lib.objects import Camera, GameObject
 
