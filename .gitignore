@@ -2,4 +2,5 @@
 .idea
 venv
 drawing
-.pyc
+**/*.pyc
+**/__pycache__/

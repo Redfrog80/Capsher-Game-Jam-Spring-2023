@@ -3,3 +3,5 @@ from .Camera import Camera
 from .Player import Player
 from .Enemy import Enemy
 from .ProjectTile import Projectile
+from .Gun import Gun
+

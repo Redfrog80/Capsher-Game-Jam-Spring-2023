@@ -1,7 +1,25 @@
 from pygame import image, surface, transform
-from lib.ImageDict import imageDict
-from lib.misc import floorDivTuple, floorElementDiv
-from lib.objects import Camera, GameObject
+#from lib.ImageDict import imageDict
+#from lib.misc import floorDivTuple, floorElementDiv
+#from lib.objects import Camera, GameObject
+
+
+if __name__ == '__main__':
+    if __package__ is None:
+        import sys
+        from os import path
+        sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
+        from lib.objects import *;
+        #from lib.objects import Camera;
+        from lib.misc import*;
+        from lib.ImageDict import *;
+        #from lib.imageDict import *
+    else:
+        from ..lib.objects import *
+        from ..lib.misc import *;
+        from ..lib.ImageDict import *;
+        #from ..lib.objects import Camera;
+        #from ..lib.imageDict import *
 
 class gameWorld:
     def __init__(self, dimensions : tuple, tiledim : tuple, camera : Camera) -> None:
