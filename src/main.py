@@ -15,12 +15,13 @@ if __name__ == '__main__':
         from ..lib.objects import *
 
 from gameWorld import gameWorld
+from player_controller import player_controller
 
 pygame.init()
 
 # initializer
 
-window_dim, tile_dim = (800,800), (100,100)
+window_dim, tile_dim = (1400,800), (100,100)
 screen = pygame.display.set_mode(window_dim, pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.SCALED, vsync=0)
 pygame.display.set_caption("test")
 
@@ -30,78 +31,33 @@ clock = pygame.time.Clock()
 
 camera = Camera("camera", (0, 0), size = screen.get_size())
 
-world = gameWorld(pygame.Rect(-2000,-2000,4000,4000),tile_dim,camera)
-for i in range(200):
-    world.add_game_object(str(i),Enemy("object", (i*10%2000, 200), (0, 0), img = "resources/images/notfoundTiny.png"))
+world = gameWorld(pygame.Rect(-100000, -100000,100000,100000),tile_dim,camera)
 
 player = Player("player", (0, 0), (64, 64), img="resources/images/ship.png");
+player.setStat(100,100,100,100,1000,100,200)
 gun = Gun("gun", (0, 0), (10, 10), screen.get_size(), "resources/images/directionalTest.png");
+
+controller = player_controller(player, world, gun)
 
 world.add_game_object("Player",player)
 world.add_game_object("Player_gun",gun)
-
 world.set_tracked_object("Player", "player")
-gun.trackCenter(player)
+
+for i in range(1000):
+    enemy = Enemy(str(i), (i*1%2000, 200), (0, 0), img = "resources/images/notfoundTiny.png")
+    enemy.setStat(0, 100, 50, 0, 1000, 100, 200)
+    enemy.follow_config(player,500, 0.9, 100)
+    world.add_game_object("enemy",enemy)
 
 run = True
 while run:
-    dt = clock.tick(FPS)
+    dt = clock.tick(FPS)/1000
     
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False 
-        if event.type == KEYDOWN:
-            if event.key == K_w:
-                #print("ship go forward");
-                player.setAccel((-player.accMag * sin(player.rot * pi / 180), -player.accMag * cos(player.rot * pi / 180)));
-                
-            if event.key == K_s:
-                player.setAccel((player.accMag * sin(player.rot * pi / 180), player.accMag * cos(player.rot * pi / 180)));
-                #ship go backward
-            if event.key == K_a:
-                #ship go ccw
-                player.rotvel = 0.1;
-                player.trackRot = True;
-                pass;
-            if event.key == K_d:
-                #ship go cw
-                player.rotvel = -0.1;
-                player.trackRot = True;
-                pass;
-        if event.type == KEYUP:
-            if event.key == K_w:
-                #print("ship go forward");
-                #stop acceleration
-                player.setAccel((0, 0));
-                
-            if event.key == K_s:
-                #stop acceleration
-                player.setAccel((0, 0));
-            if event.key == K_a:
-                #player stop rotating
-                player.rotvel = 0;
-                player.trackRot = False;
-                pass;
-            if event.key == K_d:
-                player.rotvel = 0;
-                player.trackRot = False;
-                #player stop rotating
-                pass;
-        if event.type == MOUSEBUTTONDOWN:
-            bullet = Projectile("bullet", "b", 1);
-            bvrot = (-sin(gun.rot * (pi/180)), -cos(gun.rot * (pi/180)))
-            bullet.vel = addTuple(bvrot, player.vel);
-            bullet.pos = gun.pos;
-            #bullet.traj(gun.pos, 1, gun.rot, 1);
-            world.add_game_object("Player_bullet",bullet)
-            print(len(world.__game_objects__["Player_bullet"]))
-            print("SHOOT");
-            pass;
 
-            
     
     screen.fill((5, 5, 15))
     
+    run = controller.update_player(dt)
     world.render_tile_map(screen)
     world.render(screen)
     

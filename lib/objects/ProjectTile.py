@@ -4,7 +4,7 @@ import math
 
 
 class Projectile(GameObject):
-    def __init__(self, name: str = "bullet", tag: str = "", dmg: float = 0, size: tuple = (16, 16),
+    def __init__(self, name: str = "bullet", dmg: float = 0, size: tuple = (16, 16),
                  img: str = "resources/images/plasmaball.png"):
         """
         since we're using rectangle collider, all bullet will be small square to prevent bug when bullet travel at an
@@ -13,7 +13,6 @@ class Projectile(GameObject):
         super().__init__(name=name, pos=(0, 0), size=size, img=img)
         self.matchTextureToBoundary()  # small bullet
         self.dmg = dmg
-        self.tag = tag
 
     def traj(self, pos: tuple, speed: float, rot: float, speed_amp: float):
         """

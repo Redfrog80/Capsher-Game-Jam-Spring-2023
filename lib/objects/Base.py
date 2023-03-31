@@ -10,8 +10,9 @@ class Base:
     """
 
     def __init__(self, name: str = "", pos: tuple = (0, 0), vel: tuple = (0, 0), acc: tuple = (0, 0),
-                 size: tuple = (0, 0)) -> None:
+                 size: tuple = (0, 0), tag: str = "") -> None:
         self.name = name
+        self.tag = tag
         self.pos = pos
         self.vel = vel
         self.acc = acc

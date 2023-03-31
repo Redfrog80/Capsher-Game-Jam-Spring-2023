@@ -11,9 +11,7 @@ class Player(Playable):
     def __init__(self, name: str = "", pos: tuple = (0, 0), size: tuple = (0, 0),
                  img: str = "resources/images/notfound.png"):
         super().__init__(name=name, pos=pos, size=size, img=img)
-        self.speed = 0  # will be remove once merge with Hao's player code
         self.trackRot = False
-        self.accMag = 0.0003
 
     def rotateLeft(self):
         self.rotvel = self.rotSpeedMax
@@ -22,11 +20,11 @@ class Player(Playable):
         self.rotvel = -self.rotSpeedMax
 
     def goForward(self):
-        self.acc = (-self.accMag * math.sin(self.rot * math.pi / 180), -self.accMag * math.cos(self.rot * math.pi / 180))
+        self.acc = (-self.acc_lin * math.sin(self.rot * math.pi / 180), -self.acc_lin * math.cos(self.rot * math.pi / 180))
 
     def goBack(self):
-        self.acc = (self.accMag * math.sin(self.rot * math.pi / 180), self.accMag * math.cos(self.rot * math.pi / 180))
-
+        self.acc = (self.acc_lin * math.sin(self.rot * math.pi / 180), self.acc_lin * math.cos(self.rot * math.pi / 180))
+    
     def rotateLeftStop(self):
         self.rotvel = 0
 
@@ -52,15 +50,16 @@ class Player(Playable):
 
     def update(self, dt: float, **kwargs):
         if self.trackRot and self.acc != (0, 0):
-            self.acc = (-self.accMag * math.sin(self.rot * math.pi / 180), -self.accMag * math.cos(self.rot * math.pi / 180))
+            self.acc = (-self.acc_lin * math.sin(self.rot * math.pi / 180), -self.acc_lin * math.cos(self.rot * math.pi / 180))
         self.pos = addTuple(self.pos, mulTuple(self.vel, dt))
         self.boundCenterToPos()
         origV = self.vel
         self.vel = addTuple(self.vel, mulTuple(self.acc, dt))
 
         #if too fast set to preset velocity
-        if magnitude(self.vel) > 0.5:
-            self.vel = origV
+        # if magnitude(self.vel) > self.speedMax:
+        #     self.vel = origV
+        # print(self.vel)
         # self.vel = addTuple(self.vel, (1, 1))
         # rotation
         self.rot += self.rotvel * dt
