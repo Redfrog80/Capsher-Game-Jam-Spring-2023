@@ -10,7 +10,7 @@ class Gun(GameObject):
         super().__init__(name, pos, size, img);
         self.campos = divTuple(campos, 2);
 
-    def update(self, dt: float, **kwargs):
+    def update(self, dt: float):
 
         #mouse angle calculations
         mangle = 0;
@@ -22,7 +22,7 @@ class Gun(GameObject):
         except:
             
             if subTuple(self.campos, mouse.get_pos())[0] > 0:
-                print("poo");
+                #print("poo");
                 mangle = 90;
             if subTuple(self.campos, mouse.get_pos())[0] < 0:
                 mangle = -90;
