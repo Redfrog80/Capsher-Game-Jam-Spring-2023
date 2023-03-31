@@ -29,6 +29,5 @@ class GameObject(Base):
                 img0 = transform.rotate(self.texture, self.rot)
                 dummy = divTuple(subTuple(img0.get_size(), self.boundary.size), 2)
                 screen.blit(img0, subTuple(subTuple(self.boundary.topleft, cam.boundary.topleft), dummy))
-
     def update(self, dt: float):
         pass
