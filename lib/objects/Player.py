@@ -44,7 +44,7 @@ class Player(Playable):
         """
         :param name: bullet name, for looking up in dictionary
         """
-        bullet = Projectile(name, "bulletEnemy", 20)
+        bullet = Projectile(name, 20,  tag = "bulletEnemy")
         bullet.traj(self.pos, self.speedMax, self.rot, 1)
         return bullet
 
