@@ -1,4 +1,3 @@
-from turtle import st
 from pygame import surface, Rect, font
 from lib.ImageDict import ImageDict
 from lib.misc import *
