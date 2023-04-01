@@ -37,7 +37,9 @@ def dotTuple(a: tuple, b: tuple):
 def unitTuple(origin: tuple, a: tuple):
     diff = subTuple(origin,a)
     if (False in [i==0 for i in diff]):
-        return divTuple(diff,magnitude(a))
+        mag = magnitude(a)
+        if (mag):
+            return divTuple(diff,mag)
     return (0,0)
 
 def magnitude(a: tuple):

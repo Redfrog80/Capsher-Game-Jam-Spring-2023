@@ -1,3 +1,4 @@
+from .ProjectTile import Projectile
 from .Playable import Playable
 import math
 from ..misc import *
@@ -17,8 +18,8 @@ class Player(Playable):
         self.gun = Gun("gun", (0, 0), (64, 64), win_size, "resources/images/aiming.png")
         # self.gun.matchTextureToBoundary()
         self.gun.setTextureSize((128, 128))
-        self.cam = cam
         self.gun.trackCenter(self)
+        self.cam = cam
 
     def rotateLeft(self):
         self.rotvel = self.rotSpeedMax
@@ -47,8 +48,17 @@ class Player(Playable):
     def setAccel(self, ac):
         self.acc = ac
 
-    def shoot(self, name):
-        return self.gun.shoot(name)
+    def shoot(self, dt, name):
+        return self.gun.shoot(dt,name)
+    
+    def destroy(self):
+        self.liveflag = 0
+        self.gun.destroy()
+    
+    def collisionEffect(self, dt, object):
+        if not isinstance(object, Projectile):
+            Playable.collisionEffect(self,dt, object)
+            self.gotHit(10)
 
     def render(self, screen: surface, cam: Camera):
         if self.checkCollision(cam):  # render when object collide with camera view
@@ -60,12 +70,15 @@ class Player(Playable):
     def update(self, dt: float, **kwargs):
         if self.trackRot and self.acc != (0, 0):
             self.acc = (-self.acc_lin * math.sin(self.rot * math.pi / 180), -self.acc_lin * math.cos(self.rot * math.pi / 180))
+        
         self.pos = addTuple(self.pos, mulTuple(self.vel, dt))
         self.boundCenterToPos()
-        origV = self.vel
+        print(self.vel)
+        
         self.vel = addTuple(self.vel, mulTuple(self.acc, dt))
-        #if too fast set to preset velocity
-        # print(self.vel)
+        
+        self.vel = (capRange(self.vel[0], -self.speedMax, self.speedMax),
+                        capRange(self.vel[1], -self.speedMax, self.speedMax))
         self.rot += self.rotvel * dt
         # udpate gun
         self.gun.update(dt, **kwargs)
