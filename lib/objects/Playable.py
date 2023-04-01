@@ -16,7 +16,7 @@ class Playable(GameObject):
         self.acc_lin = 0
         self.rotSpeedMax = 0
 
-    def setStat(self, s: float, a: float, h: float, shm: float, hm: float, sm: float, rm: float):
+    def setStat(self, s: float, shm: float, h: float, hm: float, a: float, sm: float, rm: float):
         self.shield = s
         self.health = h
         self.shieldMax = shm
@@ -45,3 +45,8 @@ class Playable(GameObject):
                 self.shield = 0
         else:
             self.health -= value
+
+    def gotHit(self, damage):
+        self.damage(damage)
+        if self.isDead():
+            self.destroy()

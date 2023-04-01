@@ -13,6 +13,9 @@ class player_controller:
         self.world = game_world
         self.run = True
         self.bullet_num = 0
+        self.shooting = False
+        
+        self.player.gun.firerate = 0.2
 
     def update_player(self, dt):
         for event in pygame.event.get():
@@ -53,7 +56,14 @@ class player_controller:
                     self.player.trackRot = False
                     pass;
             if event.type == MOUSEBUTTONDOWN:
-
-                self.world.add_game_object("player_bullet",self.player.shoot(str(self.bullet_num)))
+                self.shooting = True
+            if event.type == MOUSEBUTTONUP:
+                self.shooting = False
+        
+        if (self.shooting and self.player.liveflag):
+            bullet = self.player.shoot(dt,"b_" + str(self.bullet_num))
+            if (bullet):
+                self.world.add_game_object("player_bullet",bullet)
                 self.bullet_num += 1
+
         return True
