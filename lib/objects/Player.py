@@ -17,8 +17,8 @@ class Player(Playable):
         self.gun = Gun("gun", (0, 0), (64, 64), win_size, "resources/images/aiming.png")
         # self.gun.matchTextureToBoundary()
         self.gun.setTextureSize((128, 128))
-        self.cam = cam
         self.gun.trackCenter(self)
+        self.cam = cam
 
     def rotateLeft(self):
         self.rotvel = self.rotSpeedMax

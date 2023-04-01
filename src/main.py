@@ -21,7 +21,7 @@ pygame.init()
 
 # initializer
 
-window_dim, tile_dim = (1400,800), (100,100)
+window_dim, tile_dim = (800,800), (100,100)
 screen = pygame.display.set_mode(window_dim, pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.SCALED, vsync=0)
 pygame.display.set_caption("test")
 
@@ -43,7 +43,7 @@ world.add_game_object("Player",player)
 
 world.set_tracked_object("Player", "player")
 
-for i in range(1000):
+for i in range(10):
     enemy = Enemy(str(i), (i*1%2000, 200), (0, 0), img = "resources/images/enemy1.png")
     enemy.setTextureSize((10,10))
     enemy.setStat(0, 100, 50, 0, 1000, 100, 200)

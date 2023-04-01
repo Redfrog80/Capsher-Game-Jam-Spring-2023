@@ -29,10 +29,12 @@ class Gun(GameObject):
         
         if "mousepos" in kwargs:
             self.mouse = kwargs["mousepos"]
-        
-            
+        if "camera" in kwargs:
+            offset = subTuple(self.pos, kwargs["camera"].boundary.topleft)
+        else:
+            return
         # mouse angle calculations
-        mangle = degrees(atan2(*subTuple(self.campos, self.mouse)))
+        mangle = degrees(atan2(*subTuple(offset, self.mouse)))
         # mouse angle
         if mangle < 0:
             mangle += 360
@@ -65,6 +67,8 @@ class Gun(GameObject):
             img0 = transform.rotate(self.texture, self.rot)
             dummy = divTuple(subTuple(img0.get_size(), self.boundary.size), 2)
             screen.blit(img0, subTuple(subTuple(self.boundary.topleft, cam.boundary.topleft), dummy))
-            aimPoint = (-600 * sin(self.rot * (pi / 180)), -600 * cos(self.rot * (pi / 180)))
-            draw.line(screen, (0, 255, 150), self.campos, mouse.get_pos())
-            draw.line(screen, (255, 0, 0), self.campos, addTuple(self.campos, aimPoint))
+            aimPoint = (-600 * sin(self.rot * (
+                pi / 180)), -600 * cos(self.rot * (pi / 180)))
+            offset = subTuple(self.pos, cam.boundary.topleft)
+            draw.line(screen, (0, 255, 150), offset, self.mouse)
+            draw.line(screen, (255, 0, 0), offset, addTuple(offset, aimPoint))
