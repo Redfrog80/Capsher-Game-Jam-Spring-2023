@@ -34,6 +34,13 @@ def runPyGame():
   zap_sound = pygame.mixer.Sound(random_zap_sound)
   zap_sound.set_volume(1)
   
+  random_boom_sound = random.choice(['sounds/boom1.wav', 'sounds/boom2.wav', 'sounds/boom3.wav', 'sounds/boom4.wav'])
+  boom_sound = pygame.mixer.Sound(random_boom_sound)
+  boom_sound.set_volume(1)
+  
+  # Boom, laser, and zap are all different sounds. I was thinking boom could be used for the player's gun,
+  # zap for the enemies, and laser for the bosses. Just an idea and we can scrap any of these as necessary.
+  
   glitch_sound = pygame.mixer.Sound("sounds/Glitch_downshifter.wav")
   glitch_sound.set_volume(1)
   
@@ -67,6 +74,7 @@ def runPyGame():
   def pauseMusic():
     ############
     pygame.mixer.music.pause()
+    
   def unpauseMusic():
     global pause
     pygame.mixer.music.unpause()
@@ -81,7 +89,7 @@ def runPyGame():
   #pygame.mixer.Sound.play(glitch_sound)
   #etc
   
-  pygame.mixer.Sound.play(laser_sound)
+  pygame.mixer.Sound.play(boom_sound)
 
 ################################################################################
   dt = 1/fps # dt is the time since last frame.
