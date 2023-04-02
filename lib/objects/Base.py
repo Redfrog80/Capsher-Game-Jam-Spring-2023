@@ -24,7 +24,12 @@ class Base:
         self.liveflag = 1  # use in GameWorld to check if object should be destroyed (go out of bound, died, etc.)
 
     def boundCenterToPos(self):
-        self.boundary.move_ip(subTuple(self.pos, self.boundary.center))
+        try:
+
+            self.boundary.move_ip(subTuple(self.pos, self.boundary.center))
+        except:
+            pass
+            #print("its a laser beam");
     
     def check_collide_direction(self, other):
         r = other.boundary

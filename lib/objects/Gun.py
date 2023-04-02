@@ -5,6 +5,7 @@ from math import *
 from pygame import surface, transform, draw
 from .Camera import Camera
 from .ProjectTile import Projectile
+from .Beam import Beam;
 
 
 class Gun(GameObject):
@@ -15,9 +16,10 @@ class Gun(GameObject):
         
         self.bulletVel = 200
         self.bulletLife = 4
+        self.beamLife = 1;
         
         self.damage = 40
-        
+        self.beamDmg = 300;
         self.cooldown = 0
         self.firerate = 0.1
         
@@ -36,7 +38,7 @@ class Gun(GameObject):
         
         if "mousepos" in kwargs:
             self.mouse = kwargs["mousepos"]
-            print(self.mouse, end="\r")
+            #print(self.mouse, end="\r")
         if "camera" in kwargs:
             offset = subTuple(self.pos, kwargs["camera"].boundary.topleft)
         else:
@@ -53,27 +55,33 @@ class Gun(GameObject):
             self.rotvel = 0
         else:
             if -180 < mangle - gsimpRot < 0 or 180 < mangle - gsimpRot < 360:
-                self.rotvel = -90
+                self.rotvel = -180
             else:
-                self.rotvel = 90
+                self.rotvel = 180
 
         self.rot += self.rotvel * dt
 
-    def shoot(self, dt, name: str):
+    def shoot(self, dt, name: str, canLaser):
         """
         :param name: bullet name, for looking up in dictionary
         """
-        self.cooldown -= dt
-        print(self.cooldown)
-        if (self.cooldown < 0):
-            bullet_size = (20,20)
-            bullet = Projectile(name, self.damage, self.bulletLife, size = bullet_size, img="resources/images/bullet2.png")
-            bullet.setTextureSize(bullet_size)
-            bullet.traj(self.pos, self.follow.vel, self.bulletVel, self.rot, 1.5)
-            self.cooldown = self.firerate
-            print(self.cooldown)
-            return bullet
-        return None
+
+        if canLaser:
+            #shoot da laser
+            return Beam(self.pos, name, self.beamDmg, self.beamLife, self.rot);
+        else:
+            self.cooldown -= dt
+            #print(self.cooldown)
+            if (self.cooldown < 0):
+                bullet_size = (20,20)
+                bullet = Projectile(name, self.damage, self.bulletLife, size = bullet_size, img="resources/images/bullet2.png")
+                bullet.setTextureSize(bullet_size)
+                bullet.traj(self.pos, self.follow.vel, self.bulletVel, self.rot, 1.5)
+                self.cooldown = self.firerate
+                #print(self.cooldown)
+                return bullet
+            return None
+        return None;
 
 
     def render(self, screen: surface, cam: Camera):

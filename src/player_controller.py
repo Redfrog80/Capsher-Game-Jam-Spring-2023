@@ -62,8 +62,10 @@ class player_controller:
         
         if (self.shooting and self.player.liveflag):
             bullet = self.player.shoot(dt,"b_" + str(self.bullet_num))
-            if (bullet):
+            if isinstance(bullet, Projectile):
                 self.world.add_game_object("player_bullet",bullet)
                 self.bullet_num += 1
+            elif isinstance(bullet, Beam):
+                self.world.add_game_object("laser",bullet);
 
         return True

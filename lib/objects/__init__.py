@@ -4,4 +4,5 @@ from .Player import Player
 from .Enemy import Enemy
 from .ProjectTile import Projectile
 from .Gun import Gun
-
+from .Beam import Beam
+from .BeamItem import BeamItem

@@ -21,6 +21,8 @@ class Player(Playable):
         self.gun.trackCenter(self)
         self.cam = cam
 
+        self.laserBeam = False;
+
     def rotateLeft(self):
         self.rotvel = self.rotSpeedMax
 
@@ -49,7 +51,10 @@ class Player(Playable):
         self.acc = ac
 
     def shoot(self, dt, name):
-        return self.gun.shoot(dt,name)
+        temp = self.gun.shoot(dt,name, self.laserBeam)
+        if self.laserBeam:
+            self.laserBeam = False;
+        return temp;
     
     def destroy(self):
         self.liveflag = 0
@@ -73,7 +78,7 @@ class Player(Playable):
         
         self.pos = addTuple(self.pos, mulTuple(self.vel, dt))
         self.boundCenterToPos()
-        print(self.vel)
+        print(self.pos, "p")
         
         self.vel = addTuple(self.vel, mulTuple(self.acc, dt))
         

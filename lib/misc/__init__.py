@@ -52,3 +52,33 @@ def capRange(a, lo, hi):
         return hi
     else:
         return a
+
+
+
+#is point q on segment pr given p, q, and r are collinear
+#all points are tuples with 2 elements
+def onSegment(p: tuple, q: tuple, r:tuple) -> bool:
+    return (q[0] <= max(p[0], r[0]) and q[0] >= min(p[0], r[0]) and q[1] <= max(p[1], r[1]) and q[1] >= min(p[1], r[1]));
+
+def orient(p: tuple, q: tuple, r:tuple) -> int:
+    n = ((q[1] * p[1]) - (r[0] * q[0])) - ((q[0] * p[0]) - (r[1] * q[1]));
+    if n > 0:
+        return 1;
+    if n < 0:
+        return 2;
+    else:
+        return 0;
+
+def checkIntersection(linea: tuple, lineb:tuple) -> bool:
+    p1 = linea[0];
+    p2 = linea[1];
+    q1 = lineb[0];
+    q2 = lineb[1];
+
+    o1 = orient(p1, p2, q1);
+    o2 = orient(p1, p2, q2);
+    o3 = orient(q1, q2, p1);
+    o4 = orient(q1, q2, p2);
+
+    #general case only for now
+    return o1 != o2 and o3 != o4;

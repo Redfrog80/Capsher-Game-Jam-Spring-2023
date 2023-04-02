@@ -16,7 +16,17 @@ class GameObject(Base):
         self.setTextureSize(size)
         self.matchBoundaryToTexture()
     def checkCollision(self, other: Base):
-        return self.boundary.colliderect(other.boundary)
+        try:
+            return self.boundary.colliderect(other.boundary)
+        except:
+            #make lines from sides of rectangle, (start, end)
+            line1 = ((self.boundary.x, self.boundary.y), (self.boundary.x, self.boundary.y + self.boundary.height));
+            line2 = ((self.boundary.x, self.boundary.y), (self.boundary.x + self.boundary.width, self.boundary.y));
+            line3 = ((self.boundary.x, self.boundary.y + self.boundary.height), (self.boundary.x + self.boundary.width, self.boundary.y + self.boundary.height));
+            line4 = ((self.boundary.x + self.boundary.width, self.boundary.y), (self.boundary.x + self.boundary.width, self.boundary.y + self.boundary.height));
+
+            #check for intersections
+            return checkIntersection(self.boundary, line1) or checkIntersection(self.boundary, line2) or checkIntersection(self.boundary, line3) or checkIntersection(self.boundary, line4);
 
     def collisionEffect(self, dt, object):
         direction = self.check_collide_direction(object)
@@ -54,3 +64,5 @@ class GameObject(Base):
 
     def update(self, dt: float, **kwargs):
         pass
+    
+    

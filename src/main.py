@@ -47,11 +47,12 @@ world.add_game_object("Player",player)
 
 world.set_tracked_object("Player", 200)
 
-for i in range(100):
+for i in range(30):
     enemy = Enemy("e_"+str(i), (random.randint(0,2000), random.randint(0,2000)), (40, 40), img = "resources/images/enemy1.png")
     enemy.setStat(0, 100, 50, 0, 100, 200, 1000)
     enemy.follow_config(player,500, 1, 10)
     world.add_game_object("enemy",enemy)
+    world.add_game_object("powerup", BeamItem("powerup", (random.randint(0,2000), random.randint(0,2000))));
 
 run = True
 while run:
@@ -65,7 +66,7 @@ while run:
     run = controller.update_player(dt)
     world.update(dt)
     # world.render_tile_map()
-    print(player.pos)
+    #print(player.pos)
     
     window_screen.blit(pygame.transform.scale(game_screen,window_dim),(0,0))
     

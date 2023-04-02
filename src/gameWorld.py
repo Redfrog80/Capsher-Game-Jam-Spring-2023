@@ -1,7 +1,7 @@
 from pygame import Surface, surface, Rect, font
 import pygame
 from lib.misc import *
-from lib.objects import Camera, GameObject
+from lib.objects import Camera, GameObject, Beam
 
 class gameWorld:
     def __init__(self, dimensions : Rect, tiledim : tuple, screen: Surface, mouseArea: tuple, camera : Camera) -> None:
@@ -23,9 +23,11 @@ class gameWorld:
             for object_name in self.__game_objects__[key]:
                 object = self.__game_objects__[key][object_name]
                 boundary = object.boundary
-                topLeft, bottomRight = [floorElementDiv(i,self.__tiledim__) for i in [boundary.topleft, boundary.bottomright]]
-                for tup in [(i,j) for i in range(topLeft[0],bottomRight[0]+1) for j in range(topLeft[1],bottomRight[1]+1)]:
-                    self.tileMap[tup] = [object] + self.tileMap.get(tup,[])
+                if not isinstance(object, Beam):
+
+                    topLeft, bottomRight = [floorElementDiv(i,self.__tiledim__) for i in [boundary.topleft, boundary.bottomright]]
+                    for tup in [(i,j) for i in range(topLeft[0],bottomRight[0]+1) for j in range(topLeft[1],bottomRight[1]+1)]:
+                        self.tileMap[tup] = [object] + self.tileMap.get(tup,[])
     
     
     def __get_collided_pairs__(self):
@@ -47,12 +49,15 @@ class gameWorld:
         return mulElements(self.__screen__.get_size(), elementDiv(pygame.mouse.get_pos(),self.__mouse_area__))
     
     def check_out_of_bound(self, boundary, object):
-        r = object.boundary
-        b = boundary
-        return (r.top < b.top,
+        if not isinstance(object, Beam):
+            
+            r = object.boundary
+            b = boundary
+            return (r.top < b.top,
                 r.left < b.left,
                 r.bottom > b.bottom,
                 r.right > b.right)
+        
     
     def border_default(world, dt, key, object):
         r = object.boundary
@@ -85,19 +90,20 @@ class gameWorld:
             b = world.__dim__
             
             bounds = world.check_out_of_bound(b,object)
-            
-            if bounds[0]:
-                object.pos = (object.pos[0], object.pos[1] + b.top - r.top)
-                object.vel = (object.vel[0],-object.vel[1])
-            if bounds[1]:
-                object.pos = (object.pos[0] + b.left - r.left, object.pos[1])
-                object.vel = (-object.vel[0],object.vel[1])
-            if bounds[2]:
-                object.pos = (object.pos[0], object.pos[1] + b.bottom - r.bottom)
-                object.vel = (object.vel[0],-object.vel[1])
-            if bounds[3]:
-                object.pos = (object.pos[0] + b.right - r.right, object.pos[1])
-                object.vel = (-object.vel[0],object.vel[1])
+            if not isinstance(object, Beam):
+
+                if bounds[0]:
+                    object.pos = (object.pos[0], object.pos[1] + b.top - r.top)
+                    object.vel = (object.vel[0],-object.vel[1])
+                if bounds[1]:
+                    object.pos = (object.pos[0] + b.left - r.left, object.pos[1])
+                    object.vel = (-object.vel[0],object.vel[1])
+                if bounds[2]:
+                    object.pos = (object.pos[0], object.pos[1] + b.bottom - r.bottom)
+                    object.vel = (object.vel[0],-object.vel[1])
+                if bounds[3]:
+                    object.pos = (object.pos[0] + b.right - r.right, object.pos[1])
+                    object.vel = (-object.vel[0],object.vel[1])
         object.boundCenterToPos()
             
     
