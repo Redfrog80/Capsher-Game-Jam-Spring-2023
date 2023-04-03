@@ -5,7 +5,7 @@ from lib.objects import *
 
 class Assault(Enemy):
     def __init__(self, name: str = "", pos: tuple = (0, 0), size: tuple = (0, 0),
-                 img: str = "resources/images/amogus.png"):
+                 img: str = "resources/images/enemy2.png"):
         super().__init__(name, pos, size, img)
         self.bulletCount = 0
         self.att_range = 0
@@ -16,6 +16,10 @@ class Assault(Enemy):
         self.bulletLife = 4
         self.bulletVel = 200
         self.set_weapon_control()
+        # post process so I don't have to call this from main
+        self.setTextureSize((64, 64))
+        self.setStat(0, 0, 50, 50, 100, 150, 1000)
+        self.follow_config(None, 800, 1, 400)
 
     def set_weapon_control(self, dmg=10, att_r=600, cooldowntimer=2):
         self.dmg = dmg

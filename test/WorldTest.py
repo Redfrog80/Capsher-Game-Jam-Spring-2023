@@ -22,7 +22,7 @@ camera.trackCenter(player)
 
 
 def createEnemy(name, pos, target):
-    new_enemy = enemy.Assault(name, pos, (60, 60))
+    new_enemy = enemy.Suicide(name, pos, (60, 60))
     new_enemy.matchTextureToBoundary()
     new_enemy.setStat(0, 100, 50, 0, 50, 100, 200)
     new_enemy.follow_config(target, 300, .9, 100)
@@ -36,12 +36,13 @@ def chance(c):
 def randDist(obj: objects.GameObject):
     return random.randrange(-300, 300) + obj.pos[0], random.randrange(-300, 300) + obj.pos[1]
 
+
 myMouse = pygame.mouse
 
 # enemy generator
 # maxEnemy = 100
 # countEnemy = 0
-RAND_SPAWN = pygame.USEREVENT+1
+RAND_SPAWN = pygame.USEREVENT + 1
 pygame.time.set_timer(RAND_SPAWN, 1000)
 an_enemy = createEnemy("ee", randDist(player), player)
 everything = {player.name: player, an_enemy.name: an_enemy}  # everything

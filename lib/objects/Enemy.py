@@ -1,4 +1,3 @@
-from turtle import pos
 from ..objects import Gun, Player, ParticleSimple
 from .Playable import Playable
 from .ProjectTile import Projectile
@@ -18,7 +17,6 @@ class Enemy(Playable):
         self.damp_factor = 0
         self.hover_distance = 0
         self.target = None
-        
         self.coll_dmg = 10
         self.suicide = False
 
@@ -27,6 +25,9 @@ class Enemy(Playable):
         self.max_follow_distance = max_dist
         self.damp_factor = damp_fac
         self.hover_distance = hover_dist
+
+    def setTarget(self, target):
+        self.target = target
 
     def collisionEffect(self,world, dt, object):
         if isinstance(object, Projectile) and object.liveflag:

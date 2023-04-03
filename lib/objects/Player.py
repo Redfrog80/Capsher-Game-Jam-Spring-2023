@@ -1,13 +1,11 @@
 from ..misc import *
-from .Particle import ParticleSimple
 from .Camera import Camera
 from .Gun import Gun
 from .ProjectTile import Projectile
 from .Playable import Playable
-from src.sound_class import SoundEffects
 from .Enemy import Enemy
 
-from pygame import image, surface, transform
+from pygame import surface, transform
 import math
 
 class Player(Playable):
@@ -64,7 +62,7 @@ class Player(Playable):
             object.destroy()
         elif isinstance(object, Enemy):
             self.gotHit(object.coll_dmg)
-            Playable.collisionEffect(self,world, dt, object)
+            Playable.collisionEffect(self, world, dt, object)
             if object.suicide:
                 object.destroy()
         else:
