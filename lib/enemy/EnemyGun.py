@@ -6,16 +6,17 @@ from pygame import surface, transform, draw
 #from .Camera import Camera
 
 
-class Gun(GameObject):
-    def __init__(self, name: str = "", pos: tuple = ..., size: tuple = ..., win_size: tuple = ...,
+class EnemyGun(GameObject):
+    def __init__(self, name: str = "", pos: tuple = ..., size: tuple = ...,
                  img: str = "resources/images/notfound.png"):
         super().__init__(name=name, pos=pos, size=size, img=img)
-        self.mouse = (0, 0)
         
+        self.target = None;
+
         self.bulletVel = 200
         self.bulletLife = 4
         
-        self.damage = 40
+        self.damage = 30
         
         self.cooldown = 0
         self.firerate = 0.1
@@ -25,33 +26,30 @@ class Gun(GameObject):
 
     # Use this to attach the gun to something
     def trackCenter(self, other_object):
-        self.follow = other_object
+        self.follow = other_object;
 
+
+    
     def update(self, dt: float, **kwargs):
         # Sets the center position to the object it is attached to
         if self.follow is not None:
             self.pos = addTuple(self.pos, subTuple(self.follow.boundary.center, self.boundary.center))
             self.boundCenterToPos()
         
-        if "mousepos" in kwargs:
-            self.mouse = kwargs["mousepos"]
-            print(self.mouse, end="\r")
-        if "camera" in kwargs:
-            offset = subTuple(self.pos, kwargs["camera"].boundary.topleft)
-        else:
-            return
+        Tpos = self.target.pos;
+        
         # mouse angle calculations
-        mangle = degrees(atan2(*subTuple(offset, self.mouse)))
+        angle = degrees(atan2(*subTuple(self.pos, Tpos)));
         # mouse angle
-        if mangle < 0:
-            mangle += 360
+        if angle < 0:
+            angle += 360
         # gun angle
         gsimpRot = self.rot % 360
-        if abs(gsimpRot - mangle) < 1:
-            self.rot = mangle
+        if abs(gsimpRot - angle) < 1:
+            self.rot = angle
             self.rotvel = 0
         else:
-            if -180 < mangle - gsimpRot < 0 or 180 < mangle - gsimpRot < 360:
+            if -180 < angle - gsimpRot < 0 or 180 < angle - gsimpRot < 360:
                 self.rotvel = -90
             else:
                 self.rotvel = 90
