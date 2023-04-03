@@ -2,7 +2,7 @@
 
 ## R.A.G.E. Shooter [Team: S.C.R.A.P.] (Spaghetti Code Running Advanced Programs)
 
-This is a game built entirely with Python’s PyGame library. The player is a ship trying to survive and defeat the queen of the aliens – but with a twist for the player to discover during gameplay. An executable for Windows has been provided for ease of access.  
+This is a game built entirely with Python’s PyGame library. The player is an abandoned ship trying to survive. An executable for Windows has been provided for ease of access.  
 
 See how long you can survive! 
 
@@ -26,9 +26,9 @@ See how long you can survive!
 
 ## Roles
 * Gage: Concepted enemy classes, created sounds/music, created sprites, story and text system, sound engine, and start menu.
-* Hao: 
+* Hao: Player class implementation, Gun class implementation, Some enemy class implementtaion, and some other miscellaneous.
 * Jeremy: Created the gameWorld class, added collision detection, added garbage collection system, added particle system.
-* Phong:
+* Phong: Overall structure of the project, including class imlementation and interaction, object to object interaction. Gameplay tunning. Integrate all class and finallize the project
 
 ## What we weren't able to finish
 * Sound system. We resorted to removing implemenation of sounds and directly pasting music to the PyGame mixer. Successfully implemented music, but didn't push in time.
