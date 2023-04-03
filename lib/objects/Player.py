@@ -6,6 +6,7 @@ from lib.misc import *
 from .Gun import Gun
 from .Camera import Camera
 from pygame import surface, transform
+from .sound_class import SoundEffects
 
 
 class Player(Playable):
@@ -54,6 +55,7 @@ class Player(Playable):
         self.acc = ac
 
     def shoot(self, dt, name):
+        SoundEffects.play_enemy_death_sound()
         return self.gun.shoot(dt, name)
 
     def destroy(self):
