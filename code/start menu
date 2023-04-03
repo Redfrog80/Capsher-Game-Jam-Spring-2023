@@ -1,28 +1,22 @@
 import pygame
 import sys
 
-# Initialize Pygame
 pygame.init()
 
-# Set the dimensions of the screen
 screen_width = 800
 screen_height = 600
 screen = pygame.display.set_mode((screen_width, screen_height))
 
-# Set the title of the game
 pygame.display.set_caption("My Game")
 
-# Load menu button images
 start_button_img = pygame.image.load("images/player1.png")
 quit_button_img = pygame.image.load("images/gameImage.png")
 
-# Define button dimensions and positions
 button_width = 200
 button_height = 50
 start_button_pos = (screen_width // 2 - button_width // 2, screen_height // 2 - button_height - 200)
 quit_button_pos = (screen_width // 2 - button_width // 2, screen_height // 2 +50)
 
-# Define button functions
 def check_button_hover(mouse_pos, button_pos):
     button_rect = pygame.Rect(button_pos[0], button_pos[1], button_width, button_height)
     return button_rect.collidepoint(mouse_pos)
@@ -34,9 +28,8 @@ def handle_button_click(mouse_pos):
         pygame.quit()
         sys.exit()
 
-# Start menu loop
-while True:
-    # Handle events
+start_screen = True
+while start_screen:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -62,3 +55,4 @@ while True:
 
     # Update the display
     pygame.display.update()
+    start_screen = False
