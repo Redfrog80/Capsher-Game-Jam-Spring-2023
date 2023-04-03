@@ -20,6 +20,8 @@ from lib.world import EventController
 window_dim, tile_dim = (800, 800), (100, 100)
 game_dim = (800, 800)
 
+pygame.mixer.init
+
 game_screen = pygame.display.set_mode(game_dim, pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.SCALED, vsync=0).copy()
 window_screen = pygame.display.set_mode(window_dim, pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.SCALED, vsync=0)
 pygame.display.set_caption("BuggyShooter")
@@ -49,6 +51,7 @@ controller.addEventSpawn(1, 100, (1, 6), enemy.Sentinel, "enemy")
 # controller.addEventSpawn(3, 100, (1, 5), enemy.Kamikaze, "enemy")
 # controller.addEventSpawn(4, 100, (2, 2), enemy.Juggernaut, "enemy")
 
+pygame.mixer.init()
 pygame.mixer.music.load("sounds/loading_screen.wav")
 pygame.mixer.music.play(-1)
 pygame.mixer.music.set_volume(0.5)
@@ -67,7 +70,8 @@ while start_screen:
     # Using blit to copy content from one surface to other
     window_screen.blit(start_image, (0, -50))
     pygame.display.flip()
-
+    
+pygame.mixer.init()
 pygame.mixer.music.load("sounds/battle_music.wav")
 pygame.mixer.music.play(-1)
 pygame.mixer.music.set_volume(1)

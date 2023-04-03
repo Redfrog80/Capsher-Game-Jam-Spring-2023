@@ -6,7 +6,7 @@ from lib.misc import *
 from .Gun import Gun
 from .Camera import Camera
 from pygame import surface, transform
-from .sound_class import SoundEffects
+
 
 
 class Player(Playable):
@@ -24,7 +24,7 @@ class Player(Playable):
         self.gun.trackCenter(self)
         self.cam = cam
         self.damp_factor = 1
-        self.sound = SoundEffects();
+
 
     def rotateLeft(self):
         self.rotvel = self.rotSpeedMax
@@ -56,7 +56,7 @@ class Player(Playable):
         self.acc = ac
 
     def shoot(self, dt, name):
-        #self.sound.play_enemy_death_sound()
+
         return self.gun.shoot(dt, name)
 
     def destroy(self):
