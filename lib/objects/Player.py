@@ -4,6 +4,7 @@ from .Camera import Camera
 from .Gun import Gun
 from .ProjectTile import Projectile
 from .Playable import Playable
+from src.sound_class import SoundEffects
 
 from pygame import image, surface, transform
 import math
@@ -55,6 +56,7 @@ class Player(Playable):
     def destroy(self):
         self.liveflag = 0
         self.gun.destroy()
+        SoundEffects.play_death_sound()
     
     def collisionEffect(self, world,  dt, object):
         if not isinstance(object, (Projectile)):
