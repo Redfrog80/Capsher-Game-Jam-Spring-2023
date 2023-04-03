@@ -1,4 +1,4 @@
-import numpy as np
+
 from pygame.rect import Rect
 from ..misc import *
 

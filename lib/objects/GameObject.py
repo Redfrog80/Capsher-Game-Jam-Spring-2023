@@ -1,6 +1,5 @@
 
 import pygame
-from sympy import false
 
 from ..misc import *
 from .Base import Base

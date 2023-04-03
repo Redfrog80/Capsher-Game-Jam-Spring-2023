@@ -7,8 +7,12 @@ while start_screen:
             pygame.quit()
             sys.exit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            mouse_pos = pygame.mouse.get_pos()
-            start_screen = False
+            start_screen = False                    # ends start screen
+    
+    imp = pygame.image.load(").convert()
+ 
+    # Using blit to copy content from one surface to other
+    scrn.blit(imp, (0, 0))
 
 
 '''
