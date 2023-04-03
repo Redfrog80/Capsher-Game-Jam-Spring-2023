@@ -1,6 +1,9 @@
-from lib.misc import *
+import pygame
+
+from ..misc import *
 from .Base import Base
 from .Camera import Camera
+from .Particle import ParticleSimple
 from pygame import image, surface, transform
 
 
@@ -16,10 +19,7 @@ class GameObject(Base):
         self.texture = image.load(img).convert_alpha()
         self.setTextureSize(size)
 
-    def checkCollision(self, other: Base):
-        return self.boundary.colliderect(other.boundary)
-
-    def collisionEffect(self, dt, obj):
+    def collisionEffect(self, world, dt, obj):
         direction = self.check_collide_direction(obj)
         r = self.boundary
         b = self.boundary
@@ -35,6 +35,13 @@ class GameObject(Base):
         self.vel = subTuple(mulTuple(unitTuple((0, 0), self.vel), magnitude(self.vel)),
                             mulTuple(unitTuple((0, 0), obj.vel), -magnitude(obj.vel)))
 
+    def spawn_particles_on_pos(self, world, quantity: int, size: tuple, velMax: tuple, lifeMax: float, drag: float ):
+        for i in range(quantity):
+            p = ParticleSimple(str(i) + self.name + str(self.pos), pos=self.pos,size=(2,2))
+            p.set_random(velMax,lifeMax,drag)
+            p.color = pygame.transform.average_color(self.texture, consider_alpha=True)
+            world.add_game_object("particles",p)
+
     def matchBoundaryToTexture(self):
         """match size of boundary to texture"""
         self.boundary.update(subTuple(self.pos, divTuple(self.texture.get_size(), 4)),
@@ -46,6 +53,8 @@ class GameObject(Base):
 
     def setTextureSize(self, size: tuple):
         self.texture = transform.scale(self.texture, size)
+        # better collisions
+        self.matchBoundaryToTexture()
 
     def render(self, screen: surface, cam: Camera):
         if self.checkCollision(cam):  # render when object collide with camera view

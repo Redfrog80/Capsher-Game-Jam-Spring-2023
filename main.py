@@ -1,5 +1,5 @@
 import random
-from lib import enemy
+import lib.enemy as enemy
 import pygame
 
 # This is somewhat cursed, but it will let me run a __main__ file from anywhere in the python path
@@ -15,7 +15,6 @@ if __name__ == '__main__':
 
 from lib.world import GameWorld
 from lib.world import EventController
-
 # window initializer
 window_dim, tile_dim = (800, 800), (100, 100)
 game_dim = (800, 800)
@@ -33,7 +32,7 @@ world = GameWorld(pygame.Rect(0, 0, 2000, 2000), tile_dim, game_screen, window_s
 # world.debug_title_map = True
 
 # player
-player = Player("player", (1000, 1000), (48, 48), game_screen.get_size(), img="resources/images/player.png")
+player = Player("player", (1000, 1000), (48, 48), game_screen.get_size(), img="resources/images/player1.png")
 player.setTextureSize((64, 64))
 player.setStat(100, 100, 100, 100, 500, 500, 360)
 controller = EventController(player, world)
@@ -43,9 +42,9 @@ world.add_game_object("Player", player)
 world.player = player
 world.set_tracked_object("Player", 100)
 
-controller.addEventSpawn(2, 100, (1, 6), enemy.Assault, "enemy")
-controller.addEventSpawn(3, 100, (1, 5), enemy.Kamikaze, "enemy")
-controller.addEventSpawn(4, 100, (2, 2), enemy.Juggernaut, "enemy")
+controller.addEventSpawn(2, 50, (1, 6), enemy.Assault, "enemy")
+controller.addEventSpawn(3, 25, (4, 10), enemy.Kamikaze, "enemy")
+controller.addEventSpawn(4, 25, (2, 2), enemy.Juggernaut, "enemy")
 
 run = True
 while run:

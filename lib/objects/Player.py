@@ -1,12 +1,12 @@
+from ..misc import *
+from .Camera import Camera
+from .Gun import Gun
 from .ProjectTile import Projectile
 from .Playable import Playable
 from .Enemy import Enemy
-import math
-from lib.misc import *
-from .Gun import Gun
-from .Camera import Camera
-from pygame import surface, transform
 
+from pygame import image, surface, transform
+import math
 
 class Player(Playable):
     """
@@ -17,9 +17,9 @@ class Player(Playable):
                  img: str = "resources/images/player1.png"):
         super().__init__(name=name, pos=pos, size=size, img=img)
         self.trackRot = False
-        self.gun = Gun("gun", (0, 0), (64, 64), win_size, "resources/images/aiming.png")
+        self.gun = Gun("gun", (0, 0), size, win_size, "resources/images/aiming.png")
         # self.gun.matchTextureToBoundary()
-        self.gun.setTextureSize((128, 128))
+        self.gun.setTextureSize(size)
         self.gun.trackCenter(self)
         self.cam = cam
         self.damp_factor = 1
@@ -60,15 +60,22 @@ class Player(Playable):
         self.liveflag = 0
         self.gun.destroy()
 
-    def collisionEffect(self, dt, obj):
-        if isinstance(obj, Projectile) and obj.tag == "enemy_bullet":
-            self.gotHit(obj.dmg)
-            obj.destroy()
-        elif isinstance(obj, Enemy):
-            self.gotHit(obj.coll_dmg)
-            Playable.collisionEffect(self, dt, obj)
-            if obj.sucide:
-                obj.destroy()
+    def collisionEffect(self, world,  dt, object):
+        if isinstance(object, Projectile) and object.tag == "enemy_bullet":
+            self.gotHit(object.dmg)
+            object.destroy()
+        elif isinstance(object, Enemy):
+            self.gotHit(object.coll_dmg)
+            Playable.collisionEffect(self,world, dt, object)
+            if object.suicide:
+                object.destroy()
+        else:
+            return
+        
+        if self.liveflag:
+            self.spawn_particles_on_pos(world,5,(3,3),(200,200),1,1)
+        else:
+            self.spawn_particles_on_pos(world,100,(5,5),(300,300),2,1)
 
     def render(self, screen: surface, cam: Camera):
         if self.checkCollision(cam):  # render when object collide with camera view

@@ -26,9 +26,9 @@ class Assault(Enemy):
         self.cooldowntimer = cooldowntimer
 
     def shoot(self, dt, aim: tuple, name: str):
-        bullet_size = (10, 10)
-        bullet = Projectile(name, self.dmg, self.bulletLife, size=bullet_size, img="resources/images/bullet1.png")
-        bullet.setTextureSize((40, 40))
+        bullet_size = (20, 20)
+        bullet = Projectile(name, self.dmg, self.bulletLife, size=bullet_size, img="resources/images/bullet6.png")
+        bullet.setTextureSize(bullet_size)
         bullet.traj(self.pos, self.vel, self.bulletVel, math.degrees(math.atan2(*aim)), 1)
         self.cooldown = self.cooldowntimer
         return bullet

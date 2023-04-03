@@ -1,3 +1,4 @@
+from ..objects import Gun, Player
 from .Playable import Playable
 from .ProjectTile import Projectile
 from lib.misc import *
@@ -15,8 +16,9 @@ class Enemy(Playable):
         self.damp_factor = 0
         self.hover_distance = 0
         self.target = None
+        
         self.coll_dmg = 10
-        self.sucide = False
+        self.suicide = False
 
     def follow_config(self, target, max_dist, damp_fac, hover_dist):
         self.target = target
@@ -27,10 +29,20 @@ class Enemy(Playable):
     def setTarget(self, target):
         self.target = target
 
-    def collisionEffect(self, dt, obj):
-        if isinstance(obj, Projectile) and obj.tag == "player_bullet":
-            self.gotHit(obj.dmg)
-            obj.destroy()
+    def collisionEffect(self,world, dt, object):
+        if isinstance(object, Projectile) and object.liveflag:
+            if  object.tag == "player_bullet":
+                self.gotHit(object.dmg)
+                object.destroy()
+            else:
+                return
+        elif not isinstance(object, type(Gun)):
+            Playable.collisionEffect(self, world, dt, object)
+        
+        if self.liveflag:
+            self.spawn_particles_on_pos(world,5,(3,3),(200,200),1,1)
+        else:
+            self.spawn_particles_on_pos(world,15,(5,5),(800,800),1,1)
 
     def gotHit(self, damage):
         self.damage(damage)

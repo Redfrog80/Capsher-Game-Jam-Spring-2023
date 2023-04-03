@@ -1,10 +1,10 @@
+from ..misc import *
 from .GameObject import GameObject
-from lib.misc import *
-from math import *
-from pygame import surface, transform, draw
 from .Camera import Camera
 from .ProjectTile import Projectile
 
+from pygame import surface, transform, draw
+from math import *
 
 class Gun(GameObject):
     def __init__(self, name: str = "", pos: tuple = ..., size: tuple = ..., win_size: tuple = ...,
@@ -25,6 +25,10 @@ class Gun(GameObject):
     # Use this to attach the gun to something
     def trackCenter(self, other_object):
         self.follow = other_object
+
+    
+    def collisionEffect(self, world, dt, object):
+        pass
 
     def update(self, dt: float, **kwargs):
         # Sets the center position to the object it is attached to
@@ -59,9 +63,9 @@ class Gun(GameObject):
     def shoot(self, dt, name: str):
         self.cooldown -= dt
         if self.cooldown < 0:
-            bullet_size = (10, 10)
+            bullet_size = (20,20)
             bullet = Projectile(name, self.damage, self.bulletLife, size=bullet_size, img="resources/images/bullet2.png")
-            bullet.setTextureSize((40, 40))
+            bullet.setTextureSize(bullet_size)
             bullet.traj(self.pos, self.follow.vel, self.bulletVel, self.rot, 1.5)
             self.cooldown = self.firerate
             return bullet
@@ -75,5 +79,5 @@ class Gun(GameObject):
             aimPoint = (-600 * sin(self.rot * (
                     pi / 180)), -600 * cos(self.rot * (pi / 180)))
             offset = subTuple(self.pos, cam.boundary.topleft)
-            draw.line(screen, (0, 255, 150), offset, self.mouse)
-            draw.line(screen, (255, 0, 0), offset, addTuple(offset, aimPoint))
+            # draw.line(screen, (0, 255, 150), offset, self.mouse)
+            # draw.line(screen, (255, 0, 0), offset, addTuple(offset, aimPoint))

@@ -1,10 +1,14 @@
-from lib.misc import *
-from .Camera import Camera
+from ..misc import *
+from .Base import Base
 from .GameObject import GameObject
+from .Camera import Camera
+from .Particle import ParticleSimple
+import lib.objects
+import lib.enemy
+
 from pygame import image, surface, transform
 
 import math
-
 
 class Projectile(GameObject):
     def __init__(self, name: str = "bullet", dmg: float = 0, life: float = 10, size: tuple = (10, 10),
@@ -31,8 +35,13 @@ class Projectile(GameObject):
         self.vel = addTuple(gun_velocity, (-speed * math.sin(math.radians(self.rot)) * speed_amp, -speed *
                                            math.cos(math.radians(self.rot)) * speed_amp))
 
-    def collisionEffect(self, dt, obj):
-        pass
+
+    def collisionEffect(self, world, dt, object):
+        if not isinstance(object, (ParticleSimple,lib.objects.Gun,Projectile)):
+            if isinstance(object, (lib.enemy.Assault,lib.enemy.Juggernaut, lib.enemy.Kamikaze)) and object.tag == "player_bullet":
+                self.spawn_particles_on_pos(world,10,(1,1),(100,100),3,1)
+            elif isinstance(object, lib.objects.Player) and object.tag == "enemy_bullet":
+                self.spawn_particles_on_pos(world,10,(1,1),(100,100),3,1)
 
     def update(self, dt: float, **kwargs):
         self.pos = addTuple(self.pos, mulTuple(self.vel, dt))

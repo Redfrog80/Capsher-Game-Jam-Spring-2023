@@ -26,9 +26,9 @@ class Juggernaut(Enemy):
         self.cooldowntimer = cooldowntimer
 
     def shoot(self, dt, aim: tuple, name: str, modified_angle=0):
-        bullet_size = (10, 10)
-        bullet = Projectile(name, self.dmg, self.bulletLife, size=bullet_size, img="resources/images/bullet1.png")
-        bullet.setTextureSize((40, 40))
+        bullet_size = (40, 40)
+        bullet = Projectile(name, self.dmg, self.bulletLife, size=bullet_size, img="resources/images/bullet5.png")
+        bullet.setTextureSize(bullet_size)
         bullet.traj(self.pos, self.vel, self.bulletVel, math.degrees(math.atan2(*aim))+modified_angle, 1)
         self.cooldown = self.cooldowntimer
         return bullet
