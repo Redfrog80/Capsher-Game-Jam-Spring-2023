@@ -2,6 +2,8 @@ import pygame
 from pygame.locals import *
 from math import *
 import random
+from sound_class import SoundEffects
+
 # This is somewhat cursed, but it will let me run a __main__ file from anywhere in the python path
 if __name__ == '__main__':
     if __package__ is None:
@@ -18,6 +20,7 @@ from gameWorld import gameWorld
 from player_controller import player_controller
 
 pygame.init()
+pygame.mixer.init()
 
 # initializer
 

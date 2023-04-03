@@ -79,7 +79,9 @@ class SoundEffects:
 """
         
 TO PLAY SOUNDS: 
-        
+
+from sound_class import SoundEffects
+pygame.mixer.init
 sound_effects = SoundEffects()
 
 sound_effects.play_laser_sound()
