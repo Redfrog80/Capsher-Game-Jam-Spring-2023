@@ -1,9 +1,6 @@
 # Capsher-Game-Jam-Spring-2023  
 
 ## Starship Renegade (undecided name)
-  
-# (Test documentation with some formatting)  fill in the blanks
-
 
 This is a game built entirely with Python’s PyGame library. The player is a ship trying to survive and defeat the queen of the aliens – but with a twist for the player to discover during gameplay. An executable for Windows has been provided for ease of access.
 
@@ -24,12 +21,12 @@ classes and documentation is unfinished
 * random (for variation in sounds, enemy spawning, etc)
 
 ## Roles
-* Gage: Concepted enemy classes, created assets, story and text system, sound engine, and start menu
+* Gage: Concepted enemy classes, created assets, story and text system, sound engine, and start menu.
 * Hao: 
-* Jeremy: Created the gameWorld class, added collision detection, added garbage collection system.
+* Jeremy: Created the gameWorld class, added collision detection, added garbage collection system, added particle system.
 * Phong:
 
 ## What we weren't able to finish:
-* Sound system
-* Text and plot system (in Gage branch)
-* Polishing
+* Sound system. We resorted to removing implemenation of sounds and directly pasting music to the PyGame mixer.
+* Text and plot system (in Gage branch.) We had a plot for the game to create fading text in the background giving hints and a monologue.
+* Polishing. The event system needs work and we currently don't have a respawn mechanic.
