@@ -1,11 +1,12 @@
+from ..misc import *
+from .Particle import ParticleSimple
+from .Camera import Camera
+from .Gun import Gun
 from .ProjectTile import Projectile
 from .Playable import Playable
-import math
-from ..misc import *
-from .Gun import Gun
-from .Camera import Camera
-from pygame import image, surface, transform
 
+from pygame import image, surface, transform
+import math
 
 class Player(Playable):
     """
@@ -15,9 +16,9 @@ class Player(Playable):
                  img: str = "resources/images/notfound.png"):
         super().__init__(name=name, pos=pos, size=size, img=img)
         self.trackRot = False
-        self.gun = Gun("gun", (0, 0), (64, 64), win_size, "resources/images/aiming.png")
+        self.gun = Gun("gun", (0, 0), size, win_size, "resources/images/aiming.png")
         # self.gun.matchTextureToBoundary()
-        self.gun.setTextureSize((128, 128))
+        self.gun.setTextureSize(size)
         self.gun.trackCenter(self)
         self.cam = cam
 
@@ -55,10 +56,15 @@ class Player(Playable):
         self.liveflag = 0
         self.gun.destroy()
     
-    def collisionEffect(self, dt, object):
-        if not isinstance(object, Projectile):
-            Playable.collisionEffect(self,dt, object)
+    def collisionEffect(self, world,  dt, object):
+        if not isinstance(object, (Projectile)):
             self.gotHit(10)
+            Playable.collisionEffect(self, world, dt, object)
+        
+            if self.liveflag:
+                self.spawn_particles_on_pos(world,5,(3,3),(200,200),1,1)
+            else:
+                self.spawn_particles_on_pos(world,10,(5,5),(300,300),2,1)
 
     def render(self, screen: surface, cam: Camera):
         if self.checkCollision(cam):  # render when object collide with camera view
@@ -73,7 +79,6 @@ class Player(Playable):
         
         self.pos = addTuple(self.pos, mulTuple(self.vel, dt))
         self.boundCenterToPos()
-        print(self.vel)
         
         self.vel = addTuple(self.vel, mulTuple(self.acc, dt))
         
@@ -82,4 +87,5 @@ class Player(Playable):
         self.rot += self.rotvel * dt
         # udpate gun
         self.gun.update(dt, **kwargs)
+        
 

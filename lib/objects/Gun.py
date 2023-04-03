@@ -1,10 +1,10 @@
-from .GameObject import GameObject
 from ..misc import *
-from pygame import mouse
-from math import *
-from pygame import surface, transform, draw
+from .GameObject import GameObject
 from .Camera import Camera
 from .ProjectTile import Projectile
+
+from pygame import surface, transform, draw
+from math import *
 
 
 class Gun(GameObject):
@@ -13,7 +13,7 @@ class Gun(GameObject):
         super().__init__(name=name, pos=pos, size=size, img=img)
         self.mouse = (0, 0)
         
-        self.bulletVel = 200
+        self.bulletVel = 400
         self.bulletLife = 4
         
         self.damage = 40
@@ -28,6 +28,9 @@ class Gun(GameObject):
     def trackCenter(self, other_object):
         self.follow = other_object
 
+    def collisionEffect(self, world, dt, object):
+        pass
+
     def update(self, dt: float, **kwargs):
         # Sets the center position to the object it is attached to
         if self.follow is not None:
@@ -36,7 +39,6 @@ class Gun(GameObject):
         
         if "mousepos" in kwargs:
             self.mouse = kwargs["mousepos"]
-            print(self.mouse, end="\r")
         if "camera" in kwargs:
             offset = subTuple(self.pos, kwargs["camera"].boundary.topleft)
         else:
@@ -53,9 +55,9 @@ class Gun(GameObject):
             self.rotvel = 0
         else:
             if -180 < mangle - gsimpRot < 0 or 180 < mangle - gsimpRot < 360:
-                self.rotvel = -90
+                self.rotvel = -180
             else:
-                self.rotvel = 90
+                self.rotvel = 180
 
         self.rot += self.rotvel * dt
 
@@ -64,14 +66,12 @@ class Gun(GameObject):
         :param name: bullet name, for looking up in dictionary
         """
         self.cooldown -= dt
-        print(self.cooldown)
         if (self.cooldown < 0):
             bullet_size = (20,20)
             bullet = Projectile(name, self.damage, self.bulletLife, size = bullet_size, img="resources/images/bullet2.png")
             bullet.setTextureSize(bullet_size)
             bullet.traj(self.pos, self.follow.vel, self.bulletVel, self.rot, 1.5)
             self.cooldown = self.firerate
-            print(self.cooldown)
             return bullet
         return None
 
@@ -84,5 +84,5 @@ class Gun(GameObject):
             aimPoint = (-600 * sin(self.rot * (
                 pi / 180)), -600 * cos(self.rot * (pi / 180)))
             offset = subTuple(self.pos, cam.boundary.topleft)
-            draw.line(screen, (0, 255, 150), offset, self.mouse)
-            draw.line(screen, (255, 0, 0), offset, addTuple(offset, aimPoint))
+            # draw.line(screen, (0, 255, 150), offset, self.mouse)
+            # draw.line(screen, (255, 0, 0), offset, addTuple(offset, aimPoint))

@@ -38,7 +38,7 @@ world = gameWorld(pygame.Rect(0,0,2000,2000),tile_dim, game_screen, window_scree
 
 player = Player("player", (1000, 1000), (64, 64), game_screen.get_size(), img="resources/images/player1.png")
 
-player.setStat(100,100,100,100,400,1000,300)
+player.setStat(100,100,100,100,400,500,300)
 
 controller = player_controller(player, world)
 
@@ -57,14 +57,13 @@ while run:
     
     game_screen.fill((5, 5, 15))
     
+    world.render_tile_map()
     world.render()
     
     dt = clock.tick(FPS)/1000
     
     run = controller.update_player(dt)
     world.update(dt)
-    # world.render_tile_map()
-    print(player.pos)
     
     window_screen.blit(pygame.transform.scale(game_screen,window_dim),(0,0))
     

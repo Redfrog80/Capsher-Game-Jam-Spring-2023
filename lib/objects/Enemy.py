@@ -1,5 +1,5 @@
 from turtle import pos
-from lib.objects import Gun, Player
+from ..objects import Gun, Player, ParticleSimple
 from .Playable import Playable
 from .ProjectTile import Projectile
 from lib.misc import *
@@ -24,14 +24,19 @@ class Enemy(Playable):
         self.damp_factor = damp_fac
         self.hover_distance = hover_dist
 
-    def collisionEffect(self, dt, object):
+    def collisionEffect(self,world, dt, object):
         if isinstance(object, Projectile) and object.liveflag and object.tag == "player_bullet":
             self.gotHit(object.dmg)
             object.destroy()
         elif not isinstance(object, type(Gun)):
-            Playable.collisionEffect(self, dt, object)
+            Playable.collisionEffect(self, world, dt, object)
         if not isinstance(object, Enemy):
             self.gotHit(1)
+
+        if self.liveflag:
+            self.spawn_particles_on_pos(world,5,(3,3),(200,200),1,1)
+        else:
+            self.spawn_particles_on_pos(world,15,(5,5),(800,800),1,1)
 
     def gotHit(self, damage):
         self.damage(damage)

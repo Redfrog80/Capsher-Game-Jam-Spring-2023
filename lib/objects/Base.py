@@ -19,12 +19,15 @@ class Base:
         self.rot = 0
         self.rotvel = 0
         self.size = size
-        self.boundary = Rect(pos, size)
+        self.boundary = Rect(subTuple(pos,divTuple(size,2)), size)
         self.boundCenterToPos()  # update pos on generation to prevent confusion due to previous called
         self.liveflag = 1  # use in GameWorld to check if object should be destroyed (go out of bound, died, etc.)
 
     def boundCenterToPos(self):
         self.boundary.move_ip(subTuple(self.pos, self.boundary.center))
+        
+    def checkCollision(self, other):
+        return self.boundary.colliderect(other.boundary)
     
     def check_collide_direction(self, other):
         r = other.boundary

@@ -1,7 +1,7 @@
-from pygame import Surface, surface, Rect, font
 import pygame
+from pygame import Surface, surface, Rect, font
 from lib.misc import *
-from lib.objects import Camera, GameObject
+from lib.objects import Camera, GameObject, ParticleSimple
 
 class gameWorld:
     def __init__(self, dimensions : Rect, tiledim : tuple, screen: Surface, mouseArea: tuple, camera : Camera) -> None:
@@ -27,7 +27,6 @@ class gameWorld:
                 for tup in [(i,j) for i in range(topLeft[0],bottomRight[0]+1) for j in range(topLeft[1],bottomRight[1]+1)]:
                     self.tileMap[tup] = [object] + self.tileMap.get(tup,[])
     
-    
     def __get_collided_pairs__(self):
         self.collided_pairs = {}
         for tile in self.tileMap:
@@ -42,6 +41,7 @@ class gameWorld:
             obj = self.__garbage__.pop()
             if (self.__game_objects__.get(obj.tag, {}).get(obj.name)):
                 del self.__game_objects__[obj.tag][obj.name]
+        
     
     def get_scaled_mouse_pos(self):
         return mulElements(self.__screen__.get_size(), elementDiv(pygame.mouse.get_pos(),self.__mouse_area__))
@@ -133,6 +133,8 @@ class gameWorld:
                 
                 for fun in args:
                     fun(world = self, dt = dt, key = key, object = object)
+                
+                self.delete_if_dead(object)
 
         self.__garbage_collection__()
         self.__update_tile_map__()
@@ -140,12 +142,10 @@ class gameWorld:
         
         for pair in self.collided_pairs:
             obj_a, obj_b = self.collided_pairs[pair]
-            obj_a.collisionEffect(dt,obj_b)
-            obj_b.collisionEffect(dt,obj_a)
-            self.delete_if_dead(obj_a)
-            self.delete_if_dead(obj_b)
+            obj_a.collisionEffect(self, dt, obj_b)
+            obj_b.collisionEffect(self, dt, obj_a)
 
-        pass
+
                 
     def render(self, *args):
         for key in self.__game_objects__:

@@ -1,8 +1,10 @@
-
 from ..misc import *
 from .Base import Base
-from .Camera import Camera
 from .GameObject import GameObject
+from .Camera import Camera
+from .Particle import ParticleSimple
+import lib.objects
+
 from pygame import image, surface, transform
 
 import math
@@ -32,8 +34,9 @@ class Projectile(GameObject):
         self.pos = pos
         self.vel = addTuple(gun_velocity,(-speed*math.sin(math.radians(self.rot))*speed_amp, -speed*math.cos(math.radians(self.rot))*speed_amp))
 
-    def collisionEffect(self,dt, object):
-        pass
+    def collisionEffect(self, world, dt, object):
+        if not isinstance(object, (ParticleSimple,lib.objects.Player,lib.objects.Gun,Projectile)):
+            self.spawn_particles_on_pos(world,10,(1,1),(100,100),3,1)
 
     def update(self, dt: float, **kwargs):
         self.pos = addTuple(self.pos, mulTuple(self.vel, dt))
