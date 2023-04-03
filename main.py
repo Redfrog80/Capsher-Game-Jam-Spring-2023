@@ -43,9 +43,25 @@ world.add_game_object("Player", player)
 world.player = player
 world.set_tracked_object("Player", 100)
 
-controller.addEventSpawn(2, 100, (1, 6), enemy.Assault, "enemy")
-controller.addEventSpawn(3, 100, (1, 5), enemy.Kamikaze, "enemy")
-controller.addEventSpawn(4, 100, (2, 2), enemy.Juggernaut, "enemy")
+controller.addEventSpawn(1, 100, (1, 6), enemy.Sentinel, "enemy")
+# controller.addEventSpawn(3, 100, (1, 5), enemy.Kamikaze, "enemy")
+# controller.addEventSpawn(4, 100, (2, 2), enemy.Juggernaut, "enemy")
+
+start_screen = True  # Click to play game
+start_image = pygame.transform.scale(pygame.image.load("resources/images/click_to_start.png").convert(), window_dim)
+while start_screen:
+    game_screen.fill((0, 0, 0))
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            start_screen = False  # ends start screen
+
+    # Using blit to copy content from one surface to other
+    window_screen.blit(start_image, (0, -50))
+    pygame.display.flip()
+
 
 run = True
 while run:

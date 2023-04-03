@@ -22,7 +22,7 @@ camera.trackCenter(player)
 
 
 def createEnemy(name, pos, target):
-    new_enemy = enemy.Assault(name, pos, (60, 60))
+    new_enemy = enemy.Suicide(name, pos, (60, 60))
     new_enemy.matchTextureToBoundary()
     new_enemy.setStat(0, 100, 50, 0, 50, 100, 200)
     new_enemy.follow_config(target, 300, .9, 100)
