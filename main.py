@@ -43,9 +43,15 @@ world.add_game_object("Player", player)
 world.player = player
 world.set_tracked_object("Player", 100)
 
+pygame.mixer.init
+
 controller.addEventSpawn(1, 100, (1, 6), enemy.Sentinel, "enemy")
 # controller.addEventSpawn(3, 100, (1, 5), enemy.Kamikaze, "enemy")
 # controller.addEventSpawn(4, 100, (2, 2), enemy.Juggernaut, "enemy")
+
+pygame.mixer.music.load("sounds/loading_screen.wav")
+pygame.mixer.music.play(-1)
+pygame.mixer.music.set_volume(1)
 
 start_screen = True  # Click to play game
 start_image = pygame.transform.scale(pygame.image.load("resources/images/click_to_start.png").convert(), window_dim)
@@ -62,6 +68,9 @@ while start_screen:
     window_screen.blit(start_image, (0, -50))
     pygame.display.flip()
 
+pygame.mixer.music.load("sounds/battle_music.wav")
+pygame.mixer.music.play(-1)
+pygame.mixer.music.set_volume(1)
 
 run = True
 while run:
