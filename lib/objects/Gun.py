@@ -68,7 +68,7 @@ class Gun(GameObject):
         self.cooldown -= dt
         if (self.cooldown < 0):
             bullet_size = (20,20)
-            bullet = Projectile(name, self.damage, self.bulletLife, size = bullet_size, img="resources/images/bullet2.png")
+            bullet = Projectile(name, self.damage, self.bulletLife, size = bullet_size, img="resources/images/bullet3.png")
             bullet.setTextureSize(bullet_size)
             bullet.traj(self.pos, self.follow.vel, self.bulletVel, self.rot, 1.5)
             self.cooldown = self.firerate

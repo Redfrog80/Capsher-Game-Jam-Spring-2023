@@ -1,3 +1,4 @@
+import random
 import pygame
 from pygame.locals import *
 from math import *
@@ -9,23 +10,24 @@ if __name__ == '__main__':
     if __package__ is None:
         import sys
         from os import path
-        sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
-        from lib.misc import *
-        from lib.objects import *
-    else:
-        from ..lib.misc import *
-        from ..lib.objects import *
 
-from gameWorld import gameWorld
-from player_controller import player_controller
+        sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+        from lib.objects import *
+        from lib import enemy
+    else:
+        from ..lib.objects import *
+        from ..lib import enemy
+
+from GameWorld import GameWorld
+from playercontroller import PlayerController
 
 pygame.init()
 pygame.mixer.init()
 
 # initializer
 
-window_dim, tile_dim = (800,800), (100,100)
-game_dim = (800,800)
+window_dim, tile_dim = (800, 800), (100, 100)
+game_dim = (800, 800)
 
 game_screen = pygame.display.set_mode(game_dim, pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.SCALED, vsync=0).copy()
 window_screen = pygame.display.set_mode(window_dim, pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.SCALED, vsync=0)
@@ -35,44 +37,64 @@ pygame.display.set_caption("test")
 FPS = 120
 clock = pygame.time.Clock()
 
-camera = Camera("camera", (0, 0), size = game_screen.get_size())
+camera = Camera("camera", (0, 0), size=game_screen.get_size())
 
-world = gameWorld(pygame.Rect(0,0,2000,2000),tile_dim, game_screen, window_screen.get_size(), camera)
+world = GameWorld(pygame.Rect(0, 0, 2000, 2000), tile_dim, game_screen, window_screen.get_size(), camera)
+# world.debug_title_map = True
+player = Player("player", (1000, 1000), (48, 48), game_screen.get_size(), img="resources/images/player1.png")
+player.setTextureSize((64, 64))
+print(player.boundary)
 
-player = Player("player", (1000, 1000), (64, 64), game_screen.get_size(), img="resources/images/player1.png")
+player.setStat(100, 100, 100, 100, 500, 500, 300)
 
-player.setStat(100,100,100,100,400,500,300)
+controller = PlayerController(player, world)
 
-controller = player_controller(player, world)
+world.add_game_object("Player", player)
 
-world.add_game_object("Player",player)
+world.set_tracked_object("Player", 100)
 
-world.set_tracked_object("Player", 200)
+for i in range(10):
+    newEnemy = enemy.Assault("a_" + str(i), (random.randint(0, 2000), random.randint(0, 2000)), (48, 48),
+                             img="resources/images/enemy2.png")
+    newEnemy.setTextureSize((64, 64))
+    newEnemy.setStat(0, 100, 50, 0, 100, 150, 1000)
+    newEnemy.follow_config(player, 800, 1, 400)
+    world.add_game_object("enemy", newEnemy)
+
+for i in range(20):
+    newEnemy = enemy.Kamikaze("k_" + str(i), (random.randint(0, 2000), random.randint(0, 2000)), (48, 48),
+                             img="resources/images/enemy3.png")
+    newEnemy.setTextureSize((48, 48))
+    newEnemy.setStat(0, 0, 20, 20, 150, 300, 1000)
+    newEnemy.follow_config(player, 800, 1, 0)
+    world.add_game_object("enemy", newEnemy)
+
+for i in range(10):
+    newEnemy = enemy.Juggernaut("j_" + str(i), (random.randint(0, 2000), random.randint(0, 2000)), (48, 48),
+                             img="resources/images/enemy4.png")
+    newEnemy.setTextureSize((80, 80))
+    newEnemy.setStat(0, 100, 50, 0, 50, 50, 1000)
+    newEnemy.follow_config(player, 800, 1, 200)
+    world.add_game_object("enemy", newEnemy)
 
 SoundEffects.Battle_Music()
 
-for i in range(1):
-    enemy = Enemy("e_"+str(i), (random.randint(0,2000), random.randint(0,2000)), (40, 40), img = "resources/images/enemy1.png")
-    enemy.setStat(0, 100, 50, 0, 100, 200, 1000)
-    enemy.follow_config(player,500, 1, 10)
-    world.add_game_object("enemy",enemy)
-
 run = True
 while run:
-    
-    game_screen.fill((5, 5, 15)) # replace with background image?
-    
-    world.render_tile_map()
+    # background -- maybe move to game world render
+    game_screen.fill((5, 5, 15))
+    # print(player.shield, player.health)
     world.render()
-    
-    dt = clock.tick(FPS)/1000
-    
+
+    dt = clock.tick(FPS) / 1000
+
     run = controller.update_player(dt)
     world.update(dt)
-    
-    window_screen.blit(pygame.transform.scale(game_screen,window_dim),(0,0))
-    
-    pygame.display.flip()
-    
-pygame.quit()
+    # world.render_tile_map()
+    # print(player.pos)
 
+    window_screen.blit(pygame.transform.scale(game_screen, window_dim), (0, 0))
+
+    pygame.display.flip()
+
+pygame.quit()

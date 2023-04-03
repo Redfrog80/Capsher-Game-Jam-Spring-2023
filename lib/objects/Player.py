@@ -5,6 +5,7 @@ from .Gun import Gun
 from .ProjectTile import Projectile
 from .Playable import Playable
 from src.sound_class import SoundEffects
+from .Enemy import Enemy
 
 from pygame import image, surface, transform
 import math
@@ -56,18 +57,23 @@ class Player(Playable):
     def destroy(self):
         self.liveflag = 0
         self.gun.destroy()
-        SoundEffects.play_death_sound()
     
     def collisionEffect(self, world,  dt, object):
-        if not isinstance(object, (Projectile)):
-            self.gotHit(10)
-            Playable.collisionEffect(self, world, dt, object)
-            SoundEffects.play_laser_sound()
+        if isinstance(object, Projectile) and object.tag == "enemy_bullet":
+            self.gotHit(object.dmg)
+            object.destroy()
+        elif isinstance(object, Enemy):
+            self.gotHit(object.coll_dmg)
+            Playable.collisionEffect(self,world, dt, object)
+            if object.suicide:
+                object.destroy()
+        else:
+            return
         
-            if self.liveflag:
-                self.spawn_particles_on_pos(world,5,(3,3),(200,200),1,1)
-            else:
-                self.spawn_particles_on_pos(world,100,(5,5),(300,300),2,1)
+        if self.liveflag:
+            self.spawn_particles_on_pos(world,5,(3,3),(200,200),1,1)
+        else:
+            self.spawn_particles_on_pos(world,100,(5,5),(300,300),2,1)
 
     def render(self, screen: surface, cam: Camera):
         if self.checkCollision(cam):  # render when object collide with camera view
