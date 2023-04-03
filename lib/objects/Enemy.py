@@ -47,7 +47,6 @@ class Enemy(Playable):
         self.damage(damage)
         if self.isDead():
             self.destroy()
-            SoundEffects.play_enemy_death_sound()
 
     def trackTarget(self, dt):
         self.pos = addTuple(self.pos, mulTuple(self.vel, dt))
