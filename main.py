@@ -13,8 +13,8 @@ if __name__ == '__main__':
     else:
         from lib.objects import *
 
-from world import GameWorld
-from world import EventController
+from lib.world import GameWorld
+from lib.world import EventController
 
 # window initializer
 window_dim, tile_dim = (800, 800), (100, 100)

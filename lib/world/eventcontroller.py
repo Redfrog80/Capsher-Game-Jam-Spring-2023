@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 from lib.objects import *
-from world.GameWorld import GameWorld
+from lib.world.GameWorld import GameWorld
 
 
 class EventController:
