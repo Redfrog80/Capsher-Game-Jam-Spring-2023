@@ -65,7 +65,7 @@ class EnemyGun(GameObject):
         print(self.cooldown)
         if (self.cooldown < 0):
             bullet_size = (20,20)
-            bullet = EnemyBullet(name, self.damage, self.bulletLife, size = bullet_size, img="resources/images/bullet1.png")
+            bullet = Projectile(name, self.damage, self.bulletLife, size = bullet_size, img="resources/images/bullet1.png")
             bullet.setTextureSize(bullet_size)
             bullet.traj(self.pos, self.follow.vel, self.bulletVel, self.rot, 1.5)
             self.cooldown = self.firerate

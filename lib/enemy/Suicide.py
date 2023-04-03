@@ -1,8 +1,6 @@
 import math
 from lib.misc import *
 from lib.objects import *
-from lib.objects import Enemy;
-
 
 class Suicide(Enemy):
     def __init__(self, name: str = "", dmg: float=25, pos: tuple = (0, 0), size: tuple = (0, 0),
@@ -17,7 +15,7 @@ class Suicide(Enemy):
 
         if bool(self.target):
             x, y = self.target.pos
-            #difference between this and player pos
+###            #difference between this and player pos
             dx = x - self.pos[0]
             dy = y - self.pos[1]
             length = math.sqrt(dx ** 2 + dy ** 2)
@@ -29,12 +27,12 @@ class Suicide(Enemy):
             #elif self.hover_distance > length:
                 # move away
                 #speedAdd = -self.acc_lin * dt
-            #else:
-                # damp speed
-                #self.vel = mulTuple(self.vel, math.exp(- self.damp_factor))
+            else:
+#                # damp speed
+                self.vel = mulTuple(self.vel, math.exp(- self.damp_factor))
             self.vel = addTuple(self.vel, (-speedAdd * math.sin(math.radians(self.rot+90)), speedAdd * math.cos(math.radians(self.rot+90))))
             self.vel = (capRange(self.vel[0], -self.speedMax, self.speedMax), capRange(self.vel[1], -self.speedMax, self.speedMax))
-    
+    #
 
     def collisionEffect(self, dt, object):
         if not isinstance(object, Projectile):
@@ -42,4 +40,4 @@ class Suicide(Enemy):
             #kill itself
             if isinstance(object, Player):
                 object.damage(self.dmg);
-                self.gotHit(1000);
+                self.gotHit(1000);#
