@@ -40,35 +40,18 @@ controller = EventController(player, world)
 
 # world add obj and event
 world.add_game_object("Player", player)
+world.player = player
 world.set_tracked_object("Player", 100)
 
-controller.addEvent(3, 0.5, (0, 3), enemy.Assault, "enemy")
-controller.addEvent(5, 1, (1, 4), enemy.Kamikaze, "enemy")
-controller.addEvent(5, 1, (0, 2), enemy.Juggernaut, "enemy")
-
-# def addenemy1
-
-# test
-# for i in range(10):
-#     newEnemy = enemy.Assault("a_" + str(i), (random.randint(0, 2000), random.randint(0, 2000)), (48, 48),
-#                              img="resources/images/enemy2.png")
-#     world.add_game_object("enemy", newEnemy)
-#
-# for i in range(20):
-#     newEnemy = enemy.Kamikaze("k_" + str(i), (random.randint(0, 2000), random.randint(0, 2000)), (48, 48),
-#                              img="resources/images/enemy3.png")
-#     world.add_game_object("enemy", newEnemy)
-#
-# for i in range(10):
-#     newEnemy = enemy.Juggernaut("j_" + str(i), (random.randint(0, 2000), random.randint(0, 2000)), (48, 48),
-#                              img="resources/images/enemy4.png")
-#     world.add_game_object("enemy", newEnemy)
+controller.addEventSpawn(2, 100, (1, 6), enemy.Assault, "enemy")
+controller.addEventSpawn(3, 100, (1, 5), enemy.Kamikaze, "enemy")
+controller.addEventSpawn(4, 100, (2, 2), enemy.Juggernaut, "enemy")
 
 run = True
 while run:
     # update
     dt = clock.tick(FPS) / 1000
-    run = controller.update_player(dt)
+    run = controller.update_events(dt)
     world.update(dt)
     # render
     game_screen.fill((5, 5, 15))  # background

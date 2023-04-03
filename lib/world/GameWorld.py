@@ -1,7 +1,8 @@
 from pygame import Surface, Rect
 import pygame
 from lib.misc import *
-from lib.objects import Camera, GameObject
+from lib.objects import Camera, GameObject, Enemy
+import random
 
 
 def check_out_of_bound(boundary, obj):
@@ -11,6 +12,24 @@ def check_out_of_bound(boundary, obj):
             r.left < b.left,
             r.bottom > b.bottom,
             r.right > b.right)
+
+
+def chance(c):
+    """in percentage"""
+    return random.randint(0, 100) < c
+
+
+def randist(center, d_range, world_dim):
+    """
+    :param center: tuple of obj pos
+    :param d_range: min and max dis from obj
+    :param world_dim: tuple of world dimension
+    :return: tuple x and y of new pos
+    """
+    while True:
+        out = random.randint(0, world_dim[0]), random.randint(0, world_dim[1])
+        if d_range[0] <= magnitude(subTuple(center, out)) <= d_range[1]:
+            return out
 
 
 class GameWorld:
@@ -33,7 +52,9 @@ class GameWorld:
         self.collided_pairs = {}
         self.border_behavior = self.border_default
         self.debug_title_map = False
-        self.maxEnemy = 100
+        self.__max_count__ = {}
+        self.__max_count__ = {"enemy": 100}  # limited 100 enemy so I can be lazy
+        self.player = None  # for enemy tracking purpose. Player is a little special
 
     def __update_tile_map__(self):
         self.tileMap = {}
@@ -174,5 +195,20 @@ class GameWorld:
                                  Rect(subTuple(mulElements(tile, self.__tiledim__), self.__camera__.boundary.topleft),
                                       self.__tiledim__))
 
-    def spawnEnemy(self, ):
-        pass
+    def spawnObj(self, prop, num_range, obj_class, tag):
+        """
+        build on top of adding object but allow number and probability and random location spawn
+        """
+        if chance(prop):
+            if not self.__game_objects__.get(tag):  # add empty tag if not exit
+                self.__game_objects__.update({tag: {}})
+            for _ in range(random.randint(*num_range)):
+                while True:
+                    # make sure to generate new obj with different name
+                    nametest = tag + str(random.randint(0, 1000))
+                    if nametest not in self.__game_objects__[tag]:
+                        new_obj = obj_class(nametest, randist(self.player.pos, (300, 1200), self.__dim__.size), (48, 48))
+                        if issubclass(obj_class, Enemy):  # this setting allow me to set tracking on player
+                            new_obj.setTarget(self.player)
+                        self.add_game_object(tag, new_obj)
+                        break

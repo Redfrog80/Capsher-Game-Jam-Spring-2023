@@ -24,6 +24,9 @@ class Enemy(Playable):
         self.damp_factor = damp_fac
         self.hover_distance = hover_dist
 
+    def setTarget(self, target):
+        self.target = target
+
     def collisionEffect(self, dt, obj):
         if isinstance(obj, Projectile) and obj.tag == "player_bullet":
             self.gotHit(obj.dmg)

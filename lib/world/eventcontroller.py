@@ -9,7 +9,7 @@ class EventController:
     use to handle player input and world event
     """
     def __init__(self, player_object: Player, game_world: GameWorld) -> None:
-        self.extraEventList = []
+        self.extraEventList = {}
         self.player = player_object
         self.world = game_world
         self.run = True
@@ -17,12 +17,10 @@ class EventController:
         self.shooting = False
         self.player.gun.firerate = 0.2
 
-    def update_player(self, dt):
+    def update_events(self, dt):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
-            if event.type in self.extraEventList:
-                print("custom")
             if event.type == KEYDOWN:
                 if event.key == K_w:
                     self.player.goForward()
@@ -49,7 +47,10 @@ class EventController:
                 self.shooting = True
             if event.type == MOUSEBUTTONUP:
                 self.shooting = False
-        
+            if event.type in self.extraEventList:
+                data = self.extraEventList[event.type]
+                data[0](data[1], data[2], data[3], data[4])
+
         if self.shooting and self.player.liveflag:
             bullet = self.player.shoot(dt, "b_" + str(self.bullet_num))
             if bullet:
@@ -58,14 +59,14 @@ class EventController:
 
         return True
 
-    def addEvent(self, time, chance, amount, obj_class, tag):
+    def addEventSpawn(self, time, chance, num_range, obj_class, tag):
         """
         :param time: time occur in s
         :param chance: probability of something happen 0 - 1
-        :param amount: tuple: lower and upper bound
+        :param num_range: tuple: lower and upper bound
         :param obj_class: which class to spawn
         :param tag: obj tag
         """
         newEvent = pygame.USEREVENT + 1
         pygame.time.set_timer(newEvent, time * 1000)
-        self.extraEventList.append(newEvent)
+        self.extraEventList.update({newEvent: (self.world.spawnObj, chance, num_range, obj_class, tag)})
