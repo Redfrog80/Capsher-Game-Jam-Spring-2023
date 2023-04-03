@@ -1,5 +1,9 @@
 import random
 import pygame
+from pygame.locals import *
+from math import *
+import random
+from sound_class import SoundEffects
 
 # This is somewhat cursed, but it will let me run a __main__ file from anywhere in the python path
 if __name__ == '__main__':
@@ -18,6 +22,7 @@ from GameWorld import GameWorld
 from playercontroller import PlayerController
 
 pygame.init()
+pygame.mixer.init()
 
 # initializer
 
@@ -71,6 +76,8 @@ for i in range(10):
     newEnemy.setStat(0, 100, 50, 0, 50, 50, 1000)
     newEnemy.follow_config(player, 800, 1, 200)
     world.add_game_object("enemy", newEnemy)
+
+SoundEffects.Battle_Music()
 
 run = True
 while run:
