@@ -4,6 +4,7 @@ from .Playable import Playable
 from .ProjectTile import Projectile
 from lib.misc import *
 import math
+from src.sound_class import SoundEffects
 
 
 class Enemy(Playable):
@@ -42,6 +43,7 @@ class Enemy(Playable):
         self.damage(damage)
         if self.isDead():
             self.destroy()
+            SoundEffects.play_enemy_death_sound()
 
     def trackTarget(self, dt):
         self.pos = addTuple(self.pos, mulTuple(self.vel, dt))
