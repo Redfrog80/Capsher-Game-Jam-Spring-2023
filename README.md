@@ -8,6 +8,7 @@
 This is a game built entirely with Python’s PyGame library. The player is a ship trying to survive and defeat the queen of the aliens – but with a twist for the player to discover during gameplay. An executable for Windows has been provided for ease of access.
 
 ## Classes
+classes and documentation is unfinished
 * Main():
 * Objects():
 * Camera():
@@ -17,6 +18,8 @@ This is a game built entirely with Python’s PyGame library. The player is a sh
 * GameWorld():
 
 ## Libraries used
+* pygame (main library for coding the game)
+* os (for compatibility between files)
 * math (for trig calculations and more complicated gameplay features)
 * random (for variation in sounds, enemy spawning, etc)
 * audioop.mul (I have no idea what this is for)
