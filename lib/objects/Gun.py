@@ -68,13 +68,18 @@ class Gun(GameObject):
 
         if canLaser:
             #shoot da laser
-            return Beam(self.pos, name, self.beamDmg, self.beamLife, self.rot);
+            bullet_size = (80,80)
+            bullet = Projectile(name, self.damage*100, self.bulletLife, size = bullet_size, img="resources/images/plasma4.png")
+            bullet.setTextureSize(bullet_size)
+            bullet.traj(self.pos, self.follow.vel, self.bulletVel*6, self.rot, 1.5)
+            self.cooldown = self.firerate
+            return bullet
         else:
             self.cooldown -= dt
             #print(self.cooldown)
             if (self.cooldown < 0):
                 bullet_size = (20,20)
-                bullet = Projectile(name, self.damage, self.bulletLife, size = bullet_size, img="resources/images/bullet2.png")
+                bullet = Projectile(name, self.damage*5, self.bulletLife, size = bullet_size, img="resources/images/bullet2.png")
                 bullet.setTextureSize(bullet_size)
                 bullet.traj(self.pos, self.follow.vel, self.bulletVel, self.rot, 1.5)
                 self.cooldown = self.firerate
