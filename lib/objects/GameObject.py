@@ -2,7 +2,7 @@
 from ..misc import *
 from .Base import Base
 from .Camera import Camera
-from pygame import image, surface, transform
+from pygame import image, surface, transform, draw
 
 
 class GameObject(Base):
@@ -19,14 +19,17 @@ class GameObject(Base):
         try:
             return self.boundary.colliderect(other.boundary)
         except:
-            #make lines from sides of rectangle, (start, end)
-            line1 = ((self.boundary.x, self.boundary.y), (self.boundary.x, self.boundary.y + self.boundary.height));
-            line2 = ((self.boundary.x, self.boundary.y), (self.boundary.x + self.boundary.width, self.boundary.y));
-            line3 = ((self.boundary.x, self.boundary.y + self.boundary.height), (self.boundary.x + self.boundary.width, self.boundary.y + self.boundary.height));
-            line4 = ((self.boundary.x + self.boundary.width, self.boundary.y), (self.boundary.x + self.boundary.width, self.boundary.y + self.boundary.height));
+            try:
+                #make lines from sides of rectangle, (start, end)
+                line1 = ((self.boundary.x, self.boundary.y), (self.boundary.x, self.boundary.y + self.boundary.height));
+                line2 = ((self.boundary.x, self.boundary.y), (self.boundary.x + self.boundary.width, self.boundary.y));
+                line3 = ((self.boundary.x, self.boundary.y + self.boundary.height), (self.boundary.x + self.boundary.width, self.boundary.y + self.boundary.height));
+                line4 = ((self.boundary.x + self.boundary.width, self.boundary.y), (self.boundary.x + self.boundary.width, self.boundary.y + self.boundary.height));
 
-            #check for intersections
-            return checkIntersection(self.boundary, line1) or checkIntersection(self.boundary, line2) or checkIntersection(self.boundary, line3) or checkIntersection(self.boundary, line4);
+                #check for intersections
+                return checkIntersection(self.boundary, line1) or checkIntersection(self.boundary, line2) or checkIntersection(self.boundary, line3) or checkIntersection(self.boundary, line4);
+            except:
+                return True;
 
     def collisionEffect(self, dt, object):
         direction = self.check_collide_direction(object)
@@ -56,7 +59,7 @@ class GameObject(Base):
         self.matchBoundaryToTexture()
 
     def render(self, screen: surface, cam: Camera):
-        
+        draw.rect(screen, (255, 0, 0), self.boundary);
         if self.checkCollision(cam):  # render when object collide with camera view
             img0 = transform.rotate(self.texture, self.rot)
             dummy = divTuple(subTuple(img0.get_size(), self.boundary.size), 2)
