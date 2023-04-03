@@ -18,6 +18,8 @@ classes and documentation is unfinished
 * GameWorld():
 
 ## Libraries used
+* pygame (main library for coding the game)
+* os (for compatibility between files)
 * math (for trig calculations and more complicated gameplay features)
 * random (for variation in sounds, enemy spawning, etc)
 * audioop.mul (I have no idea what this is for)
