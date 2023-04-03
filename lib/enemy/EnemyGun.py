@@ -3,6 +3,7 @@ from ..misc import *
 #from pygame import mouse
 from math import *
 from pygame import surface, transform, draw
+from enemy import EnemyBullet;
 #from .Camera import Camera
 
 
@@ -16,7 +17,7 @@ class EnemyGun(GameObject):
         self.bulletVel = 200
         self.bulletLife = 4
         
-        self.damage = 30
+        self.damage = 15
         
         self.cooldown = 0
         self.firerate = 0.1
@@ -64,7 +65,7 @@ class EnemyGun(GameObject):
         print(self.cooldown)
         if (self.cooldown < 0):
             bullet_size = (20,20)
-            bullet = Projectile(name, self.damage, self.bulletLife, size = bullet_size, img="resources/images/bullet2.png")
+            bullet = EnemyBullet(name, self.damage, self.bulletLife, size = bullet_size, img="resources/images/bullet1.png")
             bullet.setTextureSize(bullet_size)
             bullet.traj(self.pos, self.follow.vel, self.bulletVel, self.rot, 1.5)
             self.cooldown = self.firerate

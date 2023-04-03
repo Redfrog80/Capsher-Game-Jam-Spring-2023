@@ -1,9 +1,10 @@
 import math
 from lib.misc import *
 from lib.objects import *
+from lib.objects import Enemy;
 
 
-class Assault(Enemy):
+class Suicide(Enemy):
     def __init__(self, name: str = "", dmg: float=25, pos: tuple = (0, 0), size: tuple = (0, 0),
                  img: str = "resources/images/amogus.png"):
         super().__init__(name, pos, size, img)

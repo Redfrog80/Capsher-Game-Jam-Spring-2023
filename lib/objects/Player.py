@@ -4,6 +4,7 @@ import math
 from ..misc import *
 from .Gun import Gun
 from .Camera import Camera
+from lib.enemy import *;
 from pygame import image, surface, transform
 
 
@@ -57,8 +58,11 @@ class Player(Playable):
     
     def collisionEffect(self, dt, object):
         if not isinstance(object, Projectile):
-            Playable.collisionEffect(self,dt, object)
-            self.gotHit(5)
+            if isinstance(object, EnemyBullet):
+                self.gotHit(object.dmg);
+            else:
+                Playable.collisionEffect(self,dt, object)
+                self.gotHit(5)
 
     def render(self, screen: surface, cam: Camera):
         if self.checkCollision(cam):  # render when object collide with camera view

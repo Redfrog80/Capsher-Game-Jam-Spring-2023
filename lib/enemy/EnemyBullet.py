@@ -6,7 +6,7 @@ from pygame import image, surface, transform
 import math
 
 
-class Projectile(GameObject):
+class EnemyBullet(GameObject):
     def __init__(self, name: str = "bullet", dmg: float = 0, life : float = 10, size: tuple = (16, 16),
                  img: str = "resources/images/plasmaball.png"):
         """

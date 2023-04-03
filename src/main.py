@@ -49,7 +49,7 @@ world.add_game_object("Player",player)
 world.set_tracked_object("Player", 200)
 
 for i in range(40):
-    enemy = Assault("a_"+str(i), 40, (random.randint(0,2000), random.randint(0,2000)), (40, 40), img = "resources/images/enemy1.png")
+    enemy = Suicide("s_"+str(i), 40, (random.randint(0,2000), random.randint(0,2000)), (40, 40), img = "resources/images/enemy1.png")
     enemy.setStat(0, 100, 50, 0, 100, 200, 1000)
     enemy.follow_config(player,500, 1, 10)
     world.add_game_object("enemy",enemy)

@@ -13,7 +13,7 @@ class Sentinel(Enemy):
         #This guy will stay at a large distance from the player and shoot stuff
         self.gun.setTextureSize((128, 128))
         self.gun.trackCenter(self)
-        self.cooldown = 10;
+        self.cooldown = 5;
         self.timer = 0;
 
     def trackTarget(self, dt):
@@ -47,6 +47,7 @@ class Sentinel(Enemy):
         self.timer += dt;
         if self.timer >= self.cooldown:
             self.shoot(dt, "hostileBullet");
+            self.timer = 0;
 
         if self.target:
             self.trackTarget(dt)
