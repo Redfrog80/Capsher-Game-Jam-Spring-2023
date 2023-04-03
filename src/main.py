@@ -18,7 +18,7 @@ if __name__ == '__main__':
         from ..lib.objects import *
         from ..lib import enemy
 
-from GameWorld import GameWorld
+from gameWorld import GameWorld
 from playercontroller import PlayerController
 
 pygame.init()

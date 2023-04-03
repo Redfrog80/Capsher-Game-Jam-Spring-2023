@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 from lib.objects import *
-from src.GameWorld import GameWorld
+from gameWorld import GameWorld
 
 
 class PlayerController:
