@@ -55,7 +55,7 @@ class Player(Playable):
         self.acc = ac
 
     def shoot(self, dt, name):
-        #SoundEffects.play_enemy_death_sound()
+        SoundEffects.play_enemy_death_sound()
         return self.gun.shoot(dt, name)
 
     def destroy(self):
