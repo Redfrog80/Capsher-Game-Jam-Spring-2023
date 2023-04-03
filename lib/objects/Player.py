@@ -62,6 +62,7 @@ class Player(Playable):
         if not isinstance(object, (Projectile)):
             self.gotHit(10)
             Playable.collisionEffect(self, world, dt, object)
+            SoundEffects.play_laser_sound()
         
             if self.liveflag:
                 self.spawn_particles_on_pos(world,5,(3,3),(200,200),1,1)
