@@ -1,8 +1,8 @@
 import random
 import pygame
-import os
 
 class SoundEffects:
+    pygame.mixer.init()
     def __init__(self):
         self.player_damaged = [pygame.mixer.Sound('sounds/LaserShot1.wav'),
                              pygame.mixer.Sound('sounds/LaserShot3.wav')]
@@ -26,12 +26,21 @@ class SoundEffects:
         self.queen_spawn_sound = pygame.mixer.Sound('sounds/Tension2.wav')
         self.emperor_spawn_sound = pygame.mixer.Sound('sounds/Tension3.wav')
         
-        self.player_damaged.set_volume(1) # not sure
-        self.enemy_shot.set_volume(1) # enemy shots
-        self.player_shot.set_volume(1) # player shots
+        for sound in self.player_damaged:
+            sound.set_volume(1) # not sure
+        for sound in self.enemy_shot:
+            sound.set_volume(1) # not sure
+        for sound in self.player_shot:
+            sound.set_volume(1) # not sure
+        #self.enemy_shot.set_volume(1) # enemy shots
+        #self.player_shot.set_volume(1) # player shots
         self.glitch_sound.set_volume(1) 
-        self.player_death_sounds.set_volume(1)
-        self.enemy_death_sounds.set_volume(1)
+        for sound in self.player_death_sounds:
+            sound.set_volume(1) # not sure
+        for sound in self.enemy_death_sounds:
+            sound.set_volume(1) # not sure
+        #self.player_death_sounds.set_volume(1)
+        #self.enemy_death_sounds.set_volume(1)
         self.alert_sound.set_volume(1)
         self.UI_sound.set_volume(1)
 
@@ -79,15 +88,6 @@ class SoundEffects:
         
 """
         
-TO PLAY SOUNDS: 
-
-from src.sound_class import SoundEffects
-pygame.mixer.init
-
-sound_effects = SoundEffects()
-sound_effects.play_laser_sound()
-or
-SoundEffects.play_laser_sound()
 
 FINAL:
 

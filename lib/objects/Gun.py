@@ -4,7 +4,7 @@ from math import *
 from pygame import surface, transform, draw
 from .Camera import Camera
 from .ProjectTile import Projectile
-
+from .sound_class import SoundEffects;
 
 class Gun(GameObject):
     def __init__(self, name: str = "", pos: tuple = ..., size: tuple = ..., win_size: tuple = ...,
@@ -19,7 +19,7 @@ class Gun(GameObject):
 
         self.cooldown = 0
         self.firerate = 0.1
-
+        
         self.follow = None
 
     # Use this to attach the gun to something
