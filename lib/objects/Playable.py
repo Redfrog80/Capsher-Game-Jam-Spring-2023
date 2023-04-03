@@ -5,16 +5,25 @@ class Playable(GameObject):
     """Generic class for both player and enemy"""
     def __init__(self, name: str = "", pos: tuple = (0, 0), size: tuple = (0, 0),
                  img: str = "resources/images/notfound.png"):
-        super().__init__(name, pos, size, img)
+        super().__init__(name=name, pos=pos, size=size, img=img)
 
         # stat
         self.health = 0
         self.shield = 0
         self.healthMax = 0
         self.shieldMax = 0
-        self.speed = 0
         self.speedMax = 0
-        self.rotspeedMax = 0
+        self.acc_lin = 0
+        self.rotSpeedMax = 0
+
+    def setStat(self, s: float, shm: float, h: float, hm: float, a: float, sm: float, rm: float):
+        self.shield = s
+        self.health = h
+        self.shieldMax = shm
+        self.healthMax = hm
+        self.acc_lin = a
+        self.speedMax = sm
+        self.rotSpeedMax = rm
 
     def isDead(self):
         return self.health <= 0
@@ -36,3 +45,8 @@ class Playable(GameObject):
                 self.shield = 0
         else:
             self.health -= value
+
+    def gotHit(self, damage):
+        self.damage(damage)
+        if self.isDead():
+            self.destroy()
