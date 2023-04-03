@@ -19,10 +19,11 @@ This is a game built entirely with Python’s PyGame library. The player is a sh
 * Sound_class: An unfinished class that contains sound randomization and simplified playing.
 
 ## Libraries used
-* pygame (main library for coding the game)
+* PyGame (main library for coding the game)
+* Internal libraries: math, random
 
 ## Roles
-* Gage: Concepted enemy classes, created assets, story and text system, sound engine, and start menu.
+* Gage: Concepted enemy classes, created sounds/music, created sprites, story and text system, sound engine, and start menu.
 * Hao: 
 * Jeremy: Created the gameWorld class, added collision detection, added garbage collection system, added particle system.
 * Phong:
@@ -30,5 +31,9 @@ This is a game built entirely with Python’s PyGame library. The player is a sh
 ## What we weren't able to finish
 * Sound system. We resorted to removing implemenation of sounds and directly pasting music to the PyGame mixer. Successfully implemented music, but didn't push in time.
 * UI
-* Text and plot system (in Gage branch.) We had a plot for the game to create fading text in the background giving hints and a monologue.
-* Polishing. The event system needs work and we currently don't have a respawn mechanic. Also, enemies spawn way too much. Don't tell anyone, this was intentional.
+* Text and plot system (in Gage's branch.) We had a plot for the game to create fading text in the background giving hints and a monologue.
+* Polishing. The event system needs work and we currently don't have a respawn mechanic. Also, enemies spawn way too much. Don't tell anyone, this was intentional. Also, we used the wrong player sprite.
+
+## Assets
+* Sounds/music created in Ableton
+* Sprites created in Blender 3.5
