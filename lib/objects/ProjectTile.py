@@ -4,6 +4,7 @@ from .GameObject import GameObject
 from .Camera import Camera
 from .Particle import ParticleSimple
 import lib.objects
+from src.sound_class import SoundEffects
 
 from pygame import image, surface, transform
 

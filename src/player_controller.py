@@ -5,6 +5,7 @@ from lib.misc import *
 from lib.objects import *
 from src.gameWorld import gameWorld
 from math import *
+from src.sound_class import SoundEffects
 
 
 class player_controller:
@@ -65,5 +66,7 @@ class player_controller:
             if (bullet):
                 self.world.add_game_object("player_bullet",bullet)
                 self.bullet_num += 1
+                SoundEffects.play_boom_sound()
+                
 
         return True

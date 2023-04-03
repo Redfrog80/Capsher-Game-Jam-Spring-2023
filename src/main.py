@@ -58,7 +58,7 @@ for i in range(1):
 run = True
 while run:
     
-    game_screen.fill((5, 5, 15))
+    game_screen.fill((5, 5, 15)) # replace with background image?
     
     world.render_tile_map()
     world.render()
