@@ -31,25 +31,23 @@ class GameWorld:
         self.__garbage__ = []
         self.tileMap = {}
         self.collided_pairs = {}
-        self.no_collide_tags =["particles"]
         self.border_behavior = self.border_default
         self.debug_title_map = False
 
     def __update_tile_map__(self):
-        self.tileMap.clear()
+        self.tileMap = {}
         for key in self.__game_objects__:
-            if key not in self.no_collide_tags:
-                for object_name in self.__game_objects__[key]:
-                    obj = self.__game_objects__[key][object_name]
-                    boundary = obj.boundary
-                    topLeft, bottomRight = [floorElementDiv(i, self.__tiledim__) for i in
-                                            [boundary.topleft, boundary.bottomright]]
-                    for tup in [(i, j) for i in range(topLeft[0], bottomRight[0] + 1) for j in
-                                range(topLeft[1], bottomRight[1] + 1)]:
-                        self.tileMap[tup] = [obj] + self.tileMap.get(tup, [])
+            for object_name in self.__game_objects__[key]:
+                obj = self.__game_objects__[key][object_name]
+                boundary = obj.boundary
+                topLeft, bottomRight = [floorElementDiv(i, self.__tiledim__) for i in
+                                        [boundary.topleft, boundary.bottomright]]
+                for tup in [(i, j) for i in range(topLeft[0], bottomRight[0] + 1) for j in
+                            range(topLeft[1], bottomRight[1] + 1)]:
+                    self.tileMap[tup] = [obj] + self.tileMap.get(tup, [])
 
     def __get_collided_pairs__(self):
-        self.collided_pairs.clear()
+        self.collided_pairs = {}
         for tile in self.tileMap:
             for object in self.tileMap[tile]:
                 for other_object in self.tileMap[tile]:
@@ -144,10 +142,8 @@ class GameWorld:
                     fun(world=self, dt=dt, key=key, object=obj)
                 self.delete_if_dead(obj)
 
-        self.__garbage_collection__()
         self.__update_tile_map__()
         self.__get_collided_pairs__()
-        
         for i in self.__addlist__:
             for j in i:
                 self.add_game_object(j[0], j[1])
@@ -155,13 +151,13 @@ class GameWorld:
 
         for pair in self.collided_pairs:
             obj_a, obj_b = self.collided_pairs[pair]
-            obj_a.collisionEffect(self, dt, obj_b)
-            obj_b.collisionEffect(self, dt, obj_a)
+            obj_a.collisionEffect(dt, obj_b)
+            obj_b.collisionEffect(dt, obj_a)
+        self.__garbage_collection__()
 
     def render(self, *args):
         if self.debug_title_map:
             self.render_tile_map()
-
         for key in self.__game_objects__:
             for obj_key in self.__game_objects__[key]:
                 obj = self.__game_objects__[key][obj_key]

@@ -17,6 +17,9 @@ class Enemy(Playable):
         self.damp_factor = 0
         self.hover_distance = 0
         self.target = None
+        
+        self.coll_dmg = 10
+        self.suicide = False
 
     def follow_config(self, target, max_dist, damp_fac, hover_dist):
         self.target = target
@@ -25,13 +28,14 @@ class Enemy(Playable):
         self.hover_distance = hover_dist
 
     def collisionEffect(self,world, dt, object):
-        if isinstance(object, Projectile) and object.liveflag and object.tag == "player_bullet":
-            self.gotHit(object.dmg)
-            object.destroy()
+        if isinstance(object, Projectile) and object.liveflag:
+            if  object.tag == "player_bullet":
+                self.gotHit(object.dmg)
+                object.destroy()
+            else:
+                return
         elif not isinstance(object, type(Gun)):
             Playable.collisionEffect(self, world, dt, object)
-        if not isinstance(object, Enemy):
-            self.gotHit(1)
 
         if self.liveflag:
             self.spawn_particles_on_pos(world,5,(3,3),(200,200),1,1)
