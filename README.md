@@ -1,6 +1,6 @@
 # Capsher-Game-Jam-Spring-2023  
 
-## Starship Renegade (undecided name)
+## Starship Renegade [Team: S.C.R.A.P.]
 
 This is a game built entirely with Python’s PyGame library. The player is a ship trying to survive and defeat the queen of the aliens – but with a twist for the player to discover during gameplay. An executable for Windows has been provided for ease of access.
 
