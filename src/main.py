@@ -49,6 +49,8 @@ world.add_game_object("Player",player)
 
 world.set_tracked_object("Player", 200)
 
+SoundEffects.Battle_Music()
+
 for i in range(1):
     enemy = Enemy("e_"+str(i), (random.randint(0,2000), random.randint(0,2000)), (40, 40), img = "resources/images/enemy1.png")
     enemy.setStat(0, 100, 50, 0, 100, 200, 1000)
