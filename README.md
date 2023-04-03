@@ -26,7 +26,7 @@ classes and documentation is unfinished
 * Jeremy: Created the gameWorld class, added collision detection, added garbage collection system, added particle system.
 * Phong:
 
-## What we weren't able to finish:
+## What we weren't able to finish
 * Sound system. We resorted to removing implemenation of sounds and directly pasting music to the PyGame mixer.
 * Text and plot system (in Gage branch.) We had a plot for the game to create fading text in the background giving hints and a monologue.
 * Polishing. The event system needs work and we currently don't have a respawn mechanic.
