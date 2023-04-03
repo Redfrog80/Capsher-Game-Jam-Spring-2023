@@ -2,7 +2,7 @@
 
 ## R.A.G.E. Shooter [Team: S.C.R.A.P.] (Spaghetti Code Running Advanced Programs)
 
-This is a game built entirely with Python’s PyGame library. The player is an abandoned ship trying to survive. An executable for Windows has been provided for ease of access.  
+Welcome to our R.A.G.E. (Rapid Aerial Gravitational Emancipator) Shooter. This is a game built entirely with Python’s PyGame library. The player is an abandoned ship trying to survive. An executable for Windows has been provided for ease of access.  
 
 See how long you can survive! 
 
