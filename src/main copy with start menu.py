@@ -53,6 +53,21 @@ world.add_game_object("Player", player)
 
 world.set_tracked_object("Player", 100)
 
+start_screen = True # Click to play game
+while start_screen:
+    game_screen.fill((0, 0, 0))
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            start_screen = False                    # ends start screen
+    
+    start_image = pygame.image.load("resources/images/click_to_start.png").convert()
+ 
+    # Using blit to copy content from one surface to other
+    window_screen.blit(start_image, (0, 0))
+
 for i in range(10):
     newEnemy = enemy.Assault("a_" + str(i), (random.randint(0, 2000), random.randint(0, 2000)), (48, 48),
                              img="resources/images/enemy2.png")
