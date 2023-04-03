@@ -58,7 +58,7 @@ class Player(Playable):
     def collisionEffect(self, dt, object):
         if not isinstance(object, Projectile):
             Playable.collisionEffect(self,dt, object)
-            self.gotHit(10)
+            self.gotHit(5)
 
     def render(self, screen: surface, cam: Camera):
         if self.checkCollision(cam):  # render when object collide with camera view

@@ -10,9 +10,11 @@ if __name__ == '__main__':
         sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
         from lib.misc import *
         from lib.objects import *
+        from lib.enemy import *;
     else:
         from ..lib.misc import *
         from ..lib.objects import *
+        from ..lib.enemy import *;
 
 from gameWorld import gameWorld
 from player_controller import player_controller
@@ -46,8 +48,8 @@ world.add_game_object("Player",player)
 
 world.set_tracked_object("Player", 200)
 
-for i in range(100):
-    enemy = Enemy("e_"+str(i), (random.randint(0,2000), random.randint(0,2000)), (40, 40), img = "resources/images/enemy1.png")
+for i in range(40):
+    enemy = Assault("e_"+str(i), 40, (random.randint(0,2000), random.randint(0,2000)), (40, 40), img = "resources/images/enemy1.png")
     enemy.setStat(0, 100, 50, 0, 100, 200, 1000)
     enemy.follow_config(player,500, 1, 10)
     world.add_game_object("enemy",enemy)
