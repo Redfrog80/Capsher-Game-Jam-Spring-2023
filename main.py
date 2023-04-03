@@ -51,7 +51,7 @@ controller.addEventSpawn(1, 100, (1, 6), enemy.Sentinel, "enemy")
 
 pygame.mixer.music.load("sounds/loading_screen.wav")
 pygame.mixer.music.play(-1)
-pygame.mixer.music.set_volume(1)
+pygame.mixer.music.set_volume(0.5)
 
 start_screen = True  # Click to play game
 start_image = pygame.transform.scale(pygame.image.load("resources/images/click_to_start.png").convert(), window_dim)
