@@ -5,7 +5,7 @@ from lib.objects import *
 
 class Juggernaut(Enemy):
     def __init__(self, name: str = "", pos: tuple = (0, 0), size: tuple = (0, 0),
-                 img: str = "resources/images/amogus.png"):
+                 img: str = "resources/images/Emperor1.png"):
         super().__init__(name, pos, size, img)
         self.bulletCount = 0
         self.att_range = 0
@@ -15,6 +15,10 @@ class Juggernaut(Enemy):
         self.bulletLife = 3
         self.bulletVel = 200
         self.set_weapon_control()
+        # post process so I don't have to call this from main
+        self.setTextureSize((64, 64))
+        self.setStat(0, 100, 50, 0, 50, 50, 1000)
+        self.follow_config(None, 800, 1, 200)
 
     def set_weapon_control(self, dmg=10, att_r=300, cooldowntimer=5):
         self.dmg = dmg

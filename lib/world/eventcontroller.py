@@ -1,23 +1,28 @@
 import pygame
 from pygame.locals import *
 from lib.objects import *
-from src.GameWorld import GameWorld
+from world.GameWorld import GameWorld
 
 
-class PlayerController:
-    def __init__(self, player_object :Player, game_world : GameWorld) -> None:
+class EventController:
+    """
+    use to handle player input and world event
+    """
+    def __init__(self, player_object: Player, game_world: GameWorld) -> None:
+        self.extraEventList = []
         self.player = player_object
         self.world = game_world
         self.run = True
         self.bullet_num = 0
         self.shooting = False
-        
         self.player.gun.firerate = 0.2
 
     def update_player(self, dt):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
+            if event.type in self.extraEventList:
+                print("custom")
             if event.type == KEYDOWN:
                 if event.key == K_w:
                     self.player.goForward()
@@ -52,3 +57,15 @@ class PlayerController:
                 self.bullet_num += 1
 
         return True
+
+    def addEvent(self, time, chance, amount, obj_class, tag):
+        """
+        :param time: time occur in s
+        :param chance: probability of something happen 0 - 1
+        :param amount: tuple: lower and upper bound
+        :param obj_class: which class to spawn
+        :param tag: obj tag
+        """
+        newEvent = pygame.USEREVENT + 1
+        pygame.time.set_timer(newEvent, time * 1000)
+        self.extraEventList.append(newEvent)

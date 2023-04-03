@@ -1,4 +1,4 @@
-from pygame import Surface, surface, Rect, font
+from pygame import Surface, Rect
 import pygame
 from lib.misc import *
 from lib.objects import Camera, GameObject
@@ -33,6 +33,7 @@ class GameWorld:
         self.collided_pairs = {}
         self.border_behavior = self.border_default
         self.debug_title_map = False
+        self.maxEnemy = 100
 
     def __update_tile_map__(self):
         self.tileMap = {}
@@ -129,6 +130,7 @@ class GameWorld:
         self.__camera__.update(dt)
         mousePos = self.get_scaled_mouse_pos()
 
+        # update existing game obj
         for key in self.__game_objects__:
             for object_key in self.__game_objects__[key]:
                 obj = self.__game_objects__[key][object_key]
@@ -171,3 +173,6 @@ class GameWorld:
             self.__screen__.fill((tile[0] * 4 % 200 + 55, 55, tile[1] * 4 % 200 + 55),
                                  Rect(subTuple(mulElements(tile, self.__tiledim__), self.__camera__.boundary.topleft),
                                       self.__tiledim__))
+
+    def spawnEnemy(self, ):
+        pass
