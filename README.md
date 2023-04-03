@@ -2,7 +2,9 @@
 
 ## R.A.G.E. Shooter [Team: S.C.R.A.P.] (Spaghetti Code Running Advanced Programs)
 
-This is a game built entirely with Python’s PyGame library. The player is a ship trying to survive and defeat the queen of the aliens – but with a twist for the player to discover during gameplay. An executable for Windows has been provided for ease of access.
+This is a game built entirely with Python’s PyGame library. The player is a ship trying to survive and defeat the queen of the aliens – but with a twist for the player to discover during gameplay. An executable for Windows has been provided for ease of access.  
+
+See how long you can survive! 
 
 ## How to play:
 * W and S to accelerate/decelerate
