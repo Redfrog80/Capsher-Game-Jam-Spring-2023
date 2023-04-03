@@ -15,7 +15,7 @@ class player_controller:
         self.bullet_num = 0
         self.shooting = False
         
-        self.player.gun.firerate = 0.2
+        self.player.gun.firerate = 0.1
 
     def update_player(self, dt):
         for event in pygame.event.get():

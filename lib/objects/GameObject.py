@@ -19,9 +19,6 @@ class GameObject(Base):
         self.texture = image.load(img).convert_alpha()
         self.setTextureSize(size)
         self.matchBoundaryToTexture()
-    
-    def checkCollision(self, other: Base):
-        return self.boundary.colliderect(other.boundary)
 
     def collisionEffect(self,world , dt, object):
         direction = self.check_collide_direction(object)

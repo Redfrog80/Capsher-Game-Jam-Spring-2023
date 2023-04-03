@@ -64,7 +64,7 @@ class Player(Playable):
             if self.liveflag:
                 self.spawn_particles_on_pos(world,5,(3,3),(200,200),1,1)
             else:
-                self.spawn_particles_on_pos(world,10,(5,5),(300,300),2,1)
+                self.spawn_particles_on_pos(world,100,(5,5),(300,300),2,1)
 
     def render(self, screen: surface, cam: Camera):
         if self.checkCollision(cam):  # render when object collide with camera view

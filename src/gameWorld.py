@@ -15,17 +15,19 @@ class gameWorld:
         self.__garbage__ = []
         self.tileMap = {} 
         self.collided_pairs = {}
+        self.no_collide_tags =["particles"]
         self.border_behavior = self.border_default
     
     def __update_tile_map__(self):
         self.tileMap = {}
         for key in self.__game_objects__:
-            for object_name in self.__game_objects__[key]:
-                object = self.__game_objects__[key][object_name]
-                boundary = object.boundary
-                topLeft, bottomRight = [floorElementDiv(i,self.__tiledim__) for i in [boundary.topleft, boundary.bottomright]]
-                for tup in [(i,j) for i in range(topLeft[0],bottomRight[0]+1) for j in range(topLeft[1],bottomRight[1]+1)]:
-                    self.tileMap[tup] = [object] + self.tileMap.get(tup,[])
+            if key not in self.no_collide_tags:
+                for object_name in self.__game_objects__[key]:
+                    object = self.__game_objects__[key][object_name]
+                    boundary = object.boundary
+                    topLeft, bottomRight = [floorElementDiv(i,self.__tiledim__) for i in [boundary.topleft, boundary.bottomright]]
+                    for tup in [(i,j) for i in range(topLeft[0],bottomRight[0]+1) for j in range(topLeft[1],bottomRight[1]+1)]:
+                        self.tileMap[tup] = [object] + self.tileMap.get(tup,[])
     
     def __get_collided_pairs__(self):
         self.collided_pairs = {}
