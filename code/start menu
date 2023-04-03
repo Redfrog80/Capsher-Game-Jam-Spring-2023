@@ -1,34 +1,5 @@
-import pygame
-import sys
 
-pygame.init()
-
-screen_width = 800
-screen_height = 600
-screen = pygame.display.set_mode((screen_width, screen_height))
-
-pygame.display.set_caption("My Game")
-
-start_button_img = pygame.image.load("images/player1.png")
-quit_button_img = pygame.image.load("images/gameImage.png")
-
-button_width = 200
-button_height = 50
-start_button_pos = (screen_width // 2 - button_width // 2, screen_height // 2 - button_height - 200)
-quit_button_pos = (screen_width // 2 - button_width // 2, screen_height // 2 +50)
-
-def check_button_hover(mouse_pos, button_pos):
-    button_rect = pygame.Rect(button_pos[0], button_pos[1], button_width, button_height)
-    return button_rect.collidepoint(mouse_pos)
-
-def handle_button_click(mouse_pos):
-    if check_button_hover(mouse_pos, start_button_pos):
-        print("Start button clicked")
-    elif check_button_hover(mouse_pos, quit_button_pos):
-        pygame.quit()
-        sys.exit()
-
-start_screen = True
+start_screen = True # Click to play game
 while start_screen:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -36,23 +7,4 @@ while start_screen:
             sys.exit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
-            handle_button_click(mouse_pos)
-
-    # Draw buttons and text
-    screen.fill((255, 255, 255))
-    screen.blit(start_button_img, start_button_pos)
-    screen.blit(quit_button_img, quit_button_pos)
-    mouse_pos = pygame.mouse.get_pos()
-    if check_button_hover(mouse_pos, start_button_pos):
-        start_button_img = pygame.image.load("images/emperor4.png")
-    else:
-        start_button_img = pygame.image.load("images/player1.png")
-
-    if check_button_hover(mouse_pos, quit_button_pos):
-        quit_button_img = pygame.image.load("images/enemy1.png")
-    else:
-        quit_button_img = pygame.image.load("images/enemy2.png")
-
-    # Update the display
-    pygame.display.update()
-    start_screen = False
+            start_screen = False
