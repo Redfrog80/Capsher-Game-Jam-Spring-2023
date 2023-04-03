@@ -1,4 +1,4 @@
-## Capsher-Game-Jam-Spring-2023  
+## Capsher Game Jam Spring 2023  
 
 # R.A.G.E. Shooter [Team: S.C.R.A.P.] (Spaghetti Code Running Advanced Programs)
 
