@@ -25,6 +25,11 @@ classes and documentation is unfinished
 
 ## Roles
 * Gage: Concepted enemy classes, created assets, story and text system, sound engine, and start menu
-* Hao:  Idk what all everyone did, it's probably best if you put it in yoursleves
+* Hao: 
 * Jeremy: Created the gameWorld class, added collision detection, added garbage collection system.
 * Phong:
+
+## What we weren't able to finish:
+* Sound system
+* Text and plot system (in Gage branch)
+* Polishing
