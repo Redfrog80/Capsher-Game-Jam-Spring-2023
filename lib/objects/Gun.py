@@ -1,6 +1,5 @@
 from .GameObject import GameObject
-from ..misc import *
-from pygame import mouse
+from lib.misc import *
 from math import *
 from pygame import surface, transform, draw
 from .Camera import Camera
@@ -12,16 +11,15 @@ class Gun(GameObject):
                  img: str = "resources/images/notfound.png"):
         super().__init__(name=name, pos=pos, size=size, img=img)
         self.mouse = (0, 0)
-        
-        self.bulletVel = 200
-        self.bulletLife = 4
-        
-        self.damage = 40
-        
+
+        self.bulletVel = 400
+        self.bulletLife = 2
+
+        self.damage = 10
+
         self.cooldown = 0
         self.firerate = 0.1
-        
-        self.tracking = None        
+
         self.follow = None
 
     # Use this to attach the gun to something
@@ -33,10 +31,9 @@ class Gun(GameObject):
         if self.follow is not None:
             self.pos = addTuple(self.pos, subTuple(self.follow.boundary.center, self.boundary.center))
             self.boundCenterToPos()
-        
+
         if "mousepos" in kwargs:
             self.mouse = kwargs["mousepos"]
-            print(self.mouse, end="\r")
         if "camera" in kwargs:
             offset = subTuple(self.pos, kwargs["camera"].boundary.topleft)
         else:
@@ -53,28 +50,22 @@ class Gun(GameObject):
             self.rotvel = 0
         else:
             if -180 < mangle - gsimpRot < 0 or 180 < mangle - gsimpRot < 360:
-                self.rotvel = -90
+                self.rotvel = -360
             else:
-                self.rotvel = 90
+                self.rotvel = 360
 
         self.rot += self.rotvel * dt
 
     def shoot(self, dt, name: str):
-        """
-        :param name: bullet name, for looking up in dictionary
-        """
         self.cooldown -= dt
-        print(self.cooldown)
-        if (self.cooldown < 0):
-            bullet_size = (20,20)
-            bullet = Projectile(name, self.damage, self.bulletLife, size = bullet_size, img="resources/images/bullet2.png")
-            bullet.setTextureSize(bullet_size)
+        if self.cooldown < 0:
+            bullet_size = (10, 10)
+            bullet = Projectile(name, self.damage, self.bulletLife, size=bullet_size, img="resources/images/bullet2.png")
+            bullet.setTextureSize((40, 40))
             bullet.traj(self.pos, self.follow.vel, self.bulletVel, self.rot, 1.5)
             self.cooldown = self.firerate
-            print(self.cooldown)
             return bullet
         return None
-
 
     def render(self, screen: surface, cam: Camera):
         if self.checkCollision(cam):  # render when object collide with camera view
@@ -82,7 +73,7 @@ class Gun(GameObject):
             dummy = divTuple(subTuple(img0.get_size(), self.boundary.size), 2)
             screen.blit(img0, subTuple(subTuple(self.boundary.topleft, cam.boundary.topleft), dummy))
             aimPoint = (-600 * sin(self.rot * (
-                pi / 180)), -600 * cos(self.rot * (pi / 180)))
+                    pi / 180)), -600 * cos(self.rot * (pi / 180)))
             offset = subTuple(self.pos, cam.boundary.topleft)
             draw.line(screen, (0, 255, 150), offset, self.mouse)
             draw.line(screen, (255, 0, 0), offset, addTuple(offset, aimPoint))

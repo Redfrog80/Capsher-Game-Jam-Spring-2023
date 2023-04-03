@@ -1,6 +1,5 @@
 from .Base import Base
-from ..misc import *
-import math
+from lib.misc import *
 
 
 class Camera(Base):
@@ -13,7 +12,7 @@ class Camera(Base):
     def set_world(self, world):
         self.world = world
 
-    def follow_config(self, target,follow_distance):
+    def follow_config(self, target, follow_distance):
         self.follow_distance = follow_distance
         self.target = target
         self.pos = target.pos

@@ -1,5 +1,3 @@
-from turtle import pos
-from lib.objects import Gun, Player
 from .Playable import Playable
 from .ProjectTile import Projectile
 from lib.misc import *
@@ -17,6 +15,8 @@ class Enemy(Playable):
         self.damp_factor = 0
         self.hover_distance = 0
         self.target = None
+        self.coll_dmg = 10
+        self.sucide = False
 
     def follow_config(self, target, max_dist, damp_fac, hover_dist):
         self.target = target
@@ -24,14 +24,10 @@ class Enemy(Playable):
         self.damp_factor = damp_fac
         self.hover_distance = hover_dist
 
-    def collisionEffect(self, dt, object):
-        if isinstance(object, Projectile) and object.liveflag and object.tag == "player_bullet":
-            self.gotHit(object.dmg)
-            object.destroy()
-        elif not isinstance(object, type(Gun)):
-            Playable.collisionEffect(self, dt, object)
-        if not isinstance(object, Enemy):
-            self.gotHit(1)
+    def collisionEffect(self, dt, obj):
+        if isinstance(obj, Projectile) and obj.tag == "player_bullet":
+            self.gotHit(obj.dmg)
+            obj.destroy()
 
     def gotHit(self, damage):
         self.damage(damage)
@@ -57,7 +53,7 @@ class Enemy(Playable):
                 speedAdd = -self.acc_lin * dt
             else:
                 # damp speed
-                self.vel = mulTuple(self.vel, math.exp(- self.damp_factor))
+                self.vel = mulTuple(self.vel, math.exp(- self.damp_factor * dt))
             self.vel = addTuple(self.vel, (-speedAdd * math.sin(math.radians(self.rot+90)), speedAdd *
                                            math.cos(math.radians(self.rot+90))))
             self.vel = (capRange(self.vel[0], -self.speedMax, self.speedMax),

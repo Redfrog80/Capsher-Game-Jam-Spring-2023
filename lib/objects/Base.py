@@ -1,6 +1,5 @@
-import numpy as np
 from pygame.rect import Rect
-from ..misc import *
+from lib.misc import *
 
 
 class Base:
