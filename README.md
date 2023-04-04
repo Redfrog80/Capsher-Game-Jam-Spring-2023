@@ -2,7 +2,9 @@
 
 # R.A.G.E. Shooter [Team: S.C.R.A.P.] (Spaghetti Coders Running Advanced Programs)
 
-Welcome to our R.A.G.E. (Rapid Aerial Gravitational Emancipator) Shooter. This is a game built entirely with Python’s PyGame library. The player is an abandoned ship trying to survive. An executable for Windows has been provided for ease of access.  
+Welcome to our R.A.G.E. (Rapid Aerial Gravitational Emancipator) Shooter. This is a game built entirely with Python’s PyGame library. The player is an abandoned ship trying to survive. An executable for Windows has been provided for ease of access.
+
+https://user-images.githubusercontent.com/116420022/229889500-90c8367b-9ddf-4d5b-a08a-bc1a525f42e6.mp4
 
 See how long you can survive! 
 
@@ -40,8 +42,4 @@ See how long you can survive!
 ## Assets
 * Sounds/music created in Ableton
 * Sprites created in Blender 3.5
-
-
-
-https://user-images.githubusercontent.com/116420022/229889500-90c8367b-9ddf-4d5b-a08a-bc1a525f42e6.mp4
 
