@@ -34,8 +34,14 @@ See how long you can survive!
 * Sound system. We resorted to removing implemenation of sounds and directly pasting music to the PyGame mixer. Successfully implemented music, but didn't push in time.
 * UI
 * Text and plot system (in Gage's branch.) We had a plot for the game to create fading text in the background giving hints and a monologue.
-* Polishing. The event system needs work and we currently don't have a respawn mechanic. Also, enemies spawn way too much. Don't tell anyone, this was intentional. Also, we used the wrong player sprite.
+* Polishing. The event system needs work and we currently don't have a respawn mechanic. Enemies are too strong and spawn too often. Don't tell anyone, this was intentional. Also, we used the wrong player sprite.
+* Adding features. We had 4 enemy classes, but only 1 of them spawned.
 
 ## Assets
 * Sounds/music created in Ableton
 * Sprites created in Blender 3.5
+
+
+
+https://user-images.githubusercontent.com/116420022/229889500-90c8367b-9ddf-4d5b-a08a-bc1a525f42e6.mp4
+
