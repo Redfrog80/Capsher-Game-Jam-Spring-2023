@@ -20,14 +20,14 @@ See how long you can survive!
 * Playable(): A child of GameObject(). This is the base class for all entities, player or enemy, in the game.
 * Enemy(): A child of Playable(). Basic enemy type, determines tracking, movement, and behavior. Contains 4 enemy types.
 * GameWorld(): Container for entities, handles rendering, physics, and garbage collection of destroyed entites.
-* Sound_class: An unfinished class that contains sound randomization and simplified playing.
+* Sound_class(): An unused class that contains sound randomization and simplified sound triggering.
 
 ## Libraries used
 * PyGame (main library for coding the game)
 * Internal libraries: math, random
 
 ## Roles
-* Gage: Concepted enemy classes, created sounds/music, created sprites, story and text system, sound engine, and start menu.
+* Gage: Created enemy movement and AI, created sounds/music, created sprites, story and text system, sound engine, and start menu.
 * Hao: Player class implementation, Gun class implementation, Some enemy class implementtaion, and some other miscellaneous.
 * Jeremy: Created the gameWorld class, added collision detection, added garbage collection system, added particle system.
 * Phong: Overall structure of the project, including class imlementation and interaction, object to object interaction. Gameplay tunning. Integrate all class and finallize the project
