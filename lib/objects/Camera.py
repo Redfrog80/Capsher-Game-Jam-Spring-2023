@@ -1,13 +1,13 @@
-from .Base import Base
 from lib.misc import *
-
+from .Base import Base
 
 class Camera(Base):
-    def __init__(self, name: str = "", pos: tuple = (0, 0), size: tuple = (0, 0)):
-        super().__init__(name=name, pos=pos, vel=(0, 0), acc=(0, 0), size=size)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.follow_distance = 0
-        self.target = None
-        self.world = None
+        self.world = kwargs.get("world") or None
+        self.target = kwargs.get("target") or None
+        self.shape = scalar_div(kwargs.get("screen_dim"),2)
 
     def set_world(self, world):
         self.world = world
@@ -15,22 +15,17 @@ class Camera(Base):
     def follow_config(self, target, follow_distance):
         self.follow_distance = follow_distance
         self.target = target
-        self.pos = target.pos
+        self.set_pos(target.pos)
 
     def trackTarget(self, dt):
-        self.pos = addTuple(self.pos, mulTuple(self.vel, dt))
-        self.boundCenterToPos()
-
         if bool(self.target):
-            length = magnitude(subTuple(self.target.pos, self.pos))
-            unit = unitTuple(self.target.pos, self.pos)
-            
+            length = self.dist(self.target)
+            unit = self.get_direction(self.target)
             if length > self.follow_distance:
-                self.pos = addTuple(self.pos,mulTuple(unit, length-self.follow_distance))
+                self.set_pos(element_add(self.pos,scalar_mul(unit, self.follow_distance-length)))
 
-    def update(self, dt):
-        if self.target:
+    def update(self, dt, **kwargs):
+        if self.world and self.target:
             self.trackTarget(dt)
-            self.boundCenterToPos()
-            self.world.border_default(dt = 0, object = self, key = "camera")
+            self.world.border_default(0, self)
                 

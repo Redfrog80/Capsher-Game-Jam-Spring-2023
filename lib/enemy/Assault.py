@@ -1,45 +1,54 @@
 import math
 from lib.misc import *
+
 from lib.objects import *
 
 
 class Assault(Enemy):
-    def __init__(self, name: str = "", pos: tuple = (0, 0), size: tuple = (0, 0),
-                 img: str = "resources/images/enemy2.png"):
-        super().__init__(name, pos, size, img)
-        self.bulletCount = 0
+    def __init__(self, **kwargs):
+        
+        kwargs["name"] = kwargs.get("name") or "Assault"
+        kwargs["tag"] = kwargs.get("tag") or ENEMY_TAG
+        kwargs["texture_size"] = kwargs.get("texture_size") or (64,64)
+        kwargs["texture_name"] = kwargs.get("texture_name") or "enemy2"
+        
+        super().__init__(**kwargs)
+
         self.att_range = 0
         self.cooldown = 0
         self.cooldowntimer = 0
-        self.dmg = 0
+        self.projectile_damage = 0
         self.bulletLife = 4
-        self.bulletVel = 200
+        self.bulletVel = 300
         self.set_weapon_control()
         # post process so I don't have to call this from main
-        self.setTextureSize((64, 64))
-        self.setStat(0, 0, 50, 50, 100, 150, 1000)
-        self.follow_config(None, 800, 1, 400)
+        self.setStat(0, 0, 50, 50, 100, 150, 20)
+        self.follow_config(None, 1000, 1, 200)
 
-    def set_weapon_control(self, dmg=10, att_r=600, cooldowntimer=2):
-        self.dmg = dmg
+    def set_weapon_control(self, damage=10, att_r=600, cooldowntimer=2):
+        self.projectile_damage = damage
         self.att_range = att_r
         self.cooldowntimer = cooldowntimer
 
     def shoot(self, dt, aim: tuple, name: str):
-        bullet_size = (20, 20)
-        bullet = Projectile(name, self.dmg, self.bulletLife, size=bullet_size, img="resources/images/bullet6.png")
-        bullet.setTextureSize(bullet_size)
+        bullet_size = (35,35)
+        bullet = Projectile(name = name,
+                            tag = ENEMY_PROJECTILE_TAG,
+                            damage = self.projectile_damage,
+                            life = self.bulletLife,
+                            texture_size=bullet_size,
+                            texture_name="bullet6")
         bullet.traj(self.pos, self.vel, self.bulletVel, math.degrees(math.atan2(*aim)), 1)
         self.cooldown = self.cooldowntimer
         return bullet
 
-    def update(self, dt: float, **kwargs):
+    def update(self, **kwargs):
+        dt = kwargs.get("dt") or 0
         if self.target:
             self.trackTarget(dt)
-            shootvec = subTuple(self.pos, self.target.pos)
+            shootvec = element_sub(self.pos, self.target.pos)
             if magnitude(shootvec) < self.att_range and self.cooldown <= 0:
-                bullet = self.shoot(dt, shootvec, self.name + "b_" + str(self.bulletCount))
-                self.bulletCount += 1
-                return [("enemy_bullet", bullet)]
+                bullet = self.shoot(dt, shootvec, self.name)
+                return [bullet]
             elif self.cooldown > 0:
                 self.cooldown -= dt

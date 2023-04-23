@@ -1,0 +1,6 @@
+PLAYER_TAG = "Player"
+ENEMY_TAG = "Enemy"
+PLAYER_PROJECTILE_TAG = "player_proj"
+ENEMY_PROJECTILE_TAG = "enemy_proj"
+PARTICLE_TAG = "particle"
+CAMERA_TAG = "camera"

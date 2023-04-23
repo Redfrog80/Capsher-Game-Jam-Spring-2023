@@ -1,16 +1,13 @@
-from ..misc import *
-from .GameObject import GameObject
-from .Camera import Camera
-from .ProjectTile import Projectile
-
 from pygame import surface, transform, draw
 from math import *
+from lib.misc import *
+
+from lib.objects.GameObject import GameObject
+from lib.objects.Projectile import Projectile
 
 class Gun(GameObject):
-    def __init__(self, name: str = "", pos: tuple = ..., size: tuple = ..., win_size: tuple = ...,
-                 img: str = "resources/images/notfound.png"):
-        super().__init__(name=name, pos=pos, size=size, img=img)
-        self.mouse = (0, 0)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
         self.bulletVel = 400
         self.bulletLife = 2
@@ -25,59 +22,40 @@ class Gun(GameObject):
     # Use this to attach the gun to something
     def trackCenter(self, other_object):
         self.follow = other_object
-
     
     def collisionEffect(self, world, dt, object):
         pass
 
-    def update(self, dt: float, **kwargs):
+    def update(self, **kwargs):
+        dt = kwargs.get("dt") or 0
         # Sets the center position to the object it is attached to
         if self.follow is not None:
-            self.pos = addTuple(self.pos, subTuple(self.follow.boundary.center, self.boundary.center))
-            self.boundCenterToPos()
+            self.set_pos(self.follow.pos)
+        self.rot = self.follow.rot
 
-        if "mousepos" in kwargs:
-            self.mouse = kwargs["mousepos"]
-        if "camera" in kwargs:
-            offset = subTuple(self.pos, kwargs["camera"].boundary.topleft)
-        else:
-            return
-        # mouse angle calculations
-        mangle = degrees(atan2(*subTuple(offset, self.mouse)))
-        # mouse angle
-        if mangle < 0:
-            mangle += 360
-        # gun angle
-        gsimpRot = self.rot % 360
-        if abs(gsimpRot - mangle) < 1:
-            self.rot = mangle
-            self.rotvel = 0
-        else:
-            if -180 < mangle - gsimpRot < 0 or 180 < mangle - gsimpRot < 360:
-                self.rotvel = -360
-            else:
-                self.rotvel = 360
-
-        self.rot += self.rotvel * dt
-
-    def shoot(self, dt, name: str):
+    def shoot(self, dt, name: str, tag: str):
         self.cooldown -= dt
         if self.cooldown < 0:
-            bullet_size = (20,20)
-            bullet = Projectile(name, self.damage, self.bulletLife, size=bullet_size, img="resources/images/bullet2.png")
-            bullet.setTextureSize(bullet_size)
+            bullet_size = (30,30)
+            bullet = Projectile(name = name,
+                                tag = tag,
+                                damage = self.damage,
+                                life = self.bulletLife,
+                                texture_size=bullet_size,
+                                texture_name = "bullet3",
+                                image_dict = self.image_dict)
             bullet.traj(self.pos, self.follow.vel, self.bulletVel, self.rot, 1.5)
             self.cooldown = self.firerate
             return bullet
         return None
 
-    def render(self, screen: surface, cam: Camera):
-        if self.checkCollision(cam):  # render when object collide with camera view
+    def render(self, world):
+        if self.collide_box(world.camera):  # render when object collide with camera view
             img0 = transform.rotate(self.texture, self.rot)
-            dummy = divTuple(subTuple(img0.get_size(), self.boundary.size), 2)
-            screen.blit(img0, subTuple(subTuple(self.boundary.topleft, cam.boundary.topleft), dummy))
-            aimPoint = (-600 * sin(self.rot * (
-                    pi / 180)), -600 * cos(self.rot * (pi / 180)))
-            offset = subTuple(self.pos, cam.boundary.topleft)
-            # draw.line(screen, (0, 255, 150), offset, self.mouse)
-            # draw.line(screen, (255, 0, 0), offset, addTuple(offset, aimPoint))
+            dummy = scalar_div(img0.get_size(), 2)
+            world.screen.blit(img0, element_sub(element_sub(self.pos, world.camera.topLeft), dummy))
+            # aimPoint = (-600 * sin(self.rot * (
+            #         pi / 180)), -600 * cos(self.rot * (pi / 180)))
+            # offset = element_sub(self.pos, world.camera.topLeft)
+            # draw.line(world.screen, (0, 255, 150), offset, self.mouse)
+            # draw.line(world.screen, (255, 0, 0), offset, element_add(offset, aimPoint))

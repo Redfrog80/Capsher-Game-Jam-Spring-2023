@@ -1,60 +1,57 @@
-import random
-import lib.enemy as enemy
 import pygame
-
-# This is somewhat cursed, but it will let me run a __main__ file from anywhere in the python path
-if __name__ == '__main__':
-    if __package__ is None:
-        import sys
-        from os import path
-
-        sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-        from lib.objects import *
-    else:
-        from lib.objects import *
-
+from lib.misc import *
+from lib.managers import *
+from lib.objects import *
+from lib.enemy import *
 from lib.world import GameWorld
 from lib.world import EventController
-# window initializer
-window_dim, tile_dim = (800, 800), (100, 100)
-game_dim = (800, 800)
 
+# window initializer
+a, b, c= 10, 4, (192,108)
+window_dim = [i*a for i in c]
+game_dim = [i*b for i in c]
+
+pygame.init()
 game_screen = pygame.display.set_mode(game_dim, pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.SCALED, vsync=0).copy()
-window_screen = pygame.display.set_mode(window_dim, pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.SCALED, vsync=0)
-pygame.display.set_caption("BuggyShooter")
+window_screen = pygame.display.set_mode(window_dim, pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.SCALED |pygame.FULLSCREEN, vsync=0)
 
 # world and render setting
 FPS = 120
 clock = pygame.time.Clock()
 
-camera = Camera("camera", (0, 0), size=game_screen.get_size())
-world = GameWorld(pygame.Rect(0, 0, 2000, 2000), tile_dim, game_screen, window_screen.get_size(), camera)
+image_dict = imageDict()
+# player
+player = Player(pos = (2000, 2000))
+player.setStat(150, 150, 250, 250, 500, 500, 360)
+
+world = GameWorld(dimensions = pygame.Rect(0, 0, 4000, 4000),
+                  screen = game_screen,
+                  mouse_area = window_screen.get_size(), 
+                  player = player,
+                  image_dict = image_dict)
 # world.debug_title_map = True
 
-# player
-player = Player("player", (1000, 1000), (48, 48), game_screen.get_size(), img="resources/images/player1.png")
-player.setTextureSize((64, 64))
-player.setStat(100, 100, 100, 100, 500, 500, 360)
 controller = EventController(player, world)
 
 # world add obj and event
-world.add_game_object("Player", player)
-world.player = player
-world.set_tracked_object("Player", 100)
+world.add_game_object(player)
+world.set_tracked_object(player, 40)
 
-controller.addEventSpawn(2, 50, (1, 6), enemy.Assault, "enemy")
-controller.addEventSpawn(3, 25, (4, 10), enemy.Kamikaze, "enemy")
-controller.addEventSpawn(4, 25, (2, 2), enemy.Juggernaut, "enemy")
+controller.addEventSpawn(3, 50, (1, 2), Assault, ENEMY_TAG)
+controller.addEventSpawn(3, 50, (1, 5), Kamikaze, ENEMY_TAG)
+controller.addEventSpawn(6, 25, (1, 4), Juggernaut, ENEMY_TAG)
 
 run = True
 while run:
     # update
     dt = clock.tick(FPS) / 1000
     run = controller.update_events(dt)
-    world.update(dt)
-    # render
+    
     game_screen.fill((5, 5, 15))  # background
+    # render
     world.render()
+
+    world.update(dt)
     # draw on screen
     window_screen.blit(pygame.transform.scale(game_screen, window_dim), (0, 0))
     pygame.display.flip()

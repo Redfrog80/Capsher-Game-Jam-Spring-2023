@@ -1,66 +1,48 @@
 import pygame
 
 from ..misc import *
+from ..managers import *
 from .Base import Base
-from .Camera import Camera
 from .Particle import ParticleSimple
 from pygame import image, surface, transform
-
 
 class GameObject(Base):
     """
     game object: can be rendered and have update movement
     """
 
-    def __init__(self, name: str = "", pos: tuple = (0, 0), vel: tuple = (0, 0), acc: tuple = (0, 0),
-                 size: tuple = (0, 0),
-                 img: str = "resources/images/notfound.png"):
-        super().__init__(name=name, pos=pos, vel=vel, acc=acc, size=size)
-        self.texture = image.load(img).convert_alpha()
-        self.setTextureSize(size)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        
+        self.texture_name = kwargs.get("texture_name") or "notFound"
+        self.image_dict = kwargs.get("image_dict") or imageDict()
+        
+        self.texture = self.image_dict.get_image(self.texture_name) or self.image_dict.load_image("resources/images/" + self.texture_name + ".png")
+        
+        self.texture_size = kwargs.get("texture_size") or self.texture.get_size()
+        self.shape = scalar_div(self.texture_size,4)
+        self.setTextureSize(self.texture_size)
 
     def collisionEffect(self, world, dt, obj):
-        direction = self.check_collide_direction(obj)
-        r = self.boundary
-        b = self.boundary
-        if direction[2] and not direction[0]:
-            self.pos = (self.pos[0], self.pos[1] - r.top + b.bottom)
-        elif direction[0] and not direction[2]:
-            self.pos = (self.pos[0], self.pos[1] - r.bottom + b.top)
-        elif direction[3] and not direction[1]:
-            self.pos = (self.pos[0] - r.left + b.right, self.pos[1])
-        elif direction[1] and not direction[3]:
-            self.pos = (self.pos[0] - r.right + b.left, self.pos[1])
+        self.prevent_circle_overlap(obj)
+        self.vel = element_sub(scalar_mul(unit_tuple1(self.vel), -0.7*magnitude(self.vel)),
+                            scalar_mul(unit_tuple1(obj.vel), 0.7*magnitude(obj.vel)))
 
-        self.vel = subTuple(mulTuple(unitTuple((0, 0), self.vel), magnitude(self.vel)),
-                            mulTuple(unitTuple((0, 0), obj.vel), -magnitude(obj.vel)))
-
-    def spawn_particles_on_pos(self, world, quantity: int, size: tuple, velMax: tuple, lifeMax: float, drag: float ):
+    def spawn_particles_on_pos(self, world, quantity: int, size: tuple, velMax: int, lifeMax: float, drag: float ):
         for i in range(quantity):
-            p = ParticleSimple(str(i) + self.name + str(self.pos), pos=self.pos,size=(2,2))
+            p = ParticleSimple(self.name, PARTICLE_TAG, pos = self.pos,shape = size)
             p.set_random(velMax,lifeMax,drag)
-            p.color = pygame.transform.average_color(self.texture, consider_alpha=True)
-            world.add_game_object("particles",p)
-
-    def matchBoundaryToTexture(self):
-        """match size of boundary to texture"""
-        self.boundary.update(subTuple(self.pos, divTuple(self.texture.get_size(), 4)),
-                             divTuple(self.texture.get_size(), 4))
-
-    def matchTextureToBoundary(self):
-        """match size of texture to boundary"""
-        self.texture = transform.scale(self.texture, self.boundary.size)
+            p.color = pygame.transform.average_color(self.texture, consider_alpha = True)
+            world.add_game_object(p)
 
     def setTextureSize(self, size: tuple):
         self.texture = transform.scale(self.texture, size)
-        # better collisions
-        self.matchBoundaryToTexture()
 
-    def render(self, screen: surface, cam: Camera):
-        if self.checkCollision(cam):  # render when object collide with camera view
+    def render(self, world):
+        if self.collide_box(world.camera):  # render when object collide with camera view
             img0 = transform.rotate(self.texture, self.rot)
-            dummy = divTuple(subTuple(img0.get_size(), self.boundary.size), 2)
-            screen.blit(img0, subTuple(subTuple(self.boundary.topleft, cam.boundary.topleft), dummy))
+            dummy = scalar_div(img0.get_size(),2)
+            world.screen.blit(img0, element_sub(element_sub(self.pos, world.camera.topLeft),dummy))
 
-    def update(self, dt: float, **kwargs):
+    def update(self, **kwargs):
         pass

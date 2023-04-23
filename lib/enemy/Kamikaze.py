@@ -1,10 +1,17 @@
 from lib.objects import *
-
+from lib.misc import *
 
 class Kamikaze(Enemy):
-    def __init__(self, name: str = "", pos: tuple = (0, 0), size: tuple = (0, 0),
-                 img: str = "resources/images/enemy1.png"):
-        super().__init__(name, pos, size, img)
-        self.coll_dmg = 50
+    def __init__(self, **kwargs):
+        
+        kwargs["name"] = kwargs.get("name") or "Kamikaze"
+        kwargs["tag"] = kwargs.get("tag") or ENEMY_TAG
+        kwargs["texture_size"] = kwargs.get("texture_size") or (24,24)
+        kwargs["texture_name"] = kwargs.get("texture_name") or "enemy1"
+        
+        super().__init__(**kwargs)
+        self.coll_damage = 10
         self.suicide = True
 
+        self.setStat(0, 0, 20, 50, 200, 300, 20)
+        self.follow_config(None, 2000, 1, 0)

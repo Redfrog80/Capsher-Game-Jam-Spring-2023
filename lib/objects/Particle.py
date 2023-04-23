@@ -1,3 +1,4 @@
+
 from ..objects import Camera
 from ..misc import *
 from .Base import Base
@@ -8,20 +9,19 @@ import math
 import random
 
 class ParticleSimple(Base):
-    def __init__(self, name: str = "", pos: tuple = (0,0), vel: tuple = (0,0), acc: tuple = (0,0), size: tuple = (10,10)):
+    def __init__(self, name: str = "", tag: str = "", pos: tuple = (0,0), vel: tuple = (0,0), acc: tuple = (0,0), shape: tuple = (1,1)):
         """
         Just a simple particle object
         """
-        super().__init__(name=name, pos=pos, size=size)
+        super().__init__(name=name,tag=tag, pos=pos, shape=shape)
 
         self.totallife = 0
         self.life = 0
         self.drag = 1
         self.color = (255,255,255)
-        self.radius = magnitude(size)
 
-    def set_random(self, velMax: tuple, lifeMax: float, drag: int):
-        self.vel = addTuple(self.vel, (random.randint(0,velMax[0]), random.randint(0,velMax[1])))
+    def set_random(self, velMax: int, lifeMax: float, drag: int):
+        self.vel = scalar_mul((random.uniform(-1,1),random.uniform(-1,1)),random.randint(0,velMax))
         self.totallife = random.uniform(0,lifeMax)
         self.life = self.totallife
         self.drag = drag
@@ -30,14 +30,13 @@ class ParticleSimple(Base):
         pass
 
     def update(self, dt, **kwargs):
-        self.pos = addTuple(self.pos, mulTuple(self.vel, dt))
-        self.boundCenterToPos()
-        self.vel = divTuple(addTuple(self.vel, mulTuple(self.acc, dt)),1+dt*self.drag)
-        self.life -= dt
+        self.set_pos(element_add(self.pos, scalar_mul(self.vel, dt)))
+        self.vel = scalar_div(element_add(self.vel, scalar_mul(self.acc, dt)),1+dt*self.drag)
         
+        self.life -= dt
         if (self.life < 0):
             self.destroy()
 
-    def render(self, screen: Surface, cam: Camera):
-        if self.checkCollision(cam):  # render when object collide with camera view
-            pygame.draw.circle(screen,self.color,subTuple(self.pos, cam.boundary.topleft),self.radius*self.life/self.totallife)
+    def render(self, world):
+        if self.collide_box(world.camera):  # render when object collide with camera view
+            pygame.draw.ellipse(world.screen,self.color,(element_sub(self.pos, world.camera.topLeft),scalar_mul(self.shape,self.life/self.totallife)))

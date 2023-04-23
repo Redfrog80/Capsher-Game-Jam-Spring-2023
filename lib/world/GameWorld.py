@@ -1,23 +1,21 @@
-from pygame import Surface, Rect
 import pygame
+from pygame import Surface, Rect
+
 from lib.misc import *
-from lib.objects import Camera, GameObject, Enemy
+from lib.managers import *
+from lib.objects import *
 import random
 
-
 def check_out_of_bound(boundary, obj):
-    r = obj.boundary
     b = boundary
-    return (r.top < b.top,
-            r.left < b.left,
-            r.bottom > b.bottom,
-            r.right > b.right)
-
+    return (obj.top < b.top,
+            obj.left < b.left,
+            obj.bottom > b.bottom,
+            obj.right > b.right)
 
 def chance(c):
     """in percentage"""
     return random.randint(0, 100) < c
-
 
 def randist(center, d_range, world_dim):
     """
@@ -28,114 +26,118 @@ def randist(center, d_range, world_dim):
     """
     while True:
         out = random.randint(0, world_dim[0]), random.randint(0, world_dim[1])
-        if d_range[0] <= magnitude(subTuple(center, out)) <= d_range[1]:
+        if d_range[0] <= magnitude(element_sub(center, out)) <= d_range[1]:
             return out
 
 
 class GameWorld:
-    """
-    __game_objects__ is a 2D dictionary. First is obj.tag for quick lookup. This layer should be O(1) since we
-    don't actually have a lot of tag. Second is the actual obj name. This will be O(n)
-    """
-
-    def __init__(self, dimensions: Rect, tiledim: tuple, screen: Surface, mouseArea: tuple, camera: Camera) -> None:
-        self.__dim__ = dimensions
-        self.__tiledim__ = tiledim
-        self.__camera__ = camera
-        self.__camera__.set_world(self)
+    
+    def __init__(self, **kwargs) -> None:
+        self.__dim__ = kwargs.get("dimensions") or Rect((0,0),(500,500))
+        self.__tiledim__ = (26, 26)
         self.__game_objects__ = {}
-        self.__screen__ = screen
-        self.__mouse_area__ = mouseArea
+        self.__mouse_area__ = kwargs.get("mouse_area")
         self.__addlist__ = []
         self.__garbage__ = []
+        self.__collided_pairs__ = {}
+        
+        self.__no_collide_tags__ =[PARTICLE_TAG, CAMERA_TAG]
+        self.__no_self_collide_tags = [ENEMY_TAG]
+        self.__max_count__ = {ENEMY_TAG: 1000,
+                              PLAYER_PROJECTILE_TAG: 300,
+                              ENEMY_PROJECTILE_TAG: 300,
+                              PARTICLE_TAG: 1000} 
+        
+        self.image_dict = kwargs.get("image_dictionary") or imageDict("resources/images/")
+        # self.sound_dict = kwargs.get("sound_dictionary") or soundDict("resources/sounds/")
+        
+        self.screen = kwargs.get("screen")
+        self.player = kwargs.get("player") or Player(pos = self.__dim__.center)
+        self.camera = kwargs.get("camera") or Camera(name = "camera",
+                                                     tag = CAMERA_TAG,
+                                                     world = self,
+                                                     target = self.player,
+                                                     screen_dim = self.screen.get_size(),
+                                                     image_dict = self.image_dict)
+        
         self.tileMap = {}
-        self.debug_title_map = False
-        self.collided_pairs = {}
+        self.display_tile_map = kwargs.get("debug") or False
+        
         self.border_behavior = self.border_default
-        self.no_collide_tags =["particles"]
-        self.__max_count__ = {}
-        self.__max_count__ = {"enemy": 100}  # limited 100 enemy so I can be lazy
-        self.player = None  # for enemy tracking purpose. Player is a little special
 
     def __update_tile_map__(self):
         self.tileMap.clear()
-        for key in self.__game_objects__:
-            if key not in self.no_collide_tags:
-                for object_name in self.__game_objects__[key]:
-                    obj = self.__game_objects__[key][object_name]
-                    boundary = obj.boundary
-                    topLeft, bottomRight = [floorElementDiv(i, self.__tiledim__) for i in
-                                            [boundary.topleft, boundary.bottomright]]
+        for tag in self.__game_objects__:
+            if tag not in self.__no_collide_tags__:
+                for obj in self.__game_objects__[tag]:
+                    topLeft, bottomRight = [element_floor_div(i, self.__tiledim__) for i in
+                                            [obj.topLeft, obj.bottomRight]]
                     for tup in [(i, j) for i in range(topLeft[0], bottomRight[0] + 1) for j in
                                 range(topLeft[1], bottomRight[1] + 1)]:
                         self.tileMap[tup] = [obj] + self.tileMap.get(tup, [])
 
     def __get_collided_pairs__(self):
-        self.collided_pairs.clear()
+        self.__collided_pairs__.clear()
         for tile in self.tileMap:
-            for object in self.tileMap[tile]:
+            for obj in self.tileMap[tile]:
                 for other_object in self.tileMap[tile]:
-                    if object != other_object and object.checkCollision(other_object):
-                        if object.name < other_object.name:
-                            self.collided_pairs[object.name + "x" + other_object.name] = [object, other_object]
+                    if obj.tag != other_object.tag or obj.tag not in self.__no_self_collide_tags:
+                        if obj != other_object and obj.collide_circle(other_object):
+                            if not self.__collided_pairs__.get(other_object):
+                                self.__collided_pairs__[obj] = [obj, other_object]
 
     def __garbage_collection__(self):
         while len(self.__garbage__):
             obj = self.__garbage__.pop()
-            if self.__game_objects__.get(obj.tag, {}).get(obj.name):
-                del self.__game_objects__[obj.tag][obj.name]
+            if self.__game_objects__.get(obj.tag, {}).get(obj):
+                del self.__game_objects__[obj.tag][obj]
 
     def get_scaled_mouse_pos(self):
-        return mulElements(self.__screen__.get_size(), elementDiv(pygame.mouse.get_pos(), self.__mouse_area__))
+        return element_mul(self.screen.get_size(), element_div(pygame.mouse.get_pos(), self.__mouse_area__))
 
-    def border_default(self, dt, key, object: GameObject):
-        r = object.boundary
-        if key == "player_bullet":
+    def border_default(self, dt, obj: GameObject):
+        if obj.tag in (PLAYER_PROJECTILE_TAG, ENEMY_PROJECTILE_TAG):
             # remove bullet when leave game world
             bb = self.__dim__.copy()
-            bb.inflate_ip(r.size)
-            bounds = check_out_of_bound(bb, object)
+            bounds = check_out_of_bound(bb, obj)
             if True in bounds:
-                object.destroy()
-        elif key == "camera":
+                obj.destroy()
+        elif obj.tag == "camera":
             b = self.__dim__
-            bounds = check_out_of_bound(b, object)
+            bounds = check_out_of_bound(b, obj)
             if bounds[0]:
-                object.pos = (object.pos[0], object.pos[1] + b.top - r.top)
-                object.vel = (object.vel[0], 0)
+                obj.set_pos(element_add(obj.pos,(0,b.top - obj.top)))
             if bounds[1]:
-                object.pos = (object.pos[0] + b.left - r.left, object.pos[1])
-                object.vel = (0, object.vel[1])
+                obj.set_pos(element_add(obj.pos,(b.left - obj.left,0)))
             if bounds[2]:
-                object.pos = (object.pos[0], object.pos[1] + b.bottom - r.bottom)
-                object.vel = (object.vel[0], 0)
+                obj.set_pos(element_add(obj.pos,(0,b.bottom - obj.bottom)))
             if bounds[3]:
-                object.pos = (object.pos[0] + b.right - r.right, object.pos[1])
-                object.vel = (0, object.vel[1])
+                obj.set_pos(element_add(obj.pos,(b.right - obj.right,0)))
         else:
             b = self.__dim__
-            bounds = check_out_of_bound(b, object)
+            bounds = check_out_of_bound(b, obj)
 
             if bounds[0]:
-                object.pos = (object.pos[0], object.pos[1] + b.top - r.top)
-                object.vel = (object.vel[0], -object.vel[1])
+                obj.set_pos(element_add(obj.pos,(0,b.top - obj.top)))
+                obj.vel = (obj.vel[0], -obj.vel[1])
             if bounds[1]:
-                object.pos = (object.pos[0] + b.left - r.left, object.pos[1])
-                object.vel = (-object.vel[0], object.vel[1])
+                obj.set_pos(element_add(obj.pos,(b.left - obj.left,0)))
+                obj.vel = (-obj.vel[0], obj.vel[1])
             if bounds[2]:
-                object.pos = (object.pos[0], object.pos[1] + b.bottom - r.bottom)
-                object.vel = (object.vel[0], -object.vel[1])
+                obj.set_pos(element_add(obj.pos,(0,b.bottom - obj.bottom)))
+                obj.vel = (obj.vel[0], -obj.vel[1])
             if bounds[3]:
-                object.pos = (object.pos[0] + b.right - r.right, object.pos[1])
-                object.vel = (-object.vel[0], object.vel[1])
-        object.boundCenterToPos()
+                obj.set_pos(element_add(obj.pos,(b.right - obj.right,0)))
+                obj.vel = (-obj.vel[0], obj.vel[1])
 
-    def add_game_object(self, key: str, obj: GameObject):
-        obj.tag = key
-        if self.__game_objects__.get(key):
-            self.__game_objects__[key][obj.name] = obj
+    def add_game_object(self, obj: GameObject):
+        max = self.__max_count__.get(obj.tag)
+        print(max)
+        if self.__game_objects__.get(obj.tag):
+            if not max or len(self.__game_objects__[obj.tag]) < max:
+                self.__game_objects__[obj.tag][obj] = obj.name
         else:
-            self.__game_objects__[key] = {obj.name: obj}
+                self.__game_objects__[obj.tag] = {obj : obj.name}
 
     def delete_game_object(self, obj: GameObject):
         self.__garbage__.append(obj)
@@ -144,74 +146,64 @@ class GameWorld:
         if obj and not obj.liveflag:
             self.delete_game_object(obj)
 
-    def set_tracked_object(self, key, follow_distance):
-        for object_name in self.__game_objects__[key]:
-            self.__camera__.follow_config(self.__game_objects__[key][object_name], follow_distance)
+    def set_tracked_object(self, obj, follow_distance):
+        self.camera.follow_config(obj, follow_distance)
+    
+    def set_tile_dim(self, tile_dim: tuple):
+        self.__tiledim__ = tile_dim
 
-    # args will be functions which we want to apply to every object, but we don't want in our object classes
+    # args will be functions which we want to apply to every obj, but we don't want in our obj classes
     def update(self, dt: float, *args):
-        self.__camera__.update(dt)
+        self.camera.update(dt)
         mousePos = self.get_scaled_mouse_pos()
 
         for key in self.__game_objects__:
-            for object_key in self.__game_objects__[key]:
-                obj = self.__game_objects__[key][object_key]
-                # some object update return new objs such as enemy bullet
-                mulreturn = obj.update(dt, mousepos=mousePos, camera=self.__camera__)
+            for obj in self.__game_objects__[key]:
+                mulreturn = obj.update(dt=dt, mousepos=mousePos, camera=self.camera)
                 if isinstance(mulreturn, list):
                     self.__addlist__.append(mulreturn)
-                self.border_behavior(dt=dt, key=key, object=obj)
+                self.border_behavior(dt, obj)
 
-                for fun in args:
-                    fun(world=self, dt=dt, key=key, object=obj)
                 self.delete_if_dead(obj)
 
+        # print(len(self.__game_objects__.get(ENEMY_TAG, [])))
         self.__garbage_collection__()
         self.__update_tile_map__()
         self.__get_collided_pairs__()
         
         for i in self.__addlist__:
             for j in i:
-                self.add_game_object(j[0], j[1])
+                self.add_game_object(j)
         self.__addlist__.clear()
 
-        for pair in self.collided_pairs:
-            obj_a, obj_b = self.collided_pairs[pair]
+        for pair in self.__collided_pairs__:
+            obj_a, obj_b = self.__collided_pairs__[pair]
             obj_a.collisionEffect(self, dt, obj_b)
             obj_b.collisionEffect(self, dt, obj_a)
 
-    def render(self, *args):
-        if self.debug_title_map:
+    def render(self, **kwargs):
+        if self.display_tile_map:
             self.render_tile_map()
         
         for key in self.__game_objects__:
-            for obj_key in self.__game_objects__[key]:
-                obj = self.__game_objects__[key][obj_key]
-                obj.render(self.__screen__, self.__camera__)
-
-                for fun in args:
-                    fun(self=self, screen=self.__screen__, key=key, object=obj)
-
+            for obj in self.__game_objects__[key]:
+                obj.render(self)
     def render_tile_map(self):
         for tile in self.tileMap:
-            self.__screen__.fill((tile[0] * 4 % 200 + 55, 55, tile[1] * 4 % 200 + 55),
-                                 Rect(subTuple(mulElements(tile, self.__tiledim__), self.__camera__.boundary.topleft),
-                                      self.__tiledim__))
+            self.screen.fill((tile[0] * 4 % 200 + 55, 55, tile[1] * 4 % 200 + 55),
+                                 Rect(element_sub(element_mul(tile, self.__tiledim__), self.camera.topLeft), self.__tiledim__))
 
     def spawnObj(self, prop, num_range, obj_class, tag):
         """
-        build on top of adding object but allow number and probability and random location spawn
+        build on top of adding obj but allow number and probability and random location spawn
         """
         if chance(prop):
-            if not self.__game_objects__.get(tag):  # add empty tag if not exit
-                self.__game_objects__.update({tag: {}})
             for _ in range(random.randint(*num_range)):
-                while True:
-                    # make sure to generate new obj with different name
-                    nametest = tag + str(random.randint(0, 1000))
-                    if nametest not in self.__game_objects__[tag]:
-                        new_obj = obj_class(nametest, randist(self.player.pos, (300, 1200), self.__dim__.size), (48, 48))
-                        if issubclass(obj_class, Enemy):  # this setting allow me to set tracking on player
-                            new_obj.setTarget(self.player)
-                        self.add_game_object(tag, new_obj)
-                        break
+                new_obj = obj_class(name = ENEMY_TAG + tag,
+                                    tag = tag,
+                                    pos= randist(self.player.pos, (600, 1200), self.__dim__.size),
+                                    image_dict = self.image_dict)
+                if new_obj.tag == ENEMY_TAG:
+                    new_obj.setTarget(self.player)
+                self.add_game_object(new_obj)
+                

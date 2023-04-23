@@ -1,6 +1,7 @@
+
 from ..objects import Gun, Player
 from .Playable import Playable
-from .ProjectTile import Projectile
+from .Projectile import Projectile
 from lib.misc import *
 import math
 
@@ -9,15 +10,15 @@ class Enemy(Playable):
     """
     Generic Enemy Class. Will need simple weapon and AI class
     """
-    def __init__(self, name: str = "", pos: tuple = (0, 0), size: tuple = (0, 0),
-                 img: str = "resources/images/notfound.png"):
-        super().__init__(name=name, pos=pos, size=size, img=img)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        
         self.max_follow_distance = 0
         self.damp_factor = 0
         self.hover_distance = 0
         self.target = None
         
-        self.coll_dmg = 10
+        self.coll_damage = 10
         self.suicide = False
 
     def follow_config(self, target, max_dist, damp_fac, hover_dist):
@@ -29,20 +30,20 @@ class Enemy(Playable):
     def setTarget(self, target):
         self.target = target
 
-    def collisionEffect(self,world, dt, object):
-        if isinstance(object, Projectile) and object.liveflag:
-            if  object.tag == "player_bullet":
-                self.gotHit(object.dmg)
-                object.destroy()
-            else:
-                return
-        elif not isinstance(object, type(Gun)):
-            Playable.collisionEffect(self, world, dt, object)
+    def collisionEffect(self, world, dt, obj):
+        if  obj.tag == PLAYER_PROJECTILE_TAG:
+            self.gotHit(obj.damage)
+            obj.destroy()     
+        elif obj.tag not in ("gun", ENEMY_PROJECTILE_TAG):
+            Playable.collisionEffect(self, world, dt, obj)
+        else:
+            return
         
         if self.liveflag:
-            self.spawn_particles_on_pos(world,5,(3,3),(200,200),1,1)
+            if obj.tag != ENEMY_TAG:
+                self.spawn_particles_on_pos(world,5,(5,5),200,3,1.1)
         else:
-            self.spawn_particles_on_pos(world,15,(5,5),(800,800),1,1)
+            self.spawn_particles_on_pos(world,15,(7,7),800,5,1)
 
     def gotHit(self, damage):
         self.damage(damage)
@@ -50,27 +51,23 @@ class Enemy(Playable):
             self.destroy()
 
     def trackTarget(self, dt):
-        self.pos = addTuple(self.pos, mulTuple(self.vel, dt))
-        self.boundCenterToPos()
+        self.set_pos(element_add(self.pos, scalar_mul(self.vel, dt)))
 
         if bool(self.target):
-            x, y = self.target.pos
-            dx = x - self.pos[0]
-            dy = y - self.pos[1]
-            length = math.sqrt(dx ** 2 + dy ** 2)
-            self.rot = math.degrees(math.atan2(dy, dx)) - 180
+            unit = unit_tuple2(self.pos, self.target.pos)
+            length = self.dist(self.target)
+            self.rot = math.degrees(math.atan2(*unit))
             speedAdd = 0
             if self.hover_distance < length < self.max_follow_distance:
                 # move to player
-                speedAdd = self.acc_lin * dt
+                speedAdd = self.acc_lin*dt 
             elif self.hover_distance > length:
                 # move away
-                speedAdd = -self.acc_lin * dt
+                speedAdd = -self.acc_lin*dt 
             else:
                 # damp speed
-                self.vel = mulTuple(self.vel, math.exp(- self.damp_factor * dt))
-            self.vel = addTuple(self.vel, (-speedAdd * math.sin(math.radians(self.rot+90)), speedAdd *
-                                           math.cos(math.radians(self.rot+90))))
+                self.vel = scalar_mul(self.vel, math.exp(-self.damp_factor * dt))
+            self.vel = element_sub(self.vel, scalar_mul(unit,speedAdd))
             self.vel = (capRange(self.vel[0], -self.speedMax, self.speedMax),
                         capRange(self.vel[1], -self.speedMax, self.speedMax))
 
