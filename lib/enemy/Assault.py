@@ -1,5 +1,6 @@
 import math
 from lib.misc import *
+from lib.hulls.defaultHull import hull
 
 from lib.objects import *
 
@@ -12,7 +13,9 @@ class Assault(Enemy):
         kwargs["texture_size"] = kwargs.get("texture_size") or (64,64)
         kwargs["texture_name"] = kwargs.get("texture_name") or "enemy2"
         
-        super().__init__(**kwargs)
+        enemy_hull = hull(50, 0.02, 0.005)
+        
+        super().__init__(hull=enemy_hull, **kwargs)
 
         self.att_range = 0
         self.cooldown = 0
@@ -37,13 +40,13 @@ class Assault(Enemy):
                             damage = self.projectile_damage,
                             life = self.bulletLife,
                             texture_size=bullet_size,
-                            texture_name="bullet6")
+                            texture_name="bullet6",
+                            image_dict = self.image_dict)
         bullet.traj(self.pos, self.vel, self.bulletVel, math.degrees(math.atan2(*aim)), 1)
         self.cooldown = self.cooldowntimer
         return bullet
 
-    def update(self, **kwargs):
-        dt = kwargs.get("dt") or 0
+    def update(self, dt: float, **kwargs):
         if self.target:
             self.trackTarget(dt)
             shootvec = element_sub(self.pos, self.target.pos)

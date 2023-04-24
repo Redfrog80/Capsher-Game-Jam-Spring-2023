@@ -48,7 +48,7 @@ class GameWorld:
                               ENEMY_PROJECTILE_TAG: 300,
                               PARTICLE_TAG: 1000} 
         
-        self.image_dict = kwargs.get("image_dictionary") or imageDict("resources/images/")
+        self.image_dict = kwargs.get("image_dict") or imageDict("resources/images/")
         # self.sound_dict = kwargs.get("sound_dictionary") or soundDict("resources/sounds/")
         
         self.screen = kwargs.get("screen")
@@ -132,7 +132,6 @@ class GameWorld:
 
     def add_game_object(self, obj: GameObject):
         max = self.__max_count__.get(obj.tag)
-        print(max)
         if self.__game_objects__.get(obj.tag):
             if not max or len(self.__game_objects__[obj.tag]) < max:
                 self.__game_objects__[obj.tag][obj] = obj.name
@@ -155,11 +154,10 @@ class GameWorld:
     # args will be functions which we want to apply to every obj, but we don't want in our obj classes
     def update(self, dt: float, *args):
         self.camera.update(dt)
-        mousePos = self.get_scaled_mouse_pos()
 
         for key in self.__game_objects__:
             for obj in self.__game_objects__[key]:
-                mulreturn = obj.update(dt=dt, mousepos=mousePos, camera=self.camera)
+                mulreturn = obj.update(dt=dt, world = self)
                 if isinstance(mulreturn, list):
                     self.__addlist__.append(mulreturn)
                 self.border_behavior(dt, obj)
@@ -188,6 +186,7 @@ class GameWorld:
         for key in self.__game_objects__:
             for obj in self.__game_objects__[key]:
                 obj.render(self)
+    
     def render_tile_map(self):
         for tile in self.tileMap:
             self.screen.fill((tile[0] * 4 % 200 + 55, 55, tile[1] * 4 % 200 + 55),

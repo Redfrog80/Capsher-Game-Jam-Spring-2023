@@ -23,3 +23,9 @@ class Base(Collider):
 
     def objAlive(self):
         return bool(self.liveflag)
+    
+    def update(self, dt, **kwargs):
+        self.set_pos(element_add(self.pos, scalar_mul(self.vel, dt)))
+        self.vel = (element_add(self.vel, scalar_mul(self.acc, dt)))
+        
+        self.rot += self.rotvel*dt

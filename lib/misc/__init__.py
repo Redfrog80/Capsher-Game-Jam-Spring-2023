@@ -11,6 +11,12 @@ def capRange(a, lo, hi):
     else:
         return a
 
+def lerp(a,b,t):
+    return a + t*(b-a)
+
+def sign(p):
+    return 1 if (p>=0) else -1
+
 def element_add(p:tuple, q:tuple):
         return tuple(px + qx for px, qx in zip(p, q))
     

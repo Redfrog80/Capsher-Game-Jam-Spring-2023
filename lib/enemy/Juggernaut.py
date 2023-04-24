@@ -1,5 +1,6 @@
 import math
 from lib.misc import *
+from lib.hulls.defaultHull import hull
 
 from lib.objects import *
 
@@ -12,7 +13,9 @@ class Juggernaut(Enemy):
         kwargs["texture_size"] = kwargs.get("texture_size") or (128,128)
         kwargs["texture_name"] = kwargs.get("texture_name") or "Emperor1"
         
-        super().__init__(**kwargs)
+        enemy_hull = hull(200, 0.005, 0.1)
+        
+        super().__init__(hull=enemy_hull, **kwargs)
 
         self.att_range = 0
         self.cooldown = 0
@@ -37,7 +40,8 @@ class Juggernaut(Enemy):
                             damage = self.projectile_damage,
                             life = self.bulletLife,
                             texture_size = bullet_size,
-                            texture_name = "bullet5")
+                            texture_name = "bullet5",
+                            image_dict = self.image_dict)
         bullet.traj(self.pos, self.vel, self.bulletVel, math.degrees(math.atan2(*aim))+modified_angle, 1)
         self.cooldown = self.cooldowntimer
         return bullet

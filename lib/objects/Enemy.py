@@ -1,5 +1,3 @@
-
-from ..objects import Gun, Player
 from .Playable import Playable
 from .Projectile import Projectile
 from lib.misc import *
@@ -51,8 +49,6 @@ class Enemy(Playable):
             self.destroy()
 
     def trackTarget(self, dt):
-        self.set_pos(element_add(self.pos, scalar_mul(self.vel, dt)))
-
         if bool(self.target):
             unit = unit_tuple2(self.pos, self.target.pos)
             length = self.dist(self.target)
@@ -72,5 +68,6 @@ class Enemy(Playable):
                         capRange(self.vel[1], -self.speedMax, self.speedMax))
 
     def update(self, dt: float, **kwargs):
+        super().update(dt, **kwargs)
         if self.target:
             self.trackTarget(dt)

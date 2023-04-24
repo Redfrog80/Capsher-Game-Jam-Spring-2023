@@ -16,7 +16,6 @@ class GameObject(Base):
         
         self.texture_name = kwargs.get("texture_name") or "notFound"
         self.image_dict = kwargs.get("image_dict") or imageDict()
-        
         self.texture = self.image_dict.get_image(self.texture_name) or self.image_dict.load_image("resources/images/" + self.texture_name + ".png")
         
         self.texture_size = kwargs.get("texture_size") or self.texture.get_size()
@@ -44,5 +43,5 @@ class GameObject(Base):
             dummy = scalar_div(img0.get_size(),2)
             world.screen.blit(img0, element_sub(element_sub(self.pos, world.camera.topLeft),dummy))
 
-    def update(self, **kwargs):
-        pass
+    def update(self, dt, **kwargs):
+        super().update(dt, **kwargs)

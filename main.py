@@ -7,21 +7,21 @@ from lib.world import GameWorld
 from lib.world import EventController
 
 # window initializer
-a, b, c= 10, 4, (192,108)
+a, b, c= 4, 4, (100,100)
 window_dim = [i*a for i in c]
 game_dim = [i*b for i in c]
 
 pygame.init()
 game_screen = pygame.display.set_mode(game_dim, pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.SCALED, vsync=0).copy()
-window_screen = pygame.display.set_mode(window_dim, pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.SCALED |pygame.FULLSCREEN, vsync=0)
+window_screen = pygame.display.set_mode(window_dim, pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.SCALED, vsync=0)
 
 # world and render setting
-FPS = 120
+FPS = 60
 clock = pygame.time.Clock()
 
 image_dict = imageDict()
 # player
-player = Player(pos = (2000, 2000))
+player = Player(pos = (2000, 2000), image_dict=image_dict)
 player.setStat(150, 150, 250, 250, 500, 500, 360)
 
 world = GameWorld(dimensions = pygame.Rect(0, 0, 4000, 4000),
@@ -45,13 +45,13 @@ run = True
 while run:
     # update
     dt = clock.tick(FPS) / 1000
+    world.update(dt)
     run = controller.update_events(dt)
     
     game_screen.fill((5, 5, 15))  # background
     # render
     world.render()
 
-    world.update(dt)
     # draw on screen
     window_screen.blit(pygame.transform.scale(game_screen, window_dim), (0, 0))
     pygame.display.flip()

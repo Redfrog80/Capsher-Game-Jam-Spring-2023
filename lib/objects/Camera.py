@@ -24,7 +24,7 @@ class Camera(Base):
             if length > self.follow_distance:
                 self.set_pos(element_add(self.pos,scalar_mul(unit, self.follow_distance-length)))
 
-    def update(self, dt, **kwargs):
+    def update(self, dt: float, **kwargs):
         if self.world and self.target:
             self.trackTarget(dt)
             self.world.border_default(0, self)

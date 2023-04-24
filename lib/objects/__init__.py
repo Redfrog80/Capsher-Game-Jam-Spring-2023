@@ -5,6 +5,5 @@ from .Camera import Camera
 from .Particle import ParticleSimple
 from .Playable import Playable
 from .Projectile import Projectile
-from .Gun import Gun
 from .Player import Player
 from .Enemy import Enemy

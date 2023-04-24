@@ -29,7 +29,7 @@ class ParticleSimple(Base):
     def collisionEffect(self, world, dt, object):
         pass
 
-    def update(self, dt, **kwargs):
+    def update(self, dt: float, **kwargs):
         self.set_pos(element_add(self.pos, scalar_mul(self.vel, dt)))
         self.vel = scalar_div(element_add(self.vel, scalar_mul(self.acc, dt)),1+dt*self.drag)
         

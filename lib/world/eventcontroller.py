@@ -19,7 +19,6 @@ class EventController:
         self.run = True
         self.bullet_num = 0
         self.shooting = False
-        self.player.gun.firerate = 0.2
         self.eventNumber = pygame.USEREVENT
 
     def update_events(self, dt):
@@ -57,10 +56,10 @@ class EventController:
                 data[0](data[1], data[2], data[3], data[4])
 
         if self.shooting and self.player.liveflag:
-            bullet = self.player.shoot(dt, "b_" + str(self.bullet_num), PLAYER_PROJECTILE_TAG)
-            if bullet:
-                self.world.add_game_object(bullet)
-                self.bullet_num += 1
+            bullets = self.player.shoot(dt = dt)
+            if bullets:
+                for b in bullets:
+                    self.world.add_game_object(b)
 
         return True
 

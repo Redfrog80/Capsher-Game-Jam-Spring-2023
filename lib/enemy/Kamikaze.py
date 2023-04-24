@@ -1,5 +1,6 @@
 from lib.objects import *
 from lib.misc import *
+from lib.hulls.defaultHull import hull
 
 class Kamikaze(Enemy):
     def __init__(self, **kwargs):
@@ -9,7 +10,9 @@ class Kamikaze(Enemy):
         kwargs["texture_size"] = kwargs.get("texture_size") or (24,24)
         kwargs["texture_name"] = kwargs.get("texture_name") or "enemy1"
         
-        super().__init__(**kwargs)
+        enemy_hull = hull(30, 0.03)
+        
+        super().__init__(hull = enemy_hull, **kwargs)
         self.coll_damage = 10
         self.suicide = True
 
