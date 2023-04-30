@@ -30,7 +30,7 @@ class turret(GameObject):
         self.min_rot_vel = min_rot_vel
         self.max_rot_vel = max_rot_vel
     
-    def collisionEffect(self, **kwargs):
+    def collisionEffect(self, *args, **kwargs):
         pass
 
     def update(self, dt, **kwargs):
@@ -46,15 +46,15 @@ class turret(GameObject):
                     difference -= 360*sign(difference) 
                 if (abs(difference) > self.min_rot_vel*dt):
                     self.rot += (self.parent.rotvel + sign(difference)*lerp(self.min_rot_vel, self.max_rot_vel, abs(difference)/180))*dt
-
             else:
                 self.rot = self.parent.rot
 
     def fire(self, dt, **kwargs):
-        return self.weapon.fire(dt, **kwargs)
+        self.weapon.fire(dt, world = self.world, **kwargs)
 
-    def render(self, world):
-        if self.collide_box(world.camera):  # render when object collide with camera view
+
+    def render(self):
+        if self.collide_box(self.world.camera):  # render when object collide with camera view
             img0 = transform.rotate(self.texture, self.rot)
             dummy = scalar_div(img0.get_size(), 2)
-            world.screen.blit(img0, element_sub(element_sub(self.pos, world.camera.topLeft), dummy))
+            self.world.screen.blit(img0, element_sub(element_sub(self.pos, self.world.camera.topLeft), dummy))

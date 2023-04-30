@@ -1,4 +1,5 @@
 import pygame
+import multiprocessing
 from pygame.locals import *
 
 from lib.world.GameWorld import GameWorld
@@ -56,10 +57,7 @@ class EventController:
                 data[0](data[1], data[2], data[3], data[4])
 
         if self.shooting and self.player.liveflag:
-            bullets = self.player.shoot(dt = dt)
-            if bullets:
-                for b in bullets:
-                    self.world.add_game_object(b)
+            self.player.shoot(dt = dt)
 
         return True
 

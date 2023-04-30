@@ -28,20 +28,21 @@ class Enemy(Playable):
     def setTarget(self, target):
         self.target = target
 
-    def collisionEffect(self, world, dt, obj):
+    def collisionEffect(self, dt, obj):
         if  obj.tag == PLAYER_PROJECTILE_TAG:
             self.gotHit(obj.damage)
             obj.destroy()     
         elif obj.tag not in ("gun", ENEMY_PROJECTILE_TAG):
-            Playable.collisionEffect(self, world, dt, obj)
-        else:
+            self.liveflag = self.liveflag and not self.suicide
+            Playable.collisionEffect(self, dt, obj)
+        elif obj.tag == ENEMY_PROJECTILE_TAG:
             return
         
         if self.liveflag:
             if obj.tag != ENEMY_TAG:
-                self.spawn_particles_on_pos(world,5,(5,5),200,3,1.1)
+                self.spawn_particles_on_pos(5,(5,5),200,3,1.1)
         else:
-            self.spawn_particles_on_pos(world,15,(7,7),800,5,1)
+            self.spawn_particles_on_pos(5,(13,13),100,3,2)
 
     def gotHit(self, damage):
         self.damage(damage)

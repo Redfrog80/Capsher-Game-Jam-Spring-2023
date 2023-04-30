@@ -22,7 +22,8 @@ class Player(Playable):
         
         weapon = flakker(projectile_tag = PLAYER_PROJECTILE_TAG,
                         projectile_texture_name = "bullet3",
-                        image_dict = self.image_dict)
+                        image_dict = self.image_dict,
+                        sound_dict = self.sound_dict)
         
         self.turret = turret(name = "turret",
                              tag="turret",
@@ -30,12 +31,18 @@ class Player(Playable):
                              max_rot_vel = 1000,
                              texture_size = self.texture_size,
                              texture_name="aiming",
-                             image_dict = self.image_dict)
+                             image_dict = self.image_dict,
+                             sound_dict = self.sound_dict)
 
         self.turret.attach_parent(self)
         self.turret.attach_weapon(weapon)
+        
         self.trackRot = False
         self.damp_factor = 1
+
+    def set_world(self, world):
+        super().set_world(world)
+        self.world.add_game_object(self.turret)
 
     def rotateLeft(self):
         self.rotvel = self.rotSpeedMax
@@ -67,40 +74,37 @@ class Player(Playable):
         self.acc = ac
 
     def shoot(self, **kwargs):
-        return self.turret.fire(**kwargs)
+        self.turret.fire(**kwargs)
 
     def destroy(self):
         self.liveflag = 0
         self.turret.destroy()
 
-    def collisionEffect(self, world,  dt, obj):
+    def collisionEffect(self,  dt, obj):
         if obj.tag == ENEMY_PROJECTILE_TAG:
             self.gotHit(obj.damage)
             obj.destroy()
         elif obj.tag == ENEMY_TAG:
             self.gotHit(obj.coll_damage)
-            Playable.collisionEffect(self,world, dt, obj)
+            Playable.collisionEffect(self, dt, obj)
             if obj.suicide:
                 obj.destroy()
         else:
             return
         
         if self.liveflag:
-            self.spawn_particles_on_pos(world,10,(5,5),200,5,1)
+            self.spawn_particles_on_pos(10,(5,5),200,5,1)
         else:
-            self.spawn_particles_on_pos(world,100,(7,7),300,20,1)
+            self.spawn_particles_on_pos(10,(10,10),300,4,1)
 
-    def render(self, world):
-        if self.collide_box(world.camera):  # render when object collide with camera view
+    def render(self):
+        if self.collide_box(self.world.camera):  # render when object collide with camera view
             img0 = transform.rotate(self.texture, self.rot)
             dummy = scalar_div(img0.get_size(),2)
-            world.screen.blit(img0, element_sub(element_sub(self.pos, world.camera.topLeft),dummy))
-            self.turret.render(world)
+            self.world.screen.blit(img0, element_sub(element_sub(self.pos, self.world.camera.topLeft),dummy))
 
     def update(self, dt,  **kwargs):
         super().update(dt, **kwargs)
-        #TODO, set up like image dict.
-        world = kwargs.get("world")
 
         if self.trackRot and self.acc != (0, 0):
             self.acc = (-self.acc_lin * math.sin(self.rot * math.pi / 180),
@@ -113,10 +117,9 @@ class Player(Playable):
         
         # update turret
         target_rot = None
-        # if (world):
-        #     target_rot = math.degrees(math.atan2(*unit_tuple2(element_sub(self.pos,world.camera.topLeft),world.get_scaled_mouse_pos())))
+        # if (self.world):
+        #     target_rot = math.degrees(math.atan2(*unit_tuple2(element_sub(self.pos,self.world.camera.topLeft),self.world.get_scaled_mouse_pos())))
         
         self.turret.target_rot = target_rot
-        self.turret.update(dt, **kwargs)
-        
+
         self.hull.update(dt)

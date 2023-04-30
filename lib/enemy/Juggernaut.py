@@ -8,7 +8,7 @@ from lib.objects import *
 class Juggernaut(Enemy):
     def __init__(self, **kwargs):
         
-        kwargs["name"] = kwargs.get("name") or "Juggernaught"
+        kwargs["name"] = kwargs.get("name") or "Juggernaut"
         kwargs["tag"] = kwargs.get("tag") or ENEMY_TAG
         kwargs["texture_size"] = kwargs.get("texture_size") or (128,128)
         kwargs["texture_name"] = kwargs.get("texture_name") or "Emperor1"
@@ -41,19 +41,21 @@ class Juggernaut(Enemy):
                             life = self.bulletLife,
                             texture_size = bullet_size,
                             texture_name = "bullet5",
-                            image_dict = self.image_dict)
+                            image_dict = self.image_dict,
+                            sound_dict = self.sound_dict)
         bullet.traj(self.pos, self.vel, self.bulletVel, math.degrees(math.atan2(*aim))+modified_angle, 1)
+        self.world.__addlist__.append(bullet)
         self.cooldown = self.cooldowntimer
-        return bullet
-
+        
     def update(self, dt: float, **kwargs):
+        super().update(dt, **kwargs)
         if self.target:
             self.trackTarget(dt)
             shootvec = element_sub(self.pos, self.target.pos)
             if magnitude(shootvec) < self.att_range and self.cooldown <= 0:
-                bullet0 = self.shoot(dt, shootvec, self.name + "_1", -5)
-                bullet1 = self.shoot(dt, shootvec, self.name + "_2", 0)
-                bullet2 = self.shoot(dt, shootvec, self.name + "_3", 5)
-                return [bullet0,bullet1,bullet2]
+                self.shoot(dt, shootvec, self.name + "_1", -5)
+                self.shoot(dt, shootvec, self.name + "_2", 0)
+                self.shoot(dt, shootvec, self.name + "_3", 5)
+
             elif self.cooldown > 0:
                 self.cooldown -= dt

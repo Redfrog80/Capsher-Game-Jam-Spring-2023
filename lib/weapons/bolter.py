@@ -1,8 +1,8 @@
 from .defaultWeapon import weapon
 
 class bolter(weapon):
-    def __init__(self, projectile_texture_name, projectile_tag, image_dict,**kwargs) -> None:
-        super().__init__(image_dict = image_dict, **kwargs)
+    def __init__(self, projectile_texture_name, projectile_tag, image_dict, sound_dict, **kwargs) -> None:
+        super().__init__(image_dict = image_dict, sound_dict = sound_dict, **kwargs)
         self.set_projectile_weapon()
         
         self.damage_base = self.damage_base or 20

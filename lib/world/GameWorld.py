@@ -1,10 +1,12 @@
 import pygame
+import random
+import threading
+import itertools
 from pygame import Surface, Rect
 
 from lib.misc import *
 from lib.managers import *
 from lib.objects import *
-import random
 
 def check_out_of_bound(boundary, obj):
     b = boundary
@@ -34,7 +36,7 @@ class GameWorld:
     
     def __init__(self, **kwargs) -> None:
         self.__dim__ = kwargs.get("dimensions") or Rect((0,0),(500,500))
-        self.__tiledim__ = (26, 26)
+        self.__tiledim__ = kwargs.get("tile_dim") or (60, 60)
         self.__game_objects__ = {}
         self.__mouse_area__ = kwargs.get("mouse_area")
         self.__addlist__ = []
@@ -42,21 +44,20 @@ class GameWorld:
         self.__collided_pairs__ = {}
         
         self.__no_collide_tags__ =[PARTICLE_TAG, CAMERA_TAG]
-        self.__no_self_collide_tags = [ENEMY_TAG]
+        self.__no_self_collide_tags__ = [ENEMY_TAG, PLAYER_PROJECTILE_TAG, ENEMY_PROJECTILE_TAG]
         self.__max_count__ = {ENEMY_TAG: 1000,
-                              PLAYER_PROJECTILE_TAG: 300,
+                              PLAYER_PROJECTILE_TAG: 1000,
                               ENEMY_PROJECTILE_TAG: 300,
-                              PARTICLE_TAG: 1000} 
+                              PARTICLE_TAG: 200} 
         
         self.image_dict = kwargs.get("image_dict") or imageDict("resources/images/")
-        # self.sound_dict = kwargs.get("sound_dictionary") or soundDict("resources/sounds/")
+        self.sound_dict = kwargs.get("sound_dictionary") or soundDict("resources/sounds/")
         
         self.screen = kwargs.get("screen")
-        self.player = kwargs.get("player") or Player(pos = self.__dim__.center)
+        self.player = kwargs.get("player")
         self.camera = kwargs.get("camera") or Camera(name = "camera",
                                                      tag = CAMERA_TAG,
                                                      world = self,
-                                                     target = self.player,
                                                      screen_dim = self.screen.get_size(),
                                                      image_dict = self.image_dict)
         
@@ -67,24 +68,53 @@ class GameWorld:
 
     def __update_tile_map__(self):
         self.tileMap.clear()
-        for tag in self.__game_objects__:
+            
+        def process_tag(tag):
             if tag not in self.__no_collide_tags__:
                 for obj in self.__game_objects__[tag]:
                     topLeft, bottomRight = [element_floor_div(i, self.__tiledim__) for i in
                                             [obj.topLeft, obj.bottomRight]]
                     for tup in [(i, j) for i in range(topLeft[0], bottomRight[0] + 1) for j in
                                 range(topLeft[1], bottomRight[1] + 1)]:
-                        self.tileMap[tup] = [obj] + self.tileMap.get(tup, [])
+                        self.tileMap[tup] = self.tileMap.get(tup,[])
+                        self.tileMap[tup].append(obj)
+        
+        threads = []
+        for tag in self.__game_objects__:
+            threads.append(threading.Thread(target=process_tag, args=(tag,)).run())
+        for thread in threads:
+            if thread:
+                thread.join()
+    
 
     def __get_collided_pairs__(self):
         self.__collided_pairs__.clear()
-        for tile in self.tileMap:
-            for obj in self.tileMap[tile]:
+        
+        def process_coll_pairs_fine(tile):
+            for other_object in self.tileMap[tile]:
+                if obj.tag != other_object.tag or obj.tag not in self.__no_self_collide_tags__:
+                    if obj != other_object and obj.collide_circle(other_object):
+                        if not self.__collided_pairs__.get(other_object):
+                            self.__collided_pairs__[obj] = [obj, other_object]
+        def process_coll_pairs_lazy(tile):
                 for other_object in self.tileMap[tile]:
-                    if obj.tag != other_object.tag or obj.tag not in self.__no_self_collide_tags:
-                        if obj != other_object and obj.collide_circle(other_object):
+                    if obj.tag != other_object.tag or obj.tag not in self.__no_self_collide_tags__:
+                        if obj != other_object and obj.collide_box(other_object):
                             if not self.__collided_pairs__.get(other_object):
                                 self.__collided_pairs__[obj] = [obj, other_object]
+        
+        threads = []
+        for tile in self.tileMap:
+            size = len(self.tileMap[tile])
+            lazy = size > 20
+            crammed = size > 50
+            if not crammed:
+                target = process_coll_pairs_lazy if lazy else process_coll_pairs_fine
+                for obj in self.tileMap[tile]:
+                    threads.append(threading.Thread(target=target, args=(tile,)).run())
+        for thread in threads:
+            if thread:
+                thread.join()
 
     def __garbage_collection__(self):
         while len(self.__garbage__):
@@ -130,13 +160,23 @@ class GameWorld:
                 obj.set_pos(element_add(obj.pos,(b.right - obj.right,0)))
                 obj.vel = (-obj.vel[0], obj.vel[1])
 
+    def set_player(self, player):
+        self.player = player
+        self.add_game_object(player)
+
     def add_game_object(self, obj: GameObject):
         max = self.__max_count__.get(obj.tag)
         if self.__game_objects__.get(obj.tag):
             if not max or len(self.__game_objects__[obj.tag]) < max:
                 self.__game_objects__[obj.tag][obj] = obj.name
+                obj.set_world(self)
         else:
                 self.__game_objects__[obj.tag] = {obj : obj.name}
+                obj.set_world(self)
+
+    def __add_from_addlist__(self):
+        while len(self.__addlist__):
+            self.add_game_object(self.__addlist__.pop())
 
     def delete_game_object(self, obj: GameObject):
         self.__garbage__.append(obj)
@@ -153,31 +193,32 @@ class GameWorld:
 
     # args will be functions which we want to apply to every obj, but we don't want in our obj classes
     def update(self, dt: float, *args):
-        self.camera.update(dt)
+        
+        self.__add_from_addlist__()
 
-        for key in self.__game_objects__:
-            for obj in self.__game_objects__[key]:
-                mulreturn = obj.update(dt=dt, world = self)
-                if isinstance(mulreturn, list):
-                    self.__addlist__.append(mulreturn)
+        def process_tag(obj):
+            for obj in self.__game_objects__[tag]:
+                obj.update(dt=dt)
                 self.border_behavior(dt, obj)
-
                 self.delete_if_dead(obj)
 
-        # print(len(self.__game_objects__.get(ENEMY_TAG, [])))
+        threads = []
+        for tag in self.__game_objects__:
+            threads.append(threading.Thread(target=process_tag, args=(tag,)).run())
+        for thread in threads:
+            if thread:
+                thread.join()            
+        
+        self.camera.update(dt)
+        
         self.__garbage_collection__()
         self.__update_tile_map__()
         self.__get_collided_pairs__()
-        
-        for i in self.__addlist__:
-            for j in i:
-                self.add_game_object(j)
-        self.__addlist__.clear()
 
         for pair in self.__collided_pairs__:
             obj_a, obj_b = self.__collided_pairs__[pair]
-            obj_a.collisionEffect(self, dt, obj_b)
-            obj_b.collisionEffect(self, dt, obj_a)
+            obj_a.collisionEffect(dt, obj_b)
+            obj_b.collisionEffect(dt, obj_a)
 
     def render(self, **kwargs):
         if self.display_tile_map:
@@ -185,7 +226,7 @@ class GameWorld:
         
         for key in self.__game_objects__:
             for obj in self.__game_objects__[key]:
-                obj.render(self)
+                obj.render()
     
     def render_tile_map(self):
         for tile in self.tileMap:
@@ -204,5 +245,5 @@ class GameWorld:
                                     image_dict = self.image_dict)
                 if new_obj.tag == ENEMY_TAG:
                     new_obj.setTarget(self.player)
-                self.add_game_object(new_obj)
+                self.__addlist__.append(new_obj)
                 

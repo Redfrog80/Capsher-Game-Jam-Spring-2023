@@ -2,7 +2,7 @@
 class hull:
     def __init__(self, 
                  health = 100, 
-                 regen = 0.01,
+                 regen = 0.02,
                  damage_resistance = 0,
                  **kwargs) -> None:
         

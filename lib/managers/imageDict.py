@@ -8,7 +8,7 @@ class imageDict:
             self.load_images(location)
     
     def load_image(self, location  : str = "resources/images/notfound.png"):
-        key = os.path.split(location)[1]
+        key = os.path.split(location)[1][:-4]
         if key:
             self.__image_dict__[key] = image.load(location).convert_alpha()
         return self.__image_dict__[key]

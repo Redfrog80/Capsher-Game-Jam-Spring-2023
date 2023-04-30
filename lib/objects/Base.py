@@ -10,6 +10,10 @@ class Base(Collider):
         
         super().__init__(**kwargs)
         
+        # This can be set manually, but should be set by the gameWorld as the object is added.
+        self.world = kwargs.get("world")
+
+        
         self.name = kwargs.get("name") or "unnamed_object"
         self.tag = kwargs.get("tag") or ""
         self.vel = kwargs.get("vel") or (0,0)
@@ -17,6 +21,9 @@ class Base(Collider):
         self.rot = kwargs.get("rot") or 0
         self.rotvel = kwargs.get("rotvel") or 0
         self.liveflag = 1  # use in GameWorld to check if object should be destroyed (go out of bound, died, etc.)
+
+    def set_world(self, world):
+        self.world = world
 
     def destroy(self):
         self.liveflag = 0

@@ -50,6 +50,9 @@ def element_abs(p: tuple):
 def scalar_div(p:tuple, q:float):
     return tuple(px/q for px in p)
 
+def scalar_floor_div(p:tuple, q:float):
+    return tuple(px//q for px in p)
+
 def scalar_mul(p:tuple,q:float):
     return tuple(px*q for px in p)
 

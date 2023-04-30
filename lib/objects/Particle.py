@@ -21,12 +21,12 @@ class ParticleSimple(Base):
         self.color = (255,255,255)
 
     def set_random(self, velMax: int, lifeMax: float, drag: int):
-        self.vel = scalar_mul((random.uniform(-1,1),random.uniform(-1,1)),random.randint(0,velMax))
-        self.totallife = random.uniform(0,lifeMax)
+        self.vel = scalar_mul((random.uniform(-1,1),random.uniform(-1,1)),random.random()*velMax)
+        self.totallife = random.random()*lifeMax
         self.life = self.totallife
         self.drag = drag
 
-    def collisionEffect(self, world, dt, object):
+    def collisionEffect(self, dt, object):
         pass
 
     def update(self, dt: float, **kwargs):
@@ -37,6 +37,6 @@ class ParticleSimple(Base):
         if (self.life < 0):
             self.destroy()
 
-    def render(self, world):
-        if self.collide_box(world.camera):  # render when object collide with camera view
-            pygame.draw.ellipse(world.screen,self.color,(element_sub(self.pos, world.camera.topLeft),scalar_mul(self.shape,self.life/self.totallife)))
+    def render(self):
+        if self.collide_box(self.world.camera):  # render when object collide with camera view
+            pygame.draw.ellipse(self.world.screen,self.color,(element_sub(self.pos, self.world.camera.topLeft),scalar_mul(self.shape,self.life/self.totallife)))

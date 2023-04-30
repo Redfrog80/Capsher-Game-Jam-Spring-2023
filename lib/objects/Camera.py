@@ -5,7 +5,7 @@ class Camera(Base):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.follow_distance = 0
-        self.world = kwargs.get("world") or None
+        self.world = kwargs.get("world")
         self.target = kwargs.get("target") or None
         self.shape = scalar_div(kwargs.get("screen_dim"),2)
 

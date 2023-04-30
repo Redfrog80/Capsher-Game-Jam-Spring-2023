@@ -41,17 +41,18 @@ class Assault(Enemy):
                             life = self.bulletLife,
                             texture_size=bullet_size,
                             texture_name="bullet6",
-                            image_dict = self.image_dict)
+                            image_dict = self.image_dict,
+                            sound_dict = self.sound_dict)
         bullet.traj(self.pos, self.vel, self.bulletVel, math.degrees(math.atan2(*aim)), 1)
+        self.world.__addlist__.append(bullet)
         self.cooldown = self.cooldowntimer
-        return bullet
 
     def update(self, dt: float, **kwargs):
+        super().update(dt, **kwargs)
         if self.target:
             self.trackTarget(dt)
             shootvec = element_sub(self.pos, self.target.pos)
             if magnitude(shootvec) < self.att_range and self.cooldown <= 0:
-                bullet = self.shoot(dt, shootvec, self.name)
-                return [bullet]
+                self.shoot(dt, shootvec, self.name)
             elif self.cooldown > 0:
                 self.cooldown -= dt
