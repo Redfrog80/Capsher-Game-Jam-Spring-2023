@@ -18,45 +18,38 @@ class EventController:
         self.player = player_object
         self.world = game_world
         self.run = True
-        self.bullet_num = 0
-        self.shooting = False
         self.eventNumber = pygame.USEREVENT
 
     def update_events(self, dt):
+        keys = pygame.key.get_pressed()
+        if (keys[K_w] and keys[K_s]):
+            self.player.stopAcc()
+        elif (keys[K_w]):
+            self.player.goForward()
+        elif (keys[K_w]):
+            self.player.goBack()
+        else:
+            self.player.stopAcc()
+
+        if (keys[K_a] and keys[K_d]):
+            self.player.stopRotVel()
+        elif (keys[K_a]):
+            self.player.rotateLeft()
+        elif (keys[K_d]):
+            self.player.rotateRight()
+        else:
+            self.player.stopRotVel()
+
+        shoot = keys[K_SPACE]
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
-            if event.type == KEYDOWN:
-                if event.key == K_w:
-                    self.player.goForward()
-                if event.key == K_s:
-                    self.player.goBack()
-                if event.key == K_a:
-                    self.player.rotateLeft()
-                    self.player.trackRot = True
-                if event.key == K_d:
-                    self.player.rotateRight()
-                    self.player.trackRot = True
-                if event.key == K_SPACE:
-                    self.shooting = True
-            if event.type == KEYUP:
-                if event.key == K_w:
-                    self.player.setAccel((0, 0))
-                if event.key == K_s:
-                    self.player.setAccel((0, 0))
-                if event.key == K_a:
-                    self.player.rotvel = 0
-                    self.player.trackRot = False
-                if event.key == K_d:
-                    self.player.rotvel = 0
-                    self.player.trackRot = False
-                if event.key == K_SPACE:
-                    self.shooting = False
             if event.type in self.extraEventList:
                 data = self.extraEventList[event.type]
                 data[0](data[1], data[2], data[3], data[4])
 
-        if self.shooting and self.player.liveflag:
+        if shoot and self.player.liveflag:
             self.player.shoot(dt = dt)
 
         return True

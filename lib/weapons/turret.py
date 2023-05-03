@@ -42,7 +42,7 @@ class turret(GameObject):
         
             if (self.min_rot_vel and self.max_rot_vel):
                 difference = self.target_rot - self.rot
-                if (abs(difference) > 180):
+                while (abs(difference) > 180):
                     difference -= 360*sign(difference) 
                 if (abs(difference) > self.min_rot_vel*dt):
                     self.rot += (self.parent.rotvel + sign(difference)*lerp(self.min_rot_vel, self.max_rot_vel, abs(difference)/180))*dt
@@ -51,6 +51,9 @@ class turret(GameObject):
 
     def fire(self, dt, **kwargs):
         self.weapon.fire(dt, world = self.world, **kwargs)
+        
+    def get_range(self):
+        return self.weapon.get_range()
 
 
     def render(self):

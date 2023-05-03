@@ -36,3 +36,5 @@ class Base(Collider):
         self.vel = (element_add(self.vel, scalar_mul(self.acc, dt)))
         
         self.rot += self.rotvel*dt
+        while (abs(self.rot) > 180):
+                self.rot -= 360*sign(self.rot) 

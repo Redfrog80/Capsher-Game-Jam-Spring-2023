@@ -14,7 +14,7 @@ class flakker(weapon):
         
         self.projectile_velocity_base = kwargs.get("projectile_velocity") or 700
         self.projectile_count = kwargs.get("projectile_count") or 15
-        self.projectile_firing_angle = kwargs.get("projectile_firing_angle") or 20
+        self.projectile_firing_angle = kwargs.get("projectile_firing_angle") or 30
         self.projectile_size = kwargs.get("projectile_size") or (50,50)
         self.projectile_texture_name = projectile_texture_name or "bullet1"
         self.projectile_tag = projectile_tag

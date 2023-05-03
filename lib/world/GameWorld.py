@@ -43,7 +43,7 @@ class GameWorld:
         self.__garbage__ = []
         self.__collided_pairs__ = {}
         
-        self.__no_collide_tags__ =[PARTICLE_TAG, CAMERA_TAG]
+        self.__no_collide_tags__ =[PARTICLE_TAG, CAMERA_TAG, TURRET_TAG]
         self.__no_self_collide_tags__ = [ENEMY_TAG, PLAYER_PROJECTILE_TAG, ENEMY_PROJECTILE_TAG]
         self.__max_count__ = {ENEMY_TAG: 1000,
                               PLAYER_PROJECTILE_TAG: 1000,
@@ -242,7 +242,9 @@ class GameWorld:
                 new_obj = obj_class(name = ENEMY_TAG + tag,
                                     tag = tag,
                                     pos= randist(self.player.pos, (600, 1200), self.__dim__.size),
-                                    image_dict = self.image_dict)
+                                    image_dict = self.image_dict,
+                                    sound_dict = self.sound_dict,
+                                    world = self)
                 if new_obj.tag == ENEMY_TAG:
                     new_obj.setTarget(self.player)
                 self.__addlist__.append(new_obj)

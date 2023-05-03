@@ -26,10 +26,11 @@ class Projectile(GameObject):
                                 -speed * math.cos(math.radians(self.rot)) * speed_amp))
 
     def collisionEffect(self, dt, obj):
-        if obj.tag == PLAYER_TAG and self.tag == ENEMY_PROJECTILE_TAG:
+        if (obj.tag == PLAYER_TAG and self.tag == ENEMY_PROJECTILE_TAG) or\
+           (obj.tag == ENEMY_TAG and self.tag == PLAYER_PROJECTILE_TAG):
             self.spawn_particles_on_pos(10,(7,7),100,1,1)
-        elif obj.tag == ENEMY_TAG and self.tag == PLAYER_PROJECTILE_TAG:
-            self.spawn_particles_on_pos(10,(7,7),100,1,1)
+            obj.damage(self.damage)
+            self.destroy()
 
     def update(self, dt: float, **kwargs):
         self.set_pos(element_add(self.pos, scalar_mul(self.vel, dt)))

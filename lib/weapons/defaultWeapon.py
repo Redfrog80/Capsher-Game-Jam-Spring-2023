@@ -81,3 +81,6 @@ class weapon:
         self.projectile_velocity_real = self.projectile_velocity_base * self.projectile_velocity_multiplier
         self.projectile_life = self.range_real/self.projectile_velocity_real
         
+    #TODO ADD REMAINING GETTERS
+    def get_range(self):
+        return self.range_real

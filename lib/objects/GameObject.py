@@ -27,8 +27,8 @@ class GameObject(Base):
 
     def collisionEffect(self, dt, obj):
         self.prevent_circle_overlap(obj)
-        self.vel = element_sub(scalar_mul(unit_tuple1(self.vel), 0.7*magnitude(self.vel)),
-                            scalar_mul(unit_tuple1(obj.vel), -0.7*magnitude(obj.vel)))
+        self.vel = element_sub(scalar_mul(unit_tuple1(self.vel), -0.7*magnitude(self.vel)),
+                            scalar_mul(unit_tuple1(obj.vel), 0.7*magnitude(obj.vel)))
 
     def spawn_particles_on_pos(self, quantity: int, size: tuple, velMax: int, lifeMax: float, drag: float ):
         for i in range(quantity):
