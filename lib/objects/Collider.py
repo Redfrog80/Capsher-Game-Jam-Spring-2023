@@ -46,7 +46,7 @@ class Collider:
     def collide_point(self,point: tuple):
         return (dist(self.pos, point) <= self.radius)
     
-    def prevent_circle_overlap(self,other):
+    def resolve_circle_overlap(self,other):
         mag = self.dist(other)
         dif = element_sub(self.pos, other.pos)
         if (mag):

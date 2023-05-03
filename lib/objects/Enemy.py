@@ -43,9 +43,9 @@ class Enemy(Playable):
     def render(self):
         
         # Debugging - renders acc and vel vectors.
-        # dummy = element_sub(self.pos, self.world.camera.topLeft)
-        # pygame.draw.line(self.world.screen,(0,200,0), dummy, element_add(dummy, self.vel), 2)
-        # pygame.draw.line(self.world.screen,(200,0,0), dummy, element_add(dummy, self.acc), 2)
+        dummy = element_sub(self.pos, self.world.camera.topLeft)
+        pygame.draw.line(self.world.screen,(0,200,0), dummy, element_add(dummy, self.vel), 2)
+        pygame.draw.line(self.world.screen,(200,0,0), dummy, element_add(dummy, self.acc), 2)
         super().render()
 
     def update(self, dt: float, **kwargs):

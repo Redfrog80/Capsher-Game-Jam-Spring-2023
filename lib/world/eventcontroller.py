@@ -1,5 +1,4 @@
 import pygame
-import multiprocessing
 from pygame.locals import *
 
 from lib.world.GameWorld import GameWorld
