@@ -1,3 +1,6 @@
+import math
+from random import random
+from pygame import image, surface, transform
 
 from lib.misc import *
 from .Camera import Camera
@@ -7,8 +10,6 @@ from ..hulls import hull
 from .Projectile import Projectile
 from .Playable import Playable
 
-from pygame import image, surface, transform
-import math
 
 class Player(Playable):
 
@@ -93,6 +94,16 @@ class Player(Playable):
             self.spawn_particles_on_pos(10,(5,5),200,5,1)
         else:
             self.spawn_particles_on_pos(10,(10,10),300,4,1)
+
+    def destroy(self):
+        super().destroy()
+        self.turret.destroy()
+        self.liveflag = 0
+        
+        sound = self.sound_dict.get_sound("Death" + str(1+int(random())))
+        if sound:
+            sound.set_volume(0.3)
+            sound.play()
 
     def render(self):
         if self.collide_box(self.world.camera):  # render when object collide with camera view

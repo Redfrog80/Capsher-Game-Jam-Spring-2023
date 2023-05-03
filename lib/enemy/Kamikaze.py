@@ -1,3 +1,4 @@
+from random import random
 from ..Ai import *
 from ..objects import *
 from ..misc import *
@@ -23,7 +24,7 @@ class Kamikaze(Enemy):
         
         self.coll_damage = 10
         self.suicide = True
-        
+    
     def setTarget(self, target):
         self.steeringBehavior.add_steering_behavior(pursueBehavior(1,2), target)
         self.steeringBehavior.add_steering_behavior(dragBehavior(1,.4))

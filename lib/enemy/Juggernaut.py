@@ -1,8 +1,11 @@
 import math
 from lib.misc import *
-from lib.hulls.defaultHull import hull
-
 from lib.objects import *
+from ..Ai import *
+from ..misc import *
+from ..hulls.defaultHull import hull
+from ..thrusters import thruster
+from ..weapons import turret, bolter, flakker
 
 
 class Juggernaut(Enemy):
@@ -13,49 +16,70 @@ class Juggernaut(Enemy):
         kwargs["texture_size"] = kwargs.get("texture_size") or (128,128)
         kwargs["texture_name"] = kwargs.get("texture_name") or "Emperor1"
         
-        enemy_hull = hull(200, 0.005, 0.1)
+
+        enemy_hull = hull(200, 0.01, 0.02)
+        enemy_thruster = thruster(200, 80, 180)
         
-        super().__init__(hull=enemy_hull, **kwargs)
-
-        self.att_range = 0
-        self.cooldown = 0
-        self.cooldowntimer = 0
-        self.projectile_damage = 0
-        self.bulletLife = 6
-        self.bulletVel = 200
-        self.set_weapon_control()
-        # post process so I don't have to call this from main
-        self.setStat(0, 100, 50, 0, 50, 100, 10)
-        self.follow_config(None, 1200, 1, 200)
-
-    def set_weapon_control(self, damage=20, att_r=500, cooldowntimer=5):
-        self.projectile_damage = damage
-        self.att_range = att_r
-        self.cooldowntimer = cooldowntimer
-
-    def shoot(self, dt, aim: tuple, name: str, modified_angle=0):
-        bullet_size = (40, 40)
-        bullet = Projectile(name = name,
-                            tag = ENEMY_PROJECTILE_TAG,
-                            damage = self.projectile_damage,
-                            life = self.bulletLife,
-                            texture_size = bullet_size,
-                            texture_name = "bullet5",
-                            image_dict = self.image_dict,
-                            sound_dict = self.sound_dict)
-        bullet.traj(self.pos, self.vel, self.bulletVel, math.degrees(math.atan2(*aim))+modified_angle, 1)
-        self.world.__addlist__.append(bullet)
-        self.cooldown = self.cooldowntimer
+        self.steeringBehavior = steeringBehavior(self, 
+                                                 enemy_thruster.get_acc(),
+                                                 enemy_thruster.get_rot_vel())
         
+        super().__init__(hull = enemy_hull,
+                         thruster = enemy_thruster,
+                         **kwargs)
+
+        weapon = bolter(projectile_tag = ENEMY_PROJECTILE_TAG,
+                        projectile_texture_name = "bullet5",
+                        image_dict = self.image_dict,
+                        sound_dict = self.sound_dict,
+                        damage = 20,
+                        firerate = 2,
+                        range = 600,
+                        projectile_velocity = 800,
+                        projectile_size = (100,100))
+        
+        self.turret = turret(name = "turret",
+                             tag="turret",
+                             min_rot_vel = 45,
+                             max_rot_vel = 180,
+                             texture_size = self.texture_size,
+                             texture_name = "aiming",
+                             image_dict = self.image_dict,
+                             sound_dict = self.sound_dict)
+
+        self.turret.attach_parent(self)
+        self.turret.attach_weapon(weapon)
+
+    def shoot(self, dt,  **kwargs):
+        self.turret.fire(dt, **kwargs)
+
+    def setTarget(self, target):
+        self.steeringBehavior.add_steering_behavior(arriveBehavior(1.2, 300, 2000), target)
+        self.steeringBehavior.add_steering_behavior(evadeBehavior(.2,2), target)
+        self.steeringBehavior.add_steering_behavior(faceBehavior(1), target)
+        
+        super().setTarget(target)
+    
+    def set_world(self, world):
+        super().set_world(world)
+        self.world.add_game_object(self.turret)
+    
+    def destroy(self):
+        super().destroy()
+        self.turret.destroy()
+    
     def update(self, dt: float, **kwargs):
         super().update(dt, **kwargs)
-        if self.target:
-            self.trackTarget(dt)
-            shootvec = element_sub(self.pos, self.target.pos)
-            if magnitude(shootvec) < self.att_range and self.cooldown <= 0:
-                self.shoot(dt, shootvec, self.name + "_1", -5)
-                self.shoot(dt, shootvec, self.name + "_2", 0)
-                self.shoot(dt, shootvec, self.name + "_3", 5)
-
-            elif self.cooldown > 0:
-                self.cooldown -= dt
+        
+        target_rot = None
+        if (self.world):
+            target_rot = degrees(math.atan2(*unit_tuple2(self.pos,self.target.pos)))
+        
+        difference = self.turret.rot-target_rot
+        while (abs(difference) > 180):
+                    difference -= 360*sign(difference)
+        
+        if (abs(difference) < 5 and magnitude(element_sub(self.pos, self.target.pos)) < self.turret.get_range()):
+            self.shoot(dt)
+        
+        self.turret.target_rot = target_rot

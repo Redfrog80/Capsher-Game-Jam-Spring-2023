@@ -44,9 +44,9 @@ controller = EventController(player, world)
 world.set_player(player)
 world.set_tracked_object(player, 40)
 
-controller.addEventSpawn(5, 50, (1, 2), Assault, ENEMY_TAG)
-controller.addEventSpawn(3, 50, (1, 3), Kamikaze, ENEMY_TAG)
-# controller.addEventSpawn(6, 25, (1, 2), Juggernaut, ENEMY_TAG)
+# controller.addEventSpawn(5, 50, (1, 2), Assault, ENEMY_TAG)
+# controller.addEventSpawn(3, 50, (1, 3), Kamikaze, ENEMY_TAG)
+controller.addEventSpawn(3, 25, (1, 2), Juggernaut, ENEMY_TAG)
 
 run = True
 test = 0

@@ -63,7 +63,7 @@ class Assault(Enemy):
         self.world.add_game_object(self.turret)
     
     def destroy(self):
-        self.liveflag = 0
+        super().destroy()
         self.turret.destroy()
     
     def update(self, dt: float, **kwargs):

@@ -55,7 +55,6 @@ class turret(GameObject):
     def get_range(self):
         return self.weapon.get_range()
 
-
     def render(self):
         if self.collide_box(self.world.camera):  # render when object collide with camera view
             img0 = transform.rotate(self.texture, self.rot)

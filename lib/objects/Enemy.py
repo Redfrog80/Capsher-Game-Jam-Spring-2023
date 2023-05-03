@@ -1,4 +1,5 @@
 import pygame
+from random import random
 from lib.Ai import *
 from .Playable import Playable
 from .Projectile import Projectile
@@ -26,7 +27,8 @@ class Enemy(Playable):
         if obj.tag == ENEMY_PROJECTILE_TAG:
             return
         if obj.tag != PLAYER_PROJECTILE_TAG:
-            self.liveflag = self.liveflag and not self.suicide
+            if (self.suicide):
+                self.destroy()
             Playable.collisionEffect(self, dt, obj)
         
         if self.liveflag:
@@ -40,12 +42,20 @@ class Enemy(Playable):
         if self.isDead():
             self.destroy()
 
+    def destroy(self):
+        self.liveflag = 0
+        sound = self.sound_dict.get_sound("enemy_death" + str(1+int(3*random())))
+        if sound:
+            sound.set_volume(0.3)
+            sound.fadeout(int(sound.get_length()*1000))
+            sound.play()
+
     def render(self):
         
-        # Debugging - renders acc and vel vectors.
-        dummy = element_sub(self.pos, self.world.camera.topLeft)
-        pygame.draw.line(self.world.screen,(0,200,0), dummy, element_add(dummy, self.vel), 2)
-        pygame.draw.line(self.world.screen,(200,0,0), dummy, element_add(dummy, self.acc), 2)
+        # # Debugging - renders acc and vel vectors.
+        # dummy = element_sub(self.pos, self.world.camera.topLeft)
+        # pygame.draw.line(self.world.screen,(0,200,0), dummy, element_add(dummy, self.vel), 2)
+        # pygame.draw.line(self.world.screen,(200,0,0), dummy, element_add(dummy, self.acc), 2)
         super().render()
 
     def update(self, dt: float, **kwargs):
