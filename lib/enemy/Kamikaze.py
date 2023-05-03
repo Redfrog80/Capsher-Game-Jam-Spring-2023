@@ -1,7 +1,8 @@
-from lib.Ai import *
-from lib.objects import *
-from lib.misc import *
-from lib.hulls.defaultHull import hull
+from ..Ai import *
+from ..objects import *
+from ..misc import *
+from ..hulls.defaultHull import hull
+from ..thrusters import thruster
 
 class Kamikaze(Enemy):
     def __init__(self, **kwargs):
@@ -11,10 +12,14 @@ class Kamikaze(Enemy):
         kwargs["texture_size"] = kwargs.get("texture_size") or (24,24)
         kwargs["texture_name"] = kwargs.get("texture_name") or "enemy1"
         
-        self.steeringBehavior = steeringBehavior(self, 400, 120)
         enemy_hull = hull(30, 0.03)
-        
-        super().__init__(hull = enemy_hull, **kwargs)
+        enemy_thruster = thruster(600, 200, 360)
+        self.steeringBehavior = steeringBehavior(self, 
+                                                 enemy_thruster.get_acc(),
+                                                 enemy_thruster.get_rot_vel())        
+        super().__init__(hull = enemy_hull,
+                         thruster = enemy_thruster,
+                         **kwargs)
         
         self.coll_damage = 10
         self.suicide = True
