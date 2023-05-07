@@ -7,3 +7,4 @@ from .Playable import Playable
 from .Projectile import Projectile
 from .Player import Player
 from .Enemy import Enemy
+from .cursor import cursor

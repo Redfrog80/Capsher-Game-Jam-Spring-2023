@@ -43,7 +43,7 @@ class GameWorld:
         self.__garbage__ = []
         self.__collided_pairs__ = {}
         
-        self.__no_collide_tags__ =[PARTICLE_TAG, CAMERA_TAG, TURRET_TAG]
+        self.__no_collide_tags__ =[PARTICLE_TAG, CAMERA_TAG, TURRET_TAG, CURSOR_TAG]
         self.__no_self_collide_tags__ = [ENEMY_TAG, PLAYER_PROJECTILE_TAG, ENEMY_PROJECTILE_TAG]
         self.__max_count__ = {ENEMY_TAG: 1000,
                               PLAYER_PROJECTILE_TAG: 1000,
@@ -54,12 +54,20 @@ class GameWorld:
         self.sound_dict = kwargs.get("sound_dictionary") or soundDict("resources/sounds/")
         
         self.screen = kwargs.get("screen")
-        self.player = kwargs.get("player")
+        self.player = kwargs.get("player") or Player(pos = self.__dim__.center,
+                                                     image_dict = self.image_dict,
+                                                     sound_dict = self.sound_dict)
+
         self.camera = kwargs.get("camera") or Camera(name = "camera",
                                                      tag = CAMERA_TAG,
                                                      world = self,
                                                      screen_dim = self.screen.get_size(),
                                                      image_dict = self.image_dict)
+        
+        self.cursor = cursor(world = self)
+        
+        self.set_player(self.player)
+        self.set_tracked_object(self.player, 40)
         
         self.tileMap = {}
         self.display_tile_map = kwargs.get("debug") or False
@@ -124,7 +132,10 @@ class GameWorld:
 
     def get_scaled_mouse_pos(self):
         return element_mul(self.screen.get_size(), element_div(pygame.mouse.get_pos(), self.__mouse_area__))
-
+    
+    def get_player(self):
+        return self.player
+    
     def border_default(self, dt, obj: GameObject):
         if obj.tag in (PLAYER_PROJECTILE_TAG, ENEMY_PROJECTILE_TAG):
             # remove bullet when leave game world
@@ -210,6 +221,7 @@ class GameWorld:
                 thread.join()            
         
         self.camera.update(dt)
+        self.cursor.update(dt)
         
         self.__garbage_collection__()
         self.__update_tile_map__()
@@ -223,6 +235,8 @@ class GameWorld:
     def render(self, **kwargs):
         if self.display_tile_map:
             self.render_tile_map()
+        
+        self.cursor.render()
         
         for key in self.__game_objects__:
             for obj in self.__game_objects__[key]:

@@ -65,8 +65,8 @@ def unit_tuple1(p: tuple)->bool:
     
 def unit_tuple2(p: tuple, q: tuple)->bool:
     mag = dist(p, q)
-    dif = element_sub(p, q)
+    delta = element_sub(p, q)
     if (mag):
-        return scalar_div(dif,mag)
+        return scalar_div(delta,mag)
     else:
         return (0,0)

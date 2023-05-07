@@ -9,13 +9,11 @@ class EventController:
     """
     use to handle player input and world event
     """
-    def __init__(self,
-                 player_object: Player,
-                 game_world: GameWorld) -> None:
+    def __init__(self, game_world: GameWorld) -> None:
         
         self.extraEventList = {}
-        self.player = player_object
         self.world = game_world
+        self.player = game_world.get_player()
         self.run = True
         self.eventNumber = pygame.USEREVENT
 

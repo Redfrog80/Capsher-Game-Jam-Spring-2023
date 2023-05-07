@@ -18,12 +18,19 @@ class steeringBehavior():
         behavior.obj = self.obj
         behavior.target = target
         self.steerings.append(behavior)
-        
+    
+    def clear_steering_behaviors(self):
+        self.steerings.clear()
+    
+    def set_new_target(self, target):
+        for behavior in self.steerings:
+            behavior.target = target
+    
     def update(self, dt):
         acc = (0,0)
         rot_vel = 0
         for behavior in self.steerings:
-            s = behavior.get_steering(self)
+            s = behavior.get_steering(self, dt=dt)
             acc = element_add(acc, scalar_mul(s.acc, behavior.weight))
             rot_vel = rot_vel + s.rot_vel * behavior.weight
             

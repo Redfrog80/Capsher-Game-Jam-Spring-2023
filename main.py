@@ -22,31 +22,17 @@ window_screen = pygame.display.set_mode(window_dim, flags= pygame.SCALED | pygam
 FPS = 120
 clock = pygame.time.Clock()
 
-image_dict = imageDict()
-image_dict.load_images()
-
-sound_dict = soundDict()
-sound_dict.load_sounds()
-# player
-player = Player(pos = (2000, 2000), image_dict = image_dict, sound_dict = sound_dict)
-
 world = GameWorld(dimensions = pygame.Rect(0, 0, 4000, 4000),
                   screen = game_screen,
                   tile_dim = tile_dim,
                   mouse_area = window_screen.get_size(), 
-                  image_dict = image_dict,
-                  sound_dict = sound_dict,
                   debug = False)
 
-controller = EventController(player, world)
+controller = EventController(world)
 
-# world add obj and event
-world.set_player(player)
-world.set_tracked_object(player, 40)
-
-# controller.addEventSpawn(5, 50, (1, 2), Assault, ENEMY_TAG)
-# controller.addEventSpawn(3, 50, (1, 3), Kamikaze, ENEMY_TAG)
-controller.addEventSpawn(3, 25, (1, 2), Juggernaut, ENEMY_TAG)
+controller.addEventSpawn(7, 25, (1, 2), Assault, ENEMY_TAG)
+controller.addEventSpawn(2, 50, (1, 3), Kamikaze, ENEMY_TAG)
+controller.addEventSpawn(6, 5, (1, 2), Juggernaut, ENEMY_TAG)
 
 run = True
 test = 0

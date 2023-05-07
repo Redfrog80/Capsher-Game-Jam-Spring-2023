@@ -18,7 +18,7 @@ class Juggernaut(Enemy):
         
 
         enemy_hull = hull(200, 0.01, 0.02)
-        enemy_thruster = thruster(200, 80, 180)
+        enemy_thruster = thruster(100, 40, 180)
         
         self.steeringBehavior = steeringBehavior(self, 
                                                  enemy_thruster.get_acc(),
@@ -54,10 +54,11 @@ class Juggernaut(Enemy):
         self.turret.fire(dt, **kwargs)
 
     def setTarget(self, target):
-        self.steeringBehavior.add_steering_behavior(arriveBehavior(1.2, 300, 2000), target)
-        self.steeringBehavior.add_steering_behavior(evadeBehavior(.2,2), target)
+        self.steeringBehavior.add_steering_behavior(arriveBehavior(1, 400, 2000), target)
+        self.steeringBehavior.add_steering_behavior(fleeBehavior(.2), target)
         self.steeringBehavior.add_steering_behavior(faceBehavior(1), target)
-        
+        self.turret.set_target()
+
         super().setTarget(target)
     
     def set_world(self, world):

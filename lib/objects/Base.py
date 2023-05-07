@@ -13,7 +13,6 @@ class Base(Collider):
         # This can be set manually, but should be set by the gameWorld as the object is added.
         self.world = kwargs.get("world")
 
-        
         self.name = kwargs.get("name") or "unnamed_object"
         self.tag = kwargs.get("tag") or ""
         self.vel = kwargs.get("vel") or (0,0)

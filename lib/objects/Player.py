@@ -26,7 +26,7 @@ class Player(Playable):
         super().__init__(hull = player_hull,
                          thruster = player_thruster,  **kwargs)
         
-        weapon = flakker(projectile_tag = PLAYER_PROJECTILE_TAG,
+        weapon = bolter(projectile_tag = PLAYER_PROJECTILE_TAG,
                         projectile_texture_name = "bullet3",
                         image_dict = self.image_dict,
                         sound_dict = self.sound_dict)
@@ -42,6 +42,7 @@ class Player(Playable):
 
         self.turret.attach_parent(self)
         self.turret.attach_weapon(weapon)
+        self.turret.set_target()
         
     def set_world(self, world):
         super().set_world(world)

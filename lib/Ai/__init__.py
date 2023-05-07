@@ -8,3 +8,5 @@ from .dragBehavior import dragBehavior
 from .faceBehavior import faceBehavior
 from .faceVelBehavior import faceVelBehavior
 from .faceAccBehavior import faceAccBehavior
+from .matchRotBehavior import matchRotBehavior
+from .turretBehavior import turretBehavior

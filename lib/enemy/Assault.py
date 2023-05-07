@@ -17,7 +17,7 @@ class Assault(Enemy):
         kwargs["texture_name"] = kwargs.get("texture_name") or "enemy2"
         
         enemy_hull = hull(50, 0.02, 0.005)
-        enemy_thruster = thruster(600, 200, 360)
+        enemy_thruster = thruster(500, 100, 360)
         
         self.steeringBehavior = steeringBehavior(self, 
                                                  enemy_thruster.get_acc(),
@@ -54,8 +54,8 @@ class Assault(Enemy):
     def setTarget(self, target):
         self.steeringBehavior.add_steering_behavior(arriveBehavior(1.5, 50, 1000), target)
         self.steeringBehavior.add_steering_behavior(evadeBehavior(.4,2), target)
-        self.steeringBehavior.add_steering_behavior(faceAccBehavior(1), target)
-        
+        self.steeringBehavior.add_steering_behavior(faceAccBehavior(2), target)
+        self.turret.set_target(target)
         super().setTarget(target)
     
     def set_world(self, world):

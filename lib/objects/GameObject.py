@@ -31,7 +31,7 @@ class GameObject(Base):
                                scalar_mul(unit_tuple1(self.vel), 0.5*magnitude(self.vel)))
 
     def spawn_particles_on_pos(self, quantity: int, size: tuple, velMax: int, lifeMax: float, drag: float ):
-        for i in range(quantity):
+        for _ in range(quantity):
             p = ParticleSimple(self.name, PARTICLE_TAG, pos = self.pos,shape = size)
             p.set_random(velMax,lifeMax,drag)
             p.color = pygame.Color(pygame.transform.average_color(self.texture, consider_alpha = True)).correct_gamma(2*random())
